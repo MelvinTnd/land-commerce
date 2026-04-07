@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --vert: #1B6B3A;
+  --vert2: #2E8B57;
+  --vert-fonce: #004d28;
+  --gold: #D4920A;
+  --gold2: #F5B731;
+  --fond: #F7F5F0;
+  --fond2: #F0EDE8;
+  --fond3: #E6E2DB;
+  --texte: #1A1A1A;
+  --texte2: #3f4940;
+  --texte3: #6B7280;
+  --bordure: #bec9be;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: var(--fond);
+  color: var(--texte);
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+}
+
+/* FOUT prevention — hide icon text until font is loaded */
+html:not(.mso-loaded) .material-symbols-outlined {
+  font-size: 0 !important;
+  line-height: 0;
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
