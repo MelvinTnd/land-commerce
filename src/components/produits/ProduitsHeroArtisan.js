@@ -39,7 +39,7 @@ export default function ProduitsHeroArtisan() {
 
             {/* Bouton */}
             <Link
-              href="/artisans/koffi-zinsou"
+              href="/boutiques"
               className="w-fit flex items-center gap-3 px-7 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:opacity-90"
               style={{ background: '#1B6B3A' }}
             >

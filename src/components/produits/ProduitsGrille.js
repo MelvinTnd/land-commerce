@@ -6,7 +6,7 @@ import { getProducts } from '@/lib/api'
 
 const tris = ['Pertinence', 'Prix croissant', 'Prix décroissant', 'Meilleures ventes']
 
-export default function ProduitsGrille({ categorieActive, prixMax, triActif, setTriActif, recherche }) {
+export default function ProduitsGrille({ categorieActive, prixMax, triActif, setTriActif, recherche, onCountChange }) {
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
@@ -43,9 +43,10 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           stock:    p.stock,
         }))
         setProduits(apiProducts)
+        if (onCountChange) onCountChange(apiProducts.length)
         setLoading(false)
       })
-      .catch(() => { setProduits([]); setLoading(false) })
+      .catch(() => { setProduits([]); if (onCountChange) onCountChange(0); setLoading(false) })
   }, [recherche, categorieActive, prixMax, triActif])
 
   const toggleFavori = (e, id) => {

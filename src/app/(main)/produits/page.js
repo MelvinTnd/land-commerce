@@ -7,20 +7,24 @@ import ProduitsGrille from '@/components/produits/ProduitsGrille'
 import ProduitsPagination from '@/components/produits/ProduitsPagination'
 import ProduitsBoutiques from '@/components/produits/ProduitsBoutiques'
 
+const PER_PAGE = 12
+
 function ProduitsContent() {
   const searchParams = useSearchParams()
-  const [categorieActive, setCategorieActive] = useState(null) // null = toutes catégories
+  const [categorieActive, setCategorieActive] = useState(null)
   const [prixMax, setPrixMax] = useState(1500000)
   const [triActif, setTriActif] = useState('Pertinence')
   const [recherche, setRecherche] = useState('')
+  const [totalProduits, setTotalProduits] = useState(0)
 
-  // Pré-sélection depuis l'URL (?category=artisanat ou ?q=terme)
   useEffect(() => {
     const cat = searchParams.get('category')
     if (cat) setCategorieActive(cat)
     const q = searchParams.get('q')
     if (q) setRecherche(q)
   }, [searchParams])
+
+  const totalPages = Math.max(1, Math.ceil(totalProduits / PER_PAGE))
 
   return (
     <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
@@ -40,8 +44,11 @@ function ProduitsContent() {
             triActif={triActif}
             setTriActif={setTriActif}
             recherche={recherche}
+            onCountChange={setTotalProduits}
           />
-          <ProduitsPagination total={12} />
+          {totalProduits > PER_PAGE && (
+            <ProduitsPagination total={totalPages} />
+          )}
         </div>
       </div>
 
