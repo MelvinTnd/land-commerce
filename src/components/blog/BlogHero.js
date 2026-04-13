@@ -43,7 +43,7 @@ export default function BlogHero() {
           {/* Actions */}
           <div className="flex flex-wrap items-center gap-5">
             <Link
-              href="/blog/tresors-abomey"
+              href="/blog/1"
               className="bg-white hover:bg-gray-100 text-[#1B6B3A] uppercase tracking-widest text-[11px] font-extrabold px-8 py-4 rounded-full transition-all flex items-center gap-2 shadow-xl"
             >
               Lire le dossier spécial

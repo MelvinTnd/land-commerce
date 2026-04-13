@@ -9,16 +9,16 @@ const sondageOptions = [
 ]
 
 const sections = [
-  { label: 'Dossiers Spéciaux', count: 12 },
-  { label: 'Techniques & Outils', count: 38 },
-  { label: 'Portraits d\'Artisans', count: 41 },
-  { label: 'Patrimoine & Économie', count: 19 },
+  { label: 'Dossiers Spéciaux', count: 12, slug: 'patrimoine' },
+  { label: 'Techniques & Outils', count: 38, slug: 'technique' },
+  { label: 'Portraits d\'Artisans', count: 41, slug: 'artisanat' },
+  { label: 'Patrimoine & Économie', count: 19, slug: 'e-commerce' },
 ]
 
 const tendances = [
-  { rang: 1, titre: 'Restauration des Palais Royaux d\'Abomey', categorie: 'Patrimoine' },
-  { rang: 2, titre: 'Le marché du Bronze à l\'ère numérique', categorie: 'Économie' },
-  { rang: 3, titre: 'Le renouveau du textile Kanvô', categorie: 'Savoir-Faire' },
+  { rang: 1, titre: 'Le Bronze d\'Abomey : Art Vivant', categorie: 'Patrimoine', id: 1 },
+  { rang: 2, titre: 'Miel des Collines de Dassa', categorie: 'Alimentation', id: 4 },
+  { rang: 3, titre: 'Ouvrir sa Boutique en Ligne au Bénin', categorie: 'E-commerce', id: 5 },
 ]
 
 export default function BlogSidebar() {
@@ -134,7 +134,7 @@ export default function BlogSidebar() {
         <div className="flex flex-wrap gap-2">
           {sections.map((s) => (
             <Link
-              href="#"
+              href={`/blog?categorie=${s.slug}`}
               key={s.label}
               className="flex items-center gap-1.5 bg-gray-50 hover:bg-[#E6F8EA] border border-gray-100 hover:border-[#D2F4DE] px-3 py-2 rounded-lg transition-colors group"
             >
@@ -154,7 +154,7 @@ export default function BlogSidebar() {
         
         <div className="flex flex-col gap-5">
           {tendances.map((t) => (
-            <Link href="#" key={t.rang} className="flex gap-4 group">
+            <Link href={`/blog/${t.id}`} key={t.rang} className="flex gap-4 group">
               <span className="text-[32px] font-black text-gray-100 leading-none group-hover:text-[#D2F4DE] transition-colors">
                 {t.rang}
               </span>
