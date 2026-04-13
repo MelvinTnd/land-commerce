@@ -113,13 +113,13 @@ export async function createProduct(productData) {
 export async function getProducts(params = {}) {
   const searchParams = new URLSearchParams()
   if (params.category) searchParams.set('category', params.category)
-  if (params.shop)     searchParams.set('shop', params.shop)
-  if (params.search)   searchParams.set('search', params.search)
+  if (params.shop) searchParams.set('shop', params.shop)
+  if (params.search) searchParams.set('search', params.search)
   if (params.featured) searchParams.set('featured', '1')
-  if (params.page)     searchParams.set('page', params.page)
+  if (params.page) searchParams.set('page', params.page)
   if (params.prix_max) searchParams.set('prix_max', params.prix_max)
-  if (params.tri)      searchParams.set('tri', params.tri)
-  
+  if (params.tri) searchParams.set('tri', params.tri)
+
   const query = searchParams.toString()
   return apiFetch(`/products${query ? '?' + query : ''}`)
 }
@@ -166,8 +166,8 @@ export async function getOrders() {
 export async function getArticles(params = {}) {
   const searchParams = new URLSearchParams()
   if (params.categorie) searchParams.set('categorie', params.categorie)
-  if (params.search)    searchParams.set('search', params.search)
-  if (params.page)      searchParams.set('page', params.page)
+  if (params.search) searchParams.set('search', params.search)
+  if (params.page) searchParams.set('page', params.page)
   const query = searchParams.toString()
   return apiFetch(`/articles${query ? '?' + query : ''}`)
 }
@@ -182,7 +182,7 @@ export async function createArticle(data) {
 
 export async function getForumTopics(params = {}) {
   const searchParams = new URLSearchParams()
-  if (params.tag)  searchParams.set('tag', params.tag)
+  if (params.tag) searchParams.set('tag', params.tag)
   if (params.page) searchParams.set('page', params.page)
   const query = searchParams.toString()
   return apiFetch(`/forum-topics${query ? '?' + query : ''}`)
