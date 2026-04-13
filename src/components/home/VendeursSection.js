@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getShops } from '@/lib/api'
+import { defaultShops } from '@/lib/defaultData'
 
 export default function VendeursSection() {
-  const [vendeurs, setVendeurs] = useState([])
+  const [vendeurs, setVendeurs] = useState(defaultShops)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function VendeursSection() {
               : 'Produits exceptionnels et savoir-faire unique du Bénin.',
             extra: s.products_count || 0,
           }))
-        setVendeurs(apiShops)
+        if (apiShops.length > 0) setVendeurs(apiShops)
         setLoading(false)
       })
       .catch(() => setLoading(false))

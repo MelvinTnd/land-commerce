@@ -16,7 +16,7 @@ export default function InscriptionPage() {
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8000/api/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

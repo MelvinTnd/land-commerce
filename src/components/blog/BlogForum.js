@@ -45,7 +45,7 @@ export default function BlogForum() {
       return
     }
     try {
-      const res = await fetch(`http://localhost:8000/api/forum-topics/${topicId}/vote`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/forum-topics/${topicId}/vote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

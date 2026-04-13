@@ -3,37 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getCategories } from '@/lib/api'
-
-const categoriesLocales = [
-  {
-    id: 1,
-    name: 'Alimentation & Terroir',
-    description: 'Piments, miels locaux purs et produits agricoles certifiés.',
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600',
-    icon: 'restaurant_menu',
-  },
-  {
-    id: 2,
-    name: 'Art & Sculpture',
-    description: 'Bois précieux et statues directement issues des palais royaux.',
-    image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
-    icon: 'palette',
-  },
-  {
-    id: 3,
-    name: 'Mode & Textile',
-    description: "Kanvô authentique, pagnes tissés à l'ancienne, et parures.",
-    image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600',
-    icon: 'checkroom',
-  },
-  {
-    id: 4,
-    name: 'Maison & Décoration',
-    description: 'Poteries de Sè ancestrales et vanneries solides.',
-    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=600',
-    icon: 'chair',
-  },
-]
+import { defaultCategories } from '@/lib/defaultData'
 
 const imagesParCategorie = {
   'artisanat': 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
@@ -43,7 +13,7 @@ const imagesParCategorie = {
 }
 
 export default function CategoriesSection() {
-  const [categories, setCategories] = useState(categoriesLocales)
+  const [categories, setCategories] = useState(defaultCategories)
 
   useEffect(() => {
     getCategories()

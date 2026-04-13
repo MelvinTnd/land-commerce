@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 import { getProducts } from '@/lib/api'
+import { defaultProducts } from '@/lib/defaultData'
 
 
 const filtres = [
@@ -16,7 +17,7 @@ const filtres = [
 export default function ProduitsSection() {
   const [filtre, setFiltre] = useState('recent')
   const { ajouterAuPanier, estDansPanier } = useCart()
-  const [produits, setProduits] = useState([])
+  const [produits, setProduits] = useState(defaultProducts)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function ProduitsSection() {
           image: p.image || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
           stock: p.stock,
         }))
-        setProduits(apiProducts)
+        if (apiProducts.length > 0) setProduits(apiProducts)
         setLoading(false)
       })
       .catch(() => setLoading(false))
