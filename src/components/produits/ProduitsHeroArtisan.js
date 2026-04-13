@@ -1,88 +1,62 @@
 import Link from 'next/link'
 
-export default function ProduitsHeroArtisan() {
+export default function ProduitsHero({ total = 0 }) {
   return (
-    <section className="px-10 py-12" style={{ background: '#F7F5F0' }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <section
+      className="relative overflow-hidden py-20 px-6 md:px-10"
+      style={{ background: 'linear-gradient(135deg, #0B4A26 0%, #1B6B3A 60%, #2D8A50 100%)' }}
+    >
+      {/* Cercles décoratifs */}
+      <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10 border-2 border-white" />
+      <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full opacity-10 border border-white" />
+      <div className="absolute top-1/2 right-1/4 w-4 h-4 rounded-full bg-yellow-300 opacity-40" />
+      <div className="absolute top-1/4 right-1/3 w-2 h-2 rounded-full bg-white opacity-30" />
 
-          {/* Gauche — texte */}
-          <div className="flex flex-col gap-6">
-            {/* Badge */}
-            <span
-              className="w-fit px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-              style={{ background: '#FEF3C7', color: '#D4920A', border: '1px solid #F5B731' }}
-            >
-              L'Artisan du Mois
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+
+          {/* Texte gauche */}
+          <div className="flex flex-col gap-5 max-w-xl">
+            <span className="w-fit px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-yellow-900"
+              style={{ background: '#F5B731' }}>
+              🛍️ Marketplace BéninMarket
             </span>
-
-            {/* Nom */}
-            <div>
-              <h1
-                className="text-6xl md:text-7xl font-extrabold leading-none tracking-tight"
-                style={{ color: '#1A1A1A' }}
-              >
-                Koffi
-              </h1>
-              <h1
-                className="text-6xl md:text-7xl font-extrabold leading-none tracking-tight italic"
-                style={{ color: '#1B6B3A' }}
-              >
-                Zinsou
-              </h1>
-            </div>
-
-            {/* Description */}
-            <p className="text-base leading-relaxed max-w-md" style={{ color: '#6B7280' }}>
-              Maître sculpteur d'Abomey, Koffi préserve l'héritage royal à travers des bois précieux et des motifs séculaires.
+            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
+              L'artisanat béninois<br />
+              <span style={{ color: '#A7F3D0' }}>à portée de clic.</span>
+            </h1>
+            <p className="text-base text-white/70 leading-relaxed max-w-md">
+              Découvrez {total > 0 ? `${total} produits authentiques` : 'des produits authentiques'} — sculptures, wax, épices, bijoux — directement des mains des artisans du Bénin.
             </p>
 
-            {/* Bouton */}
-            <Link
-              href="/boutiques"
-              className="w-fit flex items-center gap-3 px-7 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:opacity-90"
-              style={{ background: '#1B6B3A' }}
-            >
-              Découvrir la Collection
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </Link>
+            <div className="flex items-center gap-4 mt-2">
+              <Link href="/boutiques"
+                className="px-6 py-3 rounded-full bg-white font-bold text-sm transition-all hover:bg-gray-100"
+                style={{ color: '#0B4A26' }}>
+                Voir les boutiques
+              </Link>
+              <Link href="/inscription-vendeur"
+                className="px-6 py-3 rounded-full border border-white/40 text-white font-bold text-sm hover:bg-white/10 transition-all">
+                Devenir vendeur
+              </Link>
+            </div>
           </div>
 
-          {/* Droite — photo + carte */}
-          <div className="relative">
-            {/* Image principale */}
-            <div className="rounded-3xl overflow-hidden" style={{ height: '420px' }}>
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpCuM1raMH_d0yZ4seMOYQeSAXkpCLTGp8PSjBJEqnwjEtefivizDw7wYqIvFGMkRu6XapStFUssIpLwIuedznmegaIr4w4KEIqtoNOrQLpn4bGQLIxwOamAloySaxm2v_62WszW4vc0yj0Pl6AWHxoYIoNM-VgUZzsHhHQ5ASSqF05kBhhq1jZ-Y65gzhmZOuDkPpzO93rYFQAWghChe6Y_UTJrfKlJcZWYf9fwC59HtPheOUIUoZSWVvjKAPot5Fm4RfR71iOZE"
-                alt="Koffi Zinsou"
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* Carte flottante */}
-            <div
-              className="absolute bottom-6 left-6 bg-white rounded-2xl p-4 max-w-xs"
-              style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center"
-                  style={{ background: '#1B6B3A' }}
-                >
-                  <svg width="12" height="12" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path d="M20 6L9 17l-5-5"/>
-                  </svg>
-                </div>
-                <span className="text-xs font-bold" style={{ color: '#1B6B3A' }}>
-                  Vendeur Certifié
-                </span>
+          {/* Stats droite */}
+          <div className="grid grid-cols-2 gap-4 shrink-0">
+            {[
+              { icon: 'storefront', label: 'Boutiques', value: '3+' },
+              { icon: 'category', label: 'Catégories', value: '8' },
+              { icon: 'inventory_2', label: 'Produits', value: total > 0 ? `${total}+` : '12+' },
+              { icon: 'star', label: 'Note moy.', value: '4.8/5' },
+            ].map((s) => (
+              <div key={s.label}
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col items-center text-center gap-2 border border-white/20">
+                <span className="material-symbols-outlined text-yellow-300 text-[28px]">{s.icon}</span>
+                <span className="text-2xl font-black text-white">{s.value}</span>
+                <span className="text-xs font-bold text-white/60 uppercase tracking-wider">{s.label}</span>
               </div>
-              <p className="text-sm italic" style={{ color: '#6B7280' }}>
-                "Chaque pièce raconte une histoire de nos ancêtres."
-              </p>
-            </div>
+            ))}
           </div>
 
         </div>

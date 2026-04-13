@@ -28,7 +28,7 @@ function ProduitsContent() {
 
   return (
     <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
-      <ProduitsHeroArtisan />
+      <ProduitsHeroArtisan total={totalProduits} />
 
       <div className="max-w-7xl mx-auto px-10 py-12 flex gap-10">
         <ProduitsFiltres
