@@ -34,16 +34,37 @@ export default function InventoryTab({ token }) {
     getCategories().then(data => setCategories(data)).catch(() => {})
   }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleImageFile = (e) => {
+  const handleImageFile = async (e) => {
     const file = e.target.files[0]
     if (!file) return
+
+    // Aperçu local immédiat
     const reader = new FileReader()
-    reader.onload = (ev) => {
-      const base64 = ev.target.result
-      setImagePreview(base64)
-      setForm(f => ({ ...f, image: base64 }))
-    }
+    reader.onload = (ev) => setImagePreview(ev.target.result)
     reader.readAsDataURL(file)
+
+    // Upload vers le backend pour obtenir une URL persistante
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
+      const formData = new FormData()
+      formData.append('image', file)
+      const res = await fetch(`${apiUrl}/vendor/upload-image`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      })
+      const data = await res.json()
+      if (res.ok && data.url) {
+        setForm(f => ({ ...f, image: data.url }))
+      }
+      // Si upload échoue (ex: serveur hors ligne), on garde base64 en fallback
+    } catch {
+      // Fallback: utilise le base64 déjà mis dans imagePreview
+      setForm(f => ({ ...f, image: f.image || '' }))
+    }
   }
 
   const handleCreate = async (e) => {
