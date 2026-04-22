@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const autresArtisans = [
   {
@@ -8,7 +9,7 @@ const autresArtisans = [
     categorie: 'Alimentation & Terroir',
     lieu: 'Dassa-Zoumé',
     image: 'https://images.unsplash.com/photo-1587049352847-8d4e8941554a?auto=format&fit=crop&q=80',
-    logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDpCuM1raMH_d0yZ4seMOYQeSAXkpCLTGp8PSjBJEqnwjEtefivizDw7wYqIvFGMkRu6XapStFUssIpLwIuedznmegaIr4w4KEIqtoNOrQLpn4bGQLIxwOamAloySaxm2v_62WszW4vc0yj0Pl6AWHxoYIoNM-VgUZzsHhHQ5ASSqF05kBhhq1jZ-Y65gzhmZOuDkPpzO93rYFQAWghChe6Y_UTJrfKlJcZWYf9fwC59HtPheOUIUoZSWVvjKAPot5Fm4RfR71iOZE',
+    logo: 'https://ui-avatars.com/api/?name=Kaba+Fils&background=1B6B3A&color=fff&size=200',
   },
   {
     id: 'tisserands-abomey',
@@ -16,7 +17,7 @@ const autresArtisans = [
     categorie: 'Textile',
     lieu: 'Abomey',
     image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80',
-    logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCczKnDZoTJ8Ra16mREFvEHYD0tieC3q9_k4WUyu-uoxv_VGJ_zStL3gbd3rnwF86q5MpJ4ov1KEr8-Yj1aI38qEnddVmqvREGna0XU60tpXNJyu3pd66fXUBSozJy24AFiGmZ8Cn1QputwrZfvK_WEE8_ro87dmS-G9jpAEH5CFXNQ0DuvgwVoTI8P9YlmdyUKlzhv7vYniNs93vTFx0oN_ZmJyqc3GKFivqizsdjOu-eXbZK7ZXOf2eAhn58Kjll8AJGTffLeIow',
+    logo: 'https://ui-avatars.com/api/?name=Tisserands+Abomey&background=D4920A&color=fff&size=200',
   },
   {
     id: 'bijoux-d-afrique',
@@ -24,7 +25,7 @@ const autresArtisans = [
     categorie: 'Bijouterie',
     lieu: 'Cotonou',
     image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&q=80',
-    logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArFSaPLLYoQ2B9geElveMg62mhBDu-oY0qqMtyZb84vbbJiT8TjxvMRUlBWDe-5S229uLCTRp0lpRp4RKrgR474X653n_ZAC6ogOb96KdjomYMR92phme4pYG9n9tTt1ppg1YHBgl61KhKCMLW48AxsMCB5rZxcG-dADp6wXy2m3TEwOyhCR9JKzMq1bGV9G52m0JkXeRUs3HaqxzXUWIhEHyG4D7HhQBAJnJncOKKbIgcf1xPMwXfXhjjwooj4saRxcuebT3eeLw',
+    logo: 'https://ui-avatars.com/api/?name=Bijoux+Afrique&background=1A1A1A&color=fff&size=200',
   }
 ]
 
@@ -53,12 +54,24 @@ export default function AutresArtisans() {
           {autresArtisans.map((artisan) => (
             <Link key={artisan.id} href={`/boutique/${artisan.id}`} className="group block">
               <div className="rounded-[24px] overflow-hidden mb-5 relative aspect-[5/4] shadow-sm group-hover:shadow-xl border border-gray-100 transition-all duration-500">
-                <img src={artisan.image} alt={artisan.nom} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <Image
+                  src={artisan.image}
+                  alt={artisan.nom}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#111827]/80 via-[#111827]/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
                 
                 {/* Logo superposé dans le coin */}
-                <div className="absolute bottom-5 left-5 w-16 h-16 rounded-[14px] border border-white/20 overflow-hidden bg-white shadow-lg p-1">
-                  <img src={artisan.logo} alt={`Logo ${artisan.nom}`} className="w-full h-full rounded-[10px] object-cover" />
+                <div className="absolute bottom-5 left-5 w-16 h-16 rounded-[14px] border border-white/20 overflow-hidden bg-white shadow-lg p-1 relative">
+                  <Image
+                    src={artisan.logo}
+                    alt={`Logo ${artisan.nom}`}
+                    fill
+                    className="rounded-[10px] object-cover"
+                    sizes="64px"
+                  />
                 </div>
                 
                 {/* Flèche Hover Corner */}

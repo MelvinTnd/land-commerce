@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { updateShop } from '@/lib/api'
 
 export default function SettingsTab({ shop }) {
@@ -45,7 +46,13 @@ export default function SettingsTab({ shop }) {
             <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shop Appearance</h4>
             <div className="flex gap-6 items-center">
               <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-100 relative group cursor-pointer">
-                <img src={shop?.logo || "https://images.unsplash.com/photo-1544626154-1fe3bfab5dd1"} className="w-full h-full object-cover group-hover:opacity-50 transition-opacity" />
+                <Image
+                  src={shop?.logo || "https://images.unsplash.com/photo-1544626154-1fe3bfab5dd1?w=200&h=200&fit=crop"}
+                  alt="Logo boutique"
+                  fill
+                  className="object-cover group-hover:opacity-50 transition-opacity"
+                  sizes="96px"
+                />
                 <span className="material-symbols-outlined absolute text-white opacity-0 group-hover:opacity-100 transition-opacity">photo</span>
               </div>
               <div className="flex-1 max-w-sm">

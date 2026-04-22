@@ -1,8 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { getUser, isAuthenticated, logout, getOrders } from '@/lib/api'
+import { useSession, signOut } from 'next-auth/react'
+import { getOrders } from '@/lib/api'
 
 const adresses = [
   { id: 1, label: 'Domicile', nom: 'Marie Adjovi', telephone: '+229 96 12 34 56', rue: '15 Rue du Commerce', quartier: 'Cadjèhoun', ville: 'Cotonou', defaut: true },
@@ -19,35 +21,39 @@ const statutConfig = {
 
 export default function ComptePage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [onglet, setOnglet] = useState('commandes')
   const [profil, setProfil] = useState({ nom: '', prenom: '', email: '', telephone: '', membreDepuis: '' })
   const [editMode, setEditMode] = useState(false)
   const [commandes, setCommandes] = useState([])
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    // Le middleware gère la protection, mais on garde un fallback
+    if (status === 'unauthenticated') {
       router.push('/connexion')
       return
     }
-    const user = getUser()
-    if (user) {
-      const nameParts = user.name.split(' ')
-      setProfil({
-        prenom: nameParts[0] || '',
-        nom: nameParts.slice(1).join(' ') || '',
-        email: user.email,
-        telephone: user.phone || '',
-        membreDepuis: new Date(user.created_at || Date.now()).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }),
-      })
-    }
+    if (status !== 'authenticated' || !session?.user) return
 
-    getOrders().then(data => {
+    const user = session.user
+    const nameParts = (user.name || '').split(' ')
+    setProfil({
+      prenom: nameParts[0] || '',
+      nom: nameParts.slice(1).join(' ') || '',
+      email: user.email || '',
+      telephone: '',
+      membreDepuis: new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }),
+    })
+
+    // Chargement des commandes via API avec le token de la session
+    getOrders(session.user.apiToken).then(data => {
+      if (!Array.isArray(data)) return
       setCommandes(data.map(cmd => ({
         id: cmd.reference,
         date: new Date(cmd.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
         statut: cmd.status,
         total: parseFloat(cmd.total_amount),
-        articles: cmd.items.map(i => ({
+        articles: (cmd.items || []).map(i => ({
           nom: i.product_name,
           prix: parseFloat(i.unit_price),
           qte: i.quantity,
@@ -55,10 +61,10 @@ export default function ComptePage() {
         }))
       })))
     }).catch(() => {})
-  }, [])
+  }, [status, session, router])
 
   const handleLogout = async () => {
-    try { await logout() } catch {}
+    await signOut({ redirect: false })
     router.push('/connexion')
   }
 
@@ -165,7 +171,9 @@ export default function ComptePage() {
                       <div className="px-6 py-4 flex flex-col gap-3">
                         {cmd.articles.map((a, i) => (
                           <div key={i} className="flex items-center gap-4">
-                            <img src={a.image} alt={a.nom} className="w-14 h-14 rounded-lg object-cover" />
+                            <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative">
+                              <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="56px" />
+                            </div>
                             <div className="flex-1">
                               <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>{a.nom}</p>
                               <p className="text-xs" style={{ color: '#9CA3AF' }}>Qté : {a.qte}</p>

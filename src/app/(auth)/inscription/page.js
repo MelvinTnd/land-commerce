@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function InscriptionPage() {
@@ -8,6 +10,7 @@ export default function InscriptionPage() {
   const [form, setForm] = useState({ nom: '', email: '', tel: '', password: '', type: 'acheteur' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingGoogle, setLoadingGoogle] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e) => {
@@ -25,40 +28,55 @@ export default function InscriptionPage() {
         body: JSON.stringify({
           name: form.nom,
           email: form.email,
-          phone: form.tel,
+          phone: form.tel || null,
           password: form.password,
+          password_confirmation: form.password,
           role: form.type === 'artisan' ? 'vendeur' : 'acheteur'
         })
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        // Gérer les erreurs de validation Laravel
         if (data.errors) {
-          const firstError = Object.values(data.errors)[0][0];
-          throw new Error(firstError);
+          const firstError = Object.values(data.errors)[0][0]
+          throw new Error(firstError)
         }
-        throw new Error(data.message || 'Une erreur est survenue lors de l\'inscription');
+        throw new Error(data.message || "Une erreur est survenue lors de l'inscription")
       }
 
-      // Stocker le token localement
-      localStorage.setItem('auth_token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Inscription réussie → créer la session NextAuth automatiquement
+      const result = await signIn('credentials', {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        // Connexion auto échouée mais inscription ok — on redirige quand même
+        router.push('/connexion')
+        return
+      }
 
       // Redirection en fonction du type de compte choisi
+      router.refresh()
       if (form.type === 'artisan') {
         router.push('/inscription-vendeur')
       } else {
         router.push('/')
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
+  // Connexion Google via NextAuth
+  const handleGoogleSignIn = () => {
+    setLoadingGoogle(true)
+    signIn('google', { callbackUrl: '/' })
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row font-sans">
@@ -76,7 +94,9 @@ export default function InscriptionPage() {
         <div className="relative z-10 flex flex-col h-full p-10 lg:p-14">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-auto">
-            <img src="/logo.png" alt="BéninMarket" className="w-12 h-12 object-contain rounded-xl bg-white/10 p-1" />
+            <div className="w-12 h-12 relative rounded-xl bg-white/10 p-1 overflow-hidden">
+              <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="48px" />
+            </div>
             <span className="font-extrabold text-white text-2xl tracking-tighter">
               BéninMarket
             </span>
@@ -98,9 +118,21 @@ export default function InscriptionPage() {
           {/* Footer Avatars */}
           <div className="flex items-center gap-4 mt-auto">
             <div className="flex -space-x-3">
-              <img className="w-10 h-10 rounded-full border-2 border-[#1B6B3A] object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User 1" />
-              <img className="w-10 h-10 rounded-full border-2 border-[#1B6B3A] object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User 2" />
-              <img className="w-10 h-10 rounded-full border-2 border-[#1B6B3A] object-cover" src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=100&h=100&fit=crop" alt="User 3" />
+              {[
+                'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop',
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop',
+                'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=100&h=100&fit=crop',
+              ].map((src, i) => (
+                <div key={i} className="w-10 h-10 rounded-full border-2 border-[#1B6B3A] overflow-hidden relative">
+                  <Image
+                    src={src}
+                    alt={`Artisan ${i + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="40px"
+                  />
+                </div>
+              ))}
             </div>
             <span className="text-sm text-[#A0D9B9] font-medium">+2,500 artisans nous font confiance</span>
           </div>
@@ -163,6 +195,7 @@ export default function InscriptionPage() {
                   placeholder="Ex: Koffi Mensah"
                   className="w-full bg-[#EAECEE] text-sm font-medium pl-12 pr-4 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
                   value={form.nom} onChange={e => setForm({ ...form, nom: e.target.value })}
+                  required
                 />
               </div>
             </div>
@@ -176,15 +209,15 @@ export default function InscriptionPage() {
                   placeholder="koffi@exemple.bj"
                   className="w-full bg-[#EAECEE] text-sm font-medium pl-12 pr-4 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
                   value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-2">Téléphone</label>
+              <label className="block text-xs font-bold text-gray-700 mb-2">Téléphone <span className="text-gray-400 font-normal">(optionnel)</span></label>
               <div className="flex gap-2">
                 <div className="flex items-center gap-2 bg-[#EAECEE] pl-4 pr-3 py-3.5 rounded-[12px] border border-transparent shrink-0">
-                  {/* Benin Flag approximation using emojis or simple div block */}
                   <span className="text-base leading-none">🇧🇯</span>
                   <span className="text-sm font-bold text-gray-700">+229</span>
                 </div>
@@ -206,6 +239,8 @@ export default function InscriptionPage() {
                   placeholder="••••••••••••"
                   className="w-full bg-[#EAECEE] text-sm font-extrabold tracking-widest pl-12 pr-12 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
                   value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
+                  required
+                  minLength={8}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-800 transition-colors">
                   <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
@@ -215,9 +250,9 @@ export default function InscriptionPage() {
 
             {/* Checkbox */}
             <div className="flex items-start gap-3 mt-2">
-              <input type="checkbox" id="terms" className="mt-1 w-4 h-4 rounded border-gray-300 text-[#1B6B3A] focus:ring-[#1B6B3A]" />
+              <input type="checkbox" id="terms" required className="mt-1 w-4 h-4 rounded border-gray-300 text-[#1B6B3A] focus:ring-[#1B6B3A]" />
               <label htmlFor="terms" className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                J'accepte les <Link href="#" className="font-bold text-[#1B6B3A] hover:underline">Conditions Générales d'Utilisation</Link> et la <Link href="#" className="font-bold text-[#1B6B3A] hover:underline">Politique de Confidentialité</Link> d'Aklunon.
+                J'accepte les <Link href="/cgu" className="font-bold text-[#1B6B3A] hover:underline">Conditions Générales d'Utilisation</Link> et la <Link href="/confidentialite" className="font-bold text-[#1B6B3A] hover:underline">Politique de Confidentialité</Link> de BéninMarket.
               </label>
             </div>
 
@@ -231,18 +266,17 @@ export default function InscriptionPage() {
 
             {/* Submit */}
             <button disabled={loading} className="w-full bg-[#004e2c] hover:bg-[#134e29] text-white font-bold text-[15px] py-4 rounded-[100px] mt-4 flex justify-center items-center gap-2 transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed">
-              {loading ? 'Création en cours...' : 'Création de mon compte'}
+              {loading ? 'Création en cours...' : 'Créer mon compte'}
               {!loading && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
             </button>
 
           </form>
 
-          {/* Socials Divider */}
+          {/* Divider */}
           <div className="relative my-10 flex items-center justify-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
-            {/* Payment badge floating on the divider line */}
             <div className="relative bg-white border border-gray-100 shadow-sm rounded-full px-4 py-2 flex items-center gap-3 ml-auto z-10">
               <div className="flex -space-x-1">
                 <div className="w-6 h-6 rounded-full bg-[#FFCC00] flex items-center justify-center font-extrabold text-[6px] text-[#003366]">MTN</div>
@@ -253,21 +287,32 @@ export default function InscriptionPage() {
                 <span className="text-[7px] text-gray-500 uppercase">Via Mobile Money</span>
               </div>
             </div>
-
             <span className="absolute left-1/2 -translate-x-1/2 bg-[#F9FAFA] px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">
               Ou s'inscrire avec
             </span>
           </div>
 
           {/* Social Buttons */}
-          <div className="grid grid-cols-2 gap-4">
-            <button type="button" className="flex items-center justify-center gap-3 py-3.5 bg-transparent border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
-              <span className="text-[13px] font-bold text-gray-800">Google</span>
-            </button>
-            <button type="button" className="flex items-center justify-center gap-3 py-3.5 bg-transparent border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/480px-Facebook_logo_%28square%29.png" className="w-5 h-5 rounded-sm" alt="Facebook" />
-              <span className="text-[13px] font-bold text-gray-800">Facebook</span>
+          <div className="grid grid-cols-1 gap-3">
+            {/* Google */}
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={loadingGoogle}
+              className="flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors disabled:opacity-70 shadow-sm"
+            >
+              <div className="w-5 h-5 relative shrink-0">
+                <Image
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  fill
+                  className="object-contain"
+                  sizes="20px"
+                />
+              </div>
+              <span className="text-[13px] font-bold text-gray-800">
+                {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
+              </span>
             </button>
           </div>
 

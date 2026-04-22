@@ -48,7 +48,7 @@ export default function BlogUne() {
           </h2>
         </div>
         <Link
-          href="/blog/articles"
+          href="/blog"
           className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-widest text-[#1B6B3A] hover:text-[#134e29] transition-colors bg-[#E6F8EA] px-4 py-2 rounded-full"
         >
           Tous les articles <span className="material-symbols-outlined text-[16px]">arrow_forward</span>

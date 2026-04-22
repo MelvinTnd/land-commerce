@@ -12,7 +12,7 @@ export const defaultCategories = [
     name: 'Art & Sculpture',
     slug: 'artisanat',
     description: 'Bois précieux et statues directement issues des palais royaux.',
-    image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
+    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=600',
     icon: 'palette',
   },
   {
@@ -42,7 +42,7 @@ export const defaultProducts = [
     prix: 45000,
     badge: 'Mis en avant',
     categorie: 'recent',
-    image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
+    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=600',
     stock: 3,
   },
   {

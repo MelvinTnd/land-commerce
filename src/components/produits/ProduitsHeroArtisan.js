@@ -1,66 +1,104 @@
 import Link from 'next/link'
 
+const stats = [
+  { icon: 'storefront', label: 'Boutiques', value: '3+', bg: '#E6F8EA', color: '#1B6B3A' },
+  { icon: 'category', label: 'Catégories', value: '8', bg: '#FEF3C7', color: '#D4920A' },
+  { icon: 'inventory_2', label: 'Produits', value: '12+', bg: '#EDE9FE', color: '#7C3AED' },
+  { icon: 'star', label: 'Note moy.', value: '4.8', bg: '#FCE7F3', color: '#DB2777' },
+]
+
 export default function ProduitsHero({ total = 0 }) {
+  // Met à jour la valeur des produits dynamiquement
+  const statsLive = stats.map(s =>
+    s.label === 'Produits' ? { ...s, value: total > 0 ? `${total}+` : s.value } : s
+  )
+
   return (
-    <section
-      className="relative overflow-hidden py-20 px-6 md:px-10"
-      style={{ background: 'linear-gradient(135deg, #0B4A26 0%, #1B6B3A 60%, #2D8A50 100%)' }}
-    >
-      {/* Cercles décoratifs */}
-      <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-10 border-2 border-white" />
-      <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full opacity-10 border border-white" />
-      <div className="absolute top-1/2 right-1/4 w-4 h-4 rounded-full bg-yellow-300 opacity-40" />
-      <div className="absolute top-1/4 right-1/3 w-2 h-2 rounded-full bg-white opacity-30" />
+    <section className="relative overflow-hidden" style={{ background: '#ffffff' }}>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+      {/* Ligne décorative verte en haut */}
+      <div className="h-1 w-full" style={{ background: 'linear-gradient(90deg, #1B6B3A, #D4920A, #7C3AED, #1B6B3A)' }} />
 
-          {/* Texte gauche */}
-          <div className="flex flex-col gap-5 max-w-xl">
-            <span className="w-fit px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-yellow-900"
-              style={{ background: '#F5B731' }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-14">
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-10">
+
+          {/* Gauche : texte */}
+          <div className="max-w-xl">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-[11px] font-bold mb-6" style={{ color: '#9CA3AF' }}>
+              <Link href="/" className="hover:text-[#1B6B3A] transition-colors">Accueil</Link>
+              <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+              <span style={{ color: '#0D0D0D' }}>Produits</span>
+            </div>
+
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.22em] mb-5"
+              style={{ background: 'rgba(27,107,58,0.08)', color: '#1B6B3A', border: '1px solid rgba(27,107,58,0.18)' }}>
               🛍️ Marketplace BéninMarket
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
-              L'artisanat béninois<br />
-              <span style={{ color: '#A7F3D0' }}>à portée de clic.</span>
+            <h1 className="text-4xl md:text-[52px] font-black text-[#0D0D0D] leading-none tracking-tight mb-5">
+              Catalogue<br />
+              <span style={{ color: '#1B6B3A' }}>Artisanal</span>
             </h1>
-            <p className="text-base text-white/70 leading-relaxed max-w-md">
-              Découvrez {total > 0 ? `${total} produits authentiques` : 'des produits authentiques'} — sculptures, wax, épices, bijoux — directement des mains des artisans du Bénin.
+            <p className="text-[15px] font-medium leading-relaxed mb-7" style={{ color: '#6B7280' }}>
+              {total > 0 ? `${total} produits` : 'Des produits'} authentiques — sculptures, wax, épices, bijoux — sélectionnés directement chez les artisans.
             </p>
 
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-3 flex-wrap">
               <Link href="/boutiques"
-                className="px-6 py-3 rounded-full bg-white font-bold text-sm transition-all hover:bg-gray-100"
-                style={{ color: '#0B4A26' }}>
-                Voir les boutiques
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black text-[12px] uppercase tracking-wider text-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: '#1B6B3A' }}>
+                <span className="material-symbols-outlined text-[16px]">storefront</span>
+                Boutiques
               </Link>
               <Link href="/inscription-vendeur"
-                className="px-6 py-3 rounded-full border border-white/40 text-white font-bold text-sm hover:bg-white/10 transition-all">
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black text-[12px] uppercase tracking-wider transition-all hover:bg-[#F0FDF4]"
+                style={{ border: '1.5px solid rgba(27,107,58,0.25)', color: '#1B6B3A' }}>
                 Devenir vendeur
               </Link>
             </div>
           </div>
 
-          {/* Stats droite */}
-          <div className="grid grid-cols-2 gap-4 shrink-0">
-            {[
-              { icon: 'storefront', label: 'Boutiques', value: '3+' },
-              { icon: 'category', label: 'Catégories', value: '8' },
-              { icon: 'inventory_2', label: 'Produits', value: total > 0 ? `${total}+` : '12+' },
-              { icon: 'star', label: 'Note moy.', value: '4.8/5' },
-            ].map((s) => (
-              <div key={s.label}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-5 flex flex-col items-center text-center gap-2 border border-white/20">
-                <span className="material-symbols-outlined text-yellow-300 text-[28px]">{s.icon}</span>
-                <span className="text-2xl font-black text-white">{s.value}</span>
-                <span className="text-xs font-bold text-white/60 uppercase tracking-wider">{s.label}</span>
-              </div>
-            ))}
-          </div>
+          {/* Droite : stats & filtre rapide */}
+          <div className="flex flex-col gap-4 lg:w-80 shrink-0 w-full">
 
+            {/* Stats grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {statsLive.map(s => (
+                <div key={s.label}
+                  className="flex items-center gap-3 p-4 rounded-2xl bg-white transition-all hover:-translate-y-0.5"
+                  style={{ border: '1px solid #EBEBEB', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: s.bg }}>
+                    <span className="material-symbols-outlined text-[18px]" style={{ color: s.color }}>{s.icon}</span>
+                  </div>
+                  <div>
+                    <p className="font-black text-[18px] leading-none" style={{ color: '#0D0D0D' }}>{s.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide mt-0.5" style={{ color: '#9CA3AF' }}>{s.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Promo badge */}
+            <Link href="/promotions"
+              className="group flex items-center gap-3 p-4 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-md"
+              style={{ background: 'linear-gradient(135deg, #FEF3C7, #FDE68A)', border: '1px solid rgba(212,146,10,0.25)' }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: 'rgba(212,146,10,0.2)' }}>
+                <span className="material-symbols-outlined text-[18px]" style={{ color: '#D4920A' }}>local_offer</span>
+              </div>
+              <div className="flex-1">
+                <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>Promotions actives</p>
+                <p className="text-[11px] font-medium" style={{ color: '#92400E' }}>Jusqu&apos;à -35% sur certains articles</p>
+              </div>
+              <span className="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1" style={{ color: '#D4920A' }}>arrow_forward</span>
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Séparation élégante */}
+      <div className="h-[1px] w-full" style={{ background: 'linear-gradient(90deg, transparent, #EBEBEB, transparent)' }} />
     </section>
   )
 }

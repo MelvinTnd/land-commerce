@@ -3,20 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/lib/CartContext'
-
-const allProduits = [
-  { id: 1, nom: 'Tissu Batik Indigo', categorie: 'Textiles', prix: 45000 },
-  { id: 2, nom: 'Beurre de Karité Bio', categorie: 'Épices', prix: 7500 },
-  { id: 3, nom: "Miel Sauvage d'Atacora", categorie: 'Épices', prix: 12000 },
-  { id: 4, nom: 'Collier en Bronze', categorie: 'Bijoux', prix: 25000 },
-  { id: 5, nom: 'Panier Tressé Artisanal', categorie: 'Artisans', prix: 18500 },
-  { id: 6, nom: "Coffret d'Épices du Bénin", categorie: 'Épices', prix: 22000 },
-  { id: 7, nom: 'Miel Pur des Collines', categorie: 'Alimentation', prix: 4500 },
-  { id: 8, nom: 'Bol Cérémoniel Argile', categorie: 'Artisanat', prix: 12000 },
-  { id: 9, nom: 'Tunique Brodée Kanvô', categorie: 'Mode', prix: 25000 },
-  { id: 10, nom: "Jus d'Ananas Pain de Sucre", categorie: 'Alimentation', prix: 1200 },
-]
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
@@ -29,25 +17,27 @@ export default function Navbar() {
   const [recherche, setRecherche] = useState('')
   const [searchFocus, setSearchFocus] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [userMenu, setUserMenu] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const { data: session } = useSession()
   const { totalArticles } = useCart()
   const searchRef = useRef(null)
+  const userRef = useRef(null)
 
-  // Résultats de recherche en temps réel
-  const resultats = recherche.length >= 2
-    ? allProduits.filter((p) =>
-        p.nom.toLowerCase().includes(recherche.toLowerCase()) ||
-        p.categorie.toLowerCase().includes(recherche.toLowerCase())
-      ).slice(0, 5)
-    : []
+  // Scroll detection
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  // Fermer le dropdown au clic extérieur
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClick = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setSearchFocus(false)
-      }
+      if (searchRef.current && !searchRef.current.contains(e.target)) setSearchFocus(false)
+      if (userRef.current && !userRef.current.contains(e.target)) setUserMenu(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
@@ -56,199 +46,221 @@ export default function Navbar() {
   const handleSearchSubmit = (e) => {
     e.preventDefault()
     if (recherche.trim()) {
-      router.push(`/produits?recherche=${encodeURIComponent(recherche.trim())}`)
+      router.push(`/produits?q=${encodeURIComponent(recherche.trim())}`)
       setRecherche('')
       setSearchFocus(false)
     }
   }
 
-  const handleResultClick = (id) => {
-    router.push(`/produits/${id}`)
-    setRecherche('')
-    setSearchFocus(false)
+  const handleLogout = async () => {
+    setUserMenu(false)
+    await signOut({ redirect: false })
+    router.push('/')
   }
 
+  const user = session?.user
+  const role = user?.role
+
   return (
-    <nav className="bg-white px-4 md:px-8 py-4 flex items-center justify-between relative" style={{ borderBottom: '1px solid #F0EDE8' }}>
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 md:px-6"
+      style={{
+        background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: '1px solid #F0EDE8',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.06)' : 'none',
+      }}>
+      <div className="max-w-[1400px] mx-auto flex items-center h-[68px] gap-4">
 
-      {/* Logo */}
-      <Link href="/" className="flex items-center shrink-0 no-underline">
-        <Image src="/logo.png" alt="BéninMarket" width={40} height={40} className="w-10 h-10 object-contain rounded-xl" />
-        <span className="hidden sm:block ml-3 text-xl font-extrabold" style={{ color: '#1B6B3A', letterSpacing: '-0.5px' }}>
-          BéninMarket
-        </span>
-      </Link>
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <div className="w-9 h-9 relative rounded-xl overflow-hidden">
+            <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="36px" />
+          </div>
+          <span className="hidden sm:block font-black text-[18px] tracking-tight" style={{ color: '#0D0D0D' }}>
+            Bénin<span style={{ color: '#1B6B3A' }}>Market</span>
+          </span>
+        </Link>
 
-      {/* Barre de recherche */}
-      <div className="hidden md:flex items-center flex-1 mx-6 lg:mx-10 max-w-md relative" ref={searchRef}>
-        <form onSubmit={handleSearchSubmit} className="w-full">
-          <div className="flex items-center w-full px-4 py-2.5 rounded-full gap-2 transition-all" style={{ background: searchFocus ? '#fff' : '#F1EFEA', border: searchFocus ? '2px solid #1B6B3A' : '2px solid transparent' }}>
-            <svg width="16" height="16" fill="none" stroke="#9CA3AF" strokeWidth="2" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input
-              type="text"
-              value={recherche}
-              onChange={(e) => setRecherche(e.target.value)}
-              onFocus={() => setSearchFocus(true)}
-              placeholder="Rechercher un produit, un artisan..."
-              className="bg-transparent outline-none text-sm w-full"
-              style={{ color: '#374151' }}
-            />
-            {recherche && (
-              <button type="button" onClick={() => { setRecherche(''); setSearchFocus(false) }} className="text-gray-400 hover:text-gray-600">
-                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>close</span>
+        {/* Search bar */}
+        <div className="hidden md:flex flex-1 max-w-md mx-4 relative" ref={searchRef}>
+          <form onSubmit={handleSearchSubmit} className="w-full">
+            <div className="flex items-center w-full px-4 py-2.5 rounded-full gap-2 transition-all duration-300"
+              style={{
+                background: searchFocus ? '#fff' : '#F1EFEA',
+                border: searchFocus ? '2px solid #1B6B3A' : '2px solid transparent',
+                boxShadow: searchFocus ? '0 0 0 4px rgba(27,107,58,0.08)' : 'none',
+              }}>
+              <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>search</span>
+              <input type="text" value={recherche} onChange={e => setRecherche(e.target.value)}
+                onFocus={() => setSearchFocus(true)}
+                placeholder="Rechercher un produit, un artisan..."
+                className="bg-transparent outline-none text-[13px] font-medium w-full"
+                style={{ color: '#374151' }} />
+              {recherche && (
+                <button type="button" onClick={() => { setRecherche(''); setSearchFocus(false) }}
+                  className="text-gray-400 hover:text-gray-600 transition-colors">
+                  <span className="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* Nav links */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navLinks.map(link => {
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+            return (
+              <Link key={link.label} href={link.href}
+                className="px-4 py-2 rounded-full text-[13px] font-bold transition-all"
+                style={{
+                  color: isActive ? '#1B6B3A' : '#374151',
+                  background: isActive ? 'rgba(27,107,58,0.08)' : 'transparent',
+                }}>
+                {link.label}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Right icons */}
+        <div className="flex items-center gap-2 ml-auto">
+
+          {/* Mobile search */}
+          <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            onClick={() => router.push('/produits')}>
+            <span className="material-symbols-outlined text-[20px]" style={{ color: '#374151' }}>search</span>
+          </button>
+
+          {/* Vendeur space */}
+          {role === 'vendeur' && (
+            <Link href="/vendeur"
+              className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90"
+              style={{ background: 'rgba(27,107,58,0.1)', color: '#1B6B3A' }}>
+              <span className="material-symbols-outlined text-[16px]">storefront</span>
+              <span className="hidden lg:block">Mon Espace</span>
+            </Link>
+          )}
+
+          {/* Panier */}
+          <Link href="/panier"
+            className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            style={{ color: '#374151' }}>
+            <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
+            {totalArticles > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
+                style={{ background: '#D4920A' }}>
+                {totalArticles}
+              </span>
+            )}
+          </Link>
+
+          {/* User menu */}
+          <div className="relative" ref={userRef}>
+            {user ? (
+              <button onClick={() => setUserMenu(!userMenu)}
+                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full transition-all hover:bg-gray-100"
+                style={{ border: '1.5px solid #EBEBEB' }}>
+                <div className="w-7 h-7 rounded-full overflow-hidden relative bg-[#1B6B3A] flex items-center justify-center" >
+                  {user.image
+                    ? <Image src={user.image} alt={user.name || ''} fill className="object-cover" sizes="28px" />
+                    : <span className="text-[12px] font-black text-white">{(user.name || 'U')[0].toUpperCase()}</span>
+                  }
+                </div>
+                <span className="hidden sm:block text-[12px] font-black max-w-[80px] truncate" style={{ color: '#0D0D0D' }}>
+                  {user.name?.split(' ')[0]}
+                </span>
+                <span className="material-symbols-outlined text-[16px]" style={{ color: '#9CA3AF' }}>expand_more</span>
               </button>
+            ) : (
+              <Link href="/connexion"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-black uppercase tracking-wider transition-all hover:-translate-y-0.5 text-white"
+                style={{ background: '#0D0D0D' }}>
+                <span className="material-symbols-outlined text-[16px]">person</span>
+                <span className="hidden sm:block">Connexion</span>
+              </Link>
+            )}
+
+            {/* Dropdown user */}
+            {userMenu && user && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-[20px] py-2 z-50"
+                style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)', border: '1px solid #EBEBEB' }}>
+                {/* User info */}
+                <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid #F3F4F6' }}>
+                  <p className="font-black text-[13px] text-[#0D0D0D]">{user.name}</p>
+                  <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{user.email}</p>
+                  <span className="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wide"
+                    style={{ background: role === 'vendeur' ? 'rgba(27,107,58,0.1)' : 'rgba(0,0,0,0.06)', color: role === 'vendeur' ? '#1B6B3A' : '#6B7280' }}>
+                    {role || 'acheteur'}
+                  </span>
+                </div>
+
+                {[
+                  { href: '/compte', icon: 'person', label: 'Mon compte' },
+                  { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
+                  ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
+                ].map(item => (
+                  <Link key={item.href} href={item.href}
+                    onClick={() => setUserMenu(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-gray-50"
+                    style={{ color: '#374151' }}>
+                    <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+
+                <button onClick={handleLogout}
+                  className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-red-50 w-full text-left mt-1"
+                  style={{ color: '#EF4444', borderTop: '1px solid #F3F4F6' }}>
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                  Se déconnecter
+                </button>
+              </div>
             )}
           </div>
-        </form>
 
-        {/* Dropdown résultats */}
-        {searchFocus && resultats.length > 0 && (
-          <div
-            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl py-2 z-50"
-            style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid #E5E7EB' }}
-          >
-            {resultats.map((r) => (
-              <button
-                key={r.id}
-                onClick={() => handleResultClick(r.id)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-              >
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>{r.nom}</p>
-                  <p className="text-xs" style={{ color: '#9CA3AF' }}>{r.categorie}</p>
-                </div>
-                <p className="text-sm font-bold" style={{ color: '#1B6B3A' }}>
-                  {r.prix.toLocaleString('fr-FR')} <span className="text-[10px] font-normal">FCFA</span>
-                </p>
-              </button>
-            ))}
-            <button
-              onClick={handleSearchSubmit}
-              className="w-full px-4 py-3 text-left text-xs font-bold transition-colors hover:bg-gray-50 flex items-center gap-2"
-              style={{ color: '#1B6B3A', borderTop: '1px solid #F0EDE8' }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>search</span>
-              Voir tous les résultats pour "{recherche}"
-            </button>
-          </div>
-        )}
-
-        {searchFocus && recherche.length >= 2 && resultats.length === 0 && (
-          <div
-            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl p-6 z-50 text-center"
-            style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid #E5E7EB' }}
-          >
-            <p className="text-sm" style={{ color: '#9CA3AF' }}>Aucun résultat pour "{recherche}"</p>
-          </div>
-        )}
+          {/* Hamburger */}
+          <button className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            onClick={() => setMobileMenu(!mobileMenu)}>
+            <span className="material-symbols-outlined text-[22px]" style={{ color: '#374151' }}>
+              {mobileMenu ? 'close' : 'menu'}
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* Navigation — liens */}
-      <div className="hidden lg:flex items-center gap-5">
-        {navLinks.map((link) => {
-          const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-          return (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="text-sm font-medium pb-1 transition-colors"
-              style={{
-                color: isActive ? '#1B6B3A' : '#374151',
-                borderBottom: isActive ? '2px solid #1B6B3A' : '2px solid transparent',
-              }}
-            >
-              {link.label}
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* Icônes droite */}
-      <div className="flex items-center gap-3 md:gap-4 ml-4 md:ml-6">
-
-        {/* Recherche mobile */}
-        <button
-          className="md:hidden text-gray-600 hover:text-green-800 transition-colors"
-          onClick={() => router.push('/produits')}
-        >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-        </button>
-
-        {/* Espace Vendeur */}
-        <Link href="/vendeur" className="text-gray-600 hover:text-green-800 transition-colors hidden md:block" title="Espace Vendeur">
-          <span className="material-symbols-outlined shrink-0" style={{ fontSize: '20px' }}>storefront</span>
-        </Link>
-        
-        {/* Profil */}
-        <Link href="/compte" className="text-gray-600 hover:text-green-800 transition-colors">
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </Link>
-
-        {/* Panier */}
-        <Link href="/panier" className="relative text-gray-600 hover:text-green-800 transition-colors">
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          <span
-            className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center transition-all"
-            style={{
-              background: totalArticles > 0 ? '#D4920A' : '#9CA3AF',
-              fontSize: '9px',
-              fontWeight: '700',
-              transform: totalArticles > 0 ? 'scale(1)' : 'scale(0.8)',
-            }}
-          >
-            {totalArticles}
-          </span>
-        </Link>
-
-        {/* Menu hamburger mobile */}
-        <button
-          className="lg:hidden text-gray-600 hover:text-green-800 transition-colors"
-          onClick={() => setMobileMenu(!mobileMenu)}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
-            {mobileMenu ? 'close' : 'menu'}
-          </span>
-        </button>
-      </div>
-
-      {/* Menu mobile */}
+      {/* Mobile menu */}
       {mobileMenu && (
-        <div
-          className="absolute top-full left-0 right-0 bg-white z-50 py-4 px-6 flex flex-col gap-1 lg:hidden"
-          style={{ boxShadow: '0 12px 40px rgba(0,0,0,0.1)', borderTop: '1px solid #F0EDE8' }}
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white py-4 px-6"
+          style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.1)', borderTop: '1px solid #F0EDE8' }}>
+          {navLinks.map(link => (
+            <Link key={link.label} href={link.href}
               onClick={() => setMobileMenu(false)}
-              className="py-3 px-4 rounded-xl text-sm font-semibold transition-colors hover:bg-gray-50"
-              style={{ color: pathname === link.href ? '#1B6B3A' : '#374151' }}
-            >
+              className="flex items-center gap-3 py-3 px-4 rounded-xl text-[14px] font-bold transition-colors hover:bg-gray-50 mb-1"
+              style={{ color: pathname === link.href ? '#1B6B3A' : '#374151' }}>
               {link.label}
             </Link>
           ))}
-          {/* Recherche mobile */}
-          <form onSubmit={(e) => { handleSearchSubmit(e); setMobileMenu(false) }} className="mt-2">
-            <div className="flex items-center px-4 py-3 rounded-xl gap-2" style={{ background: '#F1EFEA' }}>
-              <svg width="16" height="16" fill="none" stroke="#9CA3AF" strokeWidth="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input type="text" value={recherche} onChange={(e) => setRecherche(e.target.value)}
-                placeholder="Rechercher..." className="bg-transparent outline-none text-sm w-full" style={{ color: '#374151' }} />
+          {!user ? (
+            <div className="flex gap-3 mt-3 pt-3" style={{ borderTop: '1px solid #F0EDE8' }}>
+              <Link href="/connexion" onClick={() => setMobileMenu(false)}
+                className="flex-1 py-3 rounded-2xl text-center text-[13px] font-black text-white"
+                style={{ background: '#0D0D0D' }}>
+                Connexion
+              </Link>
+              <Link href="/inscription" onClick={() => setMobileMenu(false)}
+                className="flex-1 py-3 rounded-2xl text-center text-[13px] font-black"
+                style={{ background: '#F3F4F6', color: '#374151' }}>
+                S'inscrire
+              </Link>
             </div>
-          </form>
+          ) : (
+            <button onClick={() => { setMobileMenu(false); handleLogout() }}
+              className="w-full mt-3 py-3 rounded-2xl text-[13px] font-black text-white"
+              style={{ background: '#EF4444' }}>
+              Se déconnecter
+            </button>
+          )}
         </div>
       )}
     </nav>

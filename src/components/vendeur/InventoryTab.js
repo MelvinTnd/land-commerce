@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { getVendorProducts, createProduct, getCategories } from '@/lib/api'
 
 export default function InventoryTab() {
@@ -188,9 +189,9 @@ export default function InventoryTab() {
                     <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                       <td className="py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 overflow-hidden relative">
                             {p.image
-                              ? <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                              ? <Image src={p.image} alt={p.name} fill className="object-cover" sizes="40px" />
                               : <span className="material-symbols-outlined text-gray-400 text-xl">image</span>
                             }
                           </div>

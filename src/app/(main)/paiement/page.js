@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/lib/CartContext'
 import { checkout, isAuthenticated } from '@/lib/api'
@@ -231,7 +232,9 @@ export default function PaiementPage() {
               <div className="flex flex-col gap-4 mb-6">
                 {articles.map((a) => (
                   <div key={a.id} className="flex items-center gap-3">
-                    <img src={a.image} alt={a.nom} className="w-14 h-14 rounded-lg object-cover shrink-0" />
+                    <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative">
+                      <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="56px" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate" style={{ color: '#1A1A1A' }}>{a.nom}</p>
                       <p className="text-xs" style={{ color: '#9CA3AF' }}>Qté : {a.quantite}</p>

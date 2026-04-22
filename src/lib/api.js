@@ -1,10 +1,13 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
 
 /**
- * Fonction utilitaire pour les appels API
+ * Fonction utilitaire pour les appels API.
+ * authToken : token Laravel passé depuis la session NextAuth (optionnel).
+ *             Si absent, on tente le fallback localStorage (rétrocompatibilité).
  */
-async function apiFetch(endpoint, options = {}) {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
+async function apiFetch(endpoint, options = {}, authToken = null) {
+  const token = authToken
+    || (typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
 
   const headers = {
     'Content-Type': 'application/json',
@@ -92,19 +95,19 @@ export async function updateShop(shopId, data) {
   })
 }
 
-export async function getVendorDashboard() {
-  return apiFetch('/vendor/dashboard')
+export async function getVendorDashboard(authToken = null) {
+  return apiFetch('/vendor/dashboard', {}, authToken)
 }
 
-export async function getVendorProducts() {
-  return apiFetch('/vendor/products')
+export async function getVendorProducts(authToken = null) {
+  return apiFetch('/vendor/products', {}, authToken)
 }
 
-export async function createProduct(productData) {
+export async function createProduct(productData, authToken = null) {
   return apiFetch('/vendor/products', {
     method: 'POST',
     body: JSON.stringify(productData),
-  })
+  }, authToken)
 }
 
 // ========================
@@ -149,15 +152,15 @@ export async function getShop(slug) {
 // ========================
 // COMMANDES / PAYEMENT
 // ========================
-export async function checkout(orderData) {
+export async function checkout(orderData, authToken = null) {
   return apiFetch('/checkout', {
     method: 'POST',
     body: JSON.stringify(orderData),
-  })
+  }, authToken)
 }
 
-export async function getOrders() {
-  return apiFetch('/orders')
+export async function getOrders(authToken = null) {
+  return apiFetch('/orders', {}, authToken)
 }
 
 // ========================

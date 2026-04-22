@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 import { useParams } from 'next/navigation'
 import { getShop } from '@/lib/api'
@@ -14,7 +15,7 @@ const boutiquesData = {
     categorie: 'Artisanat & Sculpture',
     description: 'Expert en sculpture depuis 3 générations, l\'Atelier Kanvô propose des pièces sculptées à la main dans des bois précieux selon les techniques ancestrales du Dahomey.',
     banner: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80',
-    logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBn86rtc6C63qQaDekp0jAyOU9muzPWYngtXZ9UWkihzwo7nXc_cYCa0n-gPOBF_ffJAZ1Wm5Xx1Bxeutkl7iD9y520ZJVQFepzYlBJMaXPDfY6T-CZdBBhhg1omxXCKtsr5Ue1oYxtJX_Ag8NCw_PxqzKBM-mVQcJpXfYg7kJqUQnZ3Ug8jI109CXSbRTkc-ZrxZAtAuucBkjtnEPWauGROLJNUR0jIH3SLUpTZzJalePs9vAgE_2kllxOFqxHDiYG_8-vcXjRxMY',
+    logo: 'https://ui-avatars.com/api/?name=Atelier+Kanvo&background=1B6B3A&color=fff&size=200',
     note: 4.8,
     totalAvis: 234,
     totalProduits: 18,
@@ -31,7 +32,7 @@ const boutiquesData = {
     categorie: 'Alimentation & Terroir',
     description: 'Producteur de miel bio et de produits du terroir depuis 2018. L\'excellence du terroir béninois mise en bouteille.',
     banner: 'https://images.unsplash.com/photo-1587049352847-8d4e8941554a?auto=format&fit=crop&q=80',
-    logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDpCuM1raMH_d0yZ4seMOYQeSAXkpCLTGp8PSjBJEqnwjEtefivizDw7wYqIvFGMkRu6XapStFUssIpLwIuedznmegaIr4w4KEIqtoNOrQLpn4bGQLIxwOamAloySaxm2v_62WszW4vc0yj0Pl6AWHxoYIoNM-VgUZzsHhHQ5ASSqF05kBhhq1jZ-Y65gzhmZOuDkPpzO93rYFQAWghChe6Y_UTJrfKlJcZWYf9fwC59HtPheOUIUoZSWVvjKAPot5Fm4RfR71iOZE',
+    logo: 'https://ui-avatars.com/api/?name=Kaba+Fils&background=D4920A&color=fff&size=200',
     note: 4.6,
     totalAvis: 189,
     totalProduits: 12,
@@ -44,10 +45,10 @@ const boutiquesData = {
 
 const produitsParBoutique = {
   'atelier-kanvo': [
-    { id: 101, nom: 'Statue Royale d\'Abomey', prix: 45000, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQWt3NsHUOOcKgwDibsPPLilYMKO3ygaYWDdvHdsDg4LCV8TJwv0kSw5EGxRz7o_NoxtE39htKAzNOxFGDp8W7asYbM-Txolc1fRRmELgtKN-uGOi83rb0agNO706CIkerjUB4zKOMWpk7o6y6n1j30_lGgaxXcWLNJU38_Gf36l2xgHxgk9E65T8yx1xkIlN5pBnGaqj_mQWuEuzF-xXWpPd6aBEsJh6a-N9i44F-1H2mNrddeHLM_TUvy7dHjVida3nsiXz3e9E', stock: 3, note: 4.8, sold: 142 },
-    { id: 102, nom: 'Masque Gèlèdè', prix: 35000, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCczKnDZoTJ8Ra16mREFvEHYD0tieC3q9_k4WUyu-uoxv_VGJ_zStL3gbd3rnwF86q5MpJ4ov1KEr8-Yj1aI38qEnddVmqvREGna0XU60tpXNJyu3pd66fXUBSozJy24AFiGmZ8Cn1QputwrZfvK_WEE8_ro87dmS-G9jpAEH5CFXNQ0DuvgwVoTI8P9YlmdyUKlzhv7vYniNs93vTFx0oN_ZmJyqc3GKFivqizsdjOu-eXbZK7ZXOf2eAhn58Kjll8AJGTffLeIow', stock: 5, note: 4.9, sold: 88 },
-    { id: 103, nom: 'Tabouret Nago Sculpté', prix: 28000, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBf6a8rpEmYObWv0EpYRAUzfxRQ8GIh0vIYtsN9eGnxLxBXP31391Tj2gpnGDwxQLMyYNuvtclyfJ9aqnjYhdjAmJEpiTkmbs5jCGdxD-N2a08FK6csHFMy1_uV2AxyaeoXN80R-YzSdR9EVAApVSMak6mogDV8F6IF7VPgh_wO1d-Fo5diPOjGkurEHfM7dQy-TfuxvEmmB_EPryQ3e7a_5x8nS_dnbrMNhghA_ew8VNP2X6vdOKSYy2cwQDVCNIwQ8nbf-x3BMzk', stock: 2, note: 4.7, sold: 45 },
-    { id: 104, nom: 'Porte Sacrée Miniature', prix: 55000, image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA2afMDoCl0cmLAnabdQvzASiobQIDKTOHjMNApDH87KmPjBzS_aicU6F06AckemvVfID8xB7JCB2oZmGUmEK0J1IzR4koyPOa9oMfT3ShMuNEUo3_YpuKqhrcLiAYayg_v5WvYUpnBCKIwCLyzE_wjTeQ-E8J9REMsow_PJ2Vt-fqHPkZV8pKrLK1FNNbrKwCHqmA3sxA5asR_V6XEbJFP-w8_l8183VSoaxqbmf0fBRORTIRkXaWjkgGAWbu73U6fUO4lDFOfNvw', stock: 1, note: 5.0, sold: 12 },
+    { id: 101, nom: "Statue Royale d'Abomey", prix: 45000, image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600', stock: 3, note: 4.8, sold: 142 },
+    { id: 102, nom: 'Masque Gèlèdè', prix: 35000, image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600', stock: 5, note: 4.9, sold: 88 },
+    { id: 103, nom: 'Tabouret Nago Sculpté', prix: 28000, image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=600', stock: 2, note: 4.7, sold: 45 },
+    { id: 104, nom: 'Porte Sacrée Miniature', prix: 55000, image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600', stock: 1, note: 5.0, sold: 12 },
   ],
   'kaba-et-fils': [
     { id: 201, nom: 'Miel Pur des Collines', prix: 4500, image: 'https://images.unsplash.com/photo-1587049352847-8d4e8941554a?auto=format&fit=crop&q=80', stock: 50, note: 4.6, sold: 108 },
@@ -126,7 +127,16 @@ export default function BoutiquePage() {
 
       {/* Hero Banner Section */}
       <div className="relative h-[300px] lg:h-[350px] w-full bg-[#111827]">
-        <img src={boutique.banner} alt="Banner" className="w-full h-full object-cover mix-blend-overlay opacity-60" />
+        <div className="absolute inset-0">
+          <Image
+            src={boutique.banner}
+            alt="Banner"
+            fill
+            className="object-cover mix-blend-overlay opacity-60"
+            sizes="100vw"
+            priority
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
         
         {/* Banner Navigation overlay */}
@@ -143,8 +153,14 @@ export default function BoutiquePage() {
         <div className="bg-white rounded-[24px] p-6 lg:p-10 shadow-lg flex flex-col lg:flex-row gap-8 items-start">
           
           {/* Logo */}
-          <div className="w-32 h-32 lg:w-40 lg:h-40 shrink-0 rounded-[20px] bg-white p-2 shadow-sm border border-gray-100 -mt-16 lg:-mt-20">
-             <img src={boutique.logo} alt="Logo" className="w-full h-full object-cover rounded-[14px]" />
+          <div className="w-32 h-32 lg:w-40 lg:h-40 shrink-0 rounded-[20px] bg-white p-2 shadow-sm border border-gray-100 -mt-16 lg:-mt-20 relative overflow-hidden">
+             <Image
+               src={boutique.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=1B6B3A&color=fff&size=200`}
+               alt="Logo"
+               fill
+               className="object-cover rounded-[14px]"
+               sizes="160px"
+             />
           </div>
 
           {/* Info */}
@@ -252,7 +268,13 @@ export default function BoutiquePage() {
                  <div key={p.id} className="bg-white rounded-[24px] p-4 shadow-sm flex flex-col group border border-transparent hover:border-green-100 hover:shadow-md transition-all">
                   <div className="relative rounded-[16px] overflow-hidden bg-gray-100 mb-4 aspect-[4/3]">
                     <Link href={`/produits/${p.id}`}>
-                      <img src={p.image} alt={p.nom} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <Image
+                        src={p.image}
+                        alt={p.nom}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      />
                     </Link>
                     {p.sold > 100 && (
                       <span className="absolute top-3 left-3 bg-[#1B6B3A] text-white text-[8px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm">Bestseller</span>

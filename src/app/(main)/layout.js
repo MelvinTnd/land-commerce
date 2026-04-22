@@ -5,7 +5,7 @@ export default function MainLayout({ children }) {
   return (
     <>
       <Navbar />
-      <main style={{ minHeight: '100vh' }}>
+      <main style={{ minHeight: '100vh', paddingTop: '68px' }}>
         {children}
       </main>
       <Footer />

@@ -12,20 +12,30 @@ const imagesParCategorie = {
   'maison-deco': 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=600',
 }
 
+const gradients = [
+  'from-emerald-900/90 to-emerald-700/80',
+  'from-amber-900/90 to-amber-700/80',
+  'from-purple-900/90 to-purple-700/80',
+  'from-rose-900/90 to-rose-700/80',
+]
+const accents = ['#34d399', '#fbbf24', '#a78bfa', '#fb7185']
+
 export default function CategoriesSection() {
   const [categories, setCategories] = useState(defaultCategories)
+  const [hovered, setHovered] = useState(null)
 
   useEffect(() => {
     getCategories()
       .then(data => {
         if (!data || data.length === 0) return
-        const apiCats = data.map(c => ({
+        const apiCats = data.map((c, i) => ({
           id: c.id,
           name: c.name,
           slug: c.slug,
           icon: c.icon || 'category',
           description: c.description || 'Découvrez nos produits',
           image: imagesParCategorie[c.slug] || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600',
+          count: c.products_count || 0,
         }))
         setCategories(apiCats)
       })
@@ -33,68 +43,90 @@ export default function CategoriesSection() {
   }, [])
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-20 bg-white">
-      <div className="max-w-[1200px] mx-auto">
+    <section className="py-28 px-6 md:px-12 lg:px-20" style={{ background: 'linear-gradient(180deg,#F7F5F0 0%,#EDEAE4 100%)' }}>
+      <div className="max-w-[1280px] mx-auto">
 
         {/* Header */}
-        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-16">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="material-symbols-outlined text-[#1B6B3A] text-[24px]">category</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-[#111827] tracking-tight mb-4">
-            Explorez la <span className="text-[#1B6B3A]">Diversité</span>
+        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-20">
+          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.22em] mb-5 border"
+            style={{ background: 'rgba(27,107,58,0.08)', color: '#1B6B3A', borderColor: 'rgba(27,107,58,0.2)' }}>
+            <span className="material-symbols-outlined text-[15px]">category</span>
+            Univers Exclusifs
+          </span>
+          <h2 className="text-4xl md:text-6xl font-black text-[#0D0D0D] tracking-tight mb-5 leading-[1.05]">
+            Explorez la <span style={{ color: '#1B6B3A' }}>Diversité</span>
           </h2>
-          <p className="text-[15px] font-medium text-gray-500 leading-relaxed">
-            Pour faciliter votre recherche, nous avons regroupé l'excellence des artisans dans nos 4 univers fondateurs. Plongez dans votre passion.
+          <p className="text-[16px] text-gray-500 font-medium leading-relaxed">
+            Quatre univers fondateurs, une infinité de trésors béninois. Chaque catégorie est une invitation au voyage.
           </p>
         </div>
 
-        {/* Grille */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((cat) => (
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {categories.map((cat, idx) => (
             <Link
               key={cat.id}
               href={cat.slug ? `/produits?category=${cat.slug}` : '/produits'}
-              className="group flex flex-col bg-white rounded-[32px] p-4 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#D2F4DE] transition-all duration-300 hover:-translate-y-2"
+              className="group relative flex flex-col overflow-hidden cursor-pointer"
+              style={{ borderRadius: '28px', minHeight: '340px' }}
+              onMouseEnter={() => setHovered(idx)}
+              onMouseLeave={() => setHovered(null)}
             >
-              {/* Image */}
-              <div className="relative w-full aspect-square rounded-[24px] overflow-hidden bg-gray-100 mb-6">
+              {/* Background image */}
+              <div className="absolute inset-0">
                 <Image
                   src={cat.image}
                   alt={cat.name}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw"
                 />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 transition-opacity duration-500"
+                  style={{
+                    background: `linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)`,
+                  }} />
+              </div>
 
-                {/* Icône flottante */}
-                <div className="absolute bottom-4 left-4 w-12 h-12 rounded-[14px] bg-white shadow-lg flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#1B6B3A] text-[24px]">{cat.icon}</span>
+              {/* Accent border glow on hover */}
+              <div className="absolute inset-0 rounded-[28px] transition-all duration-500 pointer-events-none"
+                style={{
+                  boxShadow: hovered === idx ? `0 0 0 2px ${accents[idx % accents.length]}, 0 30px 60px -10px rgba(0,0,0,0.4)` : '0 8px 30px rgba(0,0,0,0.12)',
+                }} />
+
+              {/* Icon top-right */}
+              <div className="relative z-10 flex justify-end p-5">
+                <div className="w-11 h-11 rounded-2xl backdrop-blur-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                  style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}>
+                  <span className="material-symbols-outlined text-white text-[22px]">{cat.icon}</span>
                 </div>
               </div>
 
-              {/* Texte */}
-              <div className="flex flex-col px-2 flex-grow">
-                <h3 className="text-[20px] font-extrabold text-[#111827] group-hover:text-[#1B6B3A] transition-colors mb-2 leading-tight">
+              {/* Bottom content */}
+              <div className="relative z-10 mt-auto p-6">
+                {cat.count > 0 && (
+                  <span className="inline-block text-[10px] font-black uppercase tracking-[0.2em] mb-3 px-3 py-1 rounded-full"
+                    style={{ background: accents[idx % accents.length], color: '#0D0D0D' }}>
+                    {cat.count} produits
+                  </span>
+                )}
+                <h3 className="text-[22px] font-black text-white leading-tight mb-2 tracking-tight">
                   {cat.name}
                 </h3>
-                <p className="text-[13px] text-gray-500 font-medium leading-relaxed mb-6">
+                <p className="text-[13px] text-white/60 font-medium mb-5 line-clamp-2">
                   {cat.description}
                 </p>
-
-                {/* Bouton */}
-                <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-[#1B6B3A] font-extrabold text-[11px] uppercase tracking-widest">
-                  Découvrir l'univers
-                  <div className="w-8 h-8 rounded-full bg-[#E6F8EA] flex items-center justify-center group-hover:bg-[#1B6B3A] group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                  </div>
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300"
+                  style={{ color: accents[idx % accents.length] }}>
+                  Découvrir
+                  <span className="material-symbols-outlined text-[16px] transition-transform duration-300 group-hover:translate-x-1.5">
+                    arrow_forward
+                  </span>
                 </div>
               </div>
             </Link>
           ))}
         </div>
-
       </div>
     </section>
   )

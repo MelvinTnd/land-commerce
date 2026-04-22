@@ -12,10 +12,7 @@ export default function VendeursSection() {
   useEffect(() => {
     getShops()
       .then(data => {
-        if (!data || data.length === 0) {
-          setLoading(false)
-          return
-        }
+        if (!data || data.length === 0) { setLoading(false); return }
         const apiShops = data
           .filter(s => s.status === 'active')
           .map(s => ({
@@ -23,9 +20,7 @@ export default function VendeursSection() {
             nom: s.name,
             subtitle: s.location || 'Bénin',
             avatar: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
-            quote: s.description
-              ? s.description.substring(0, 100) + (s.description.length > 100 ? '...' : '')
-              : 'Produits exceptionnels et savoir-faire unique du Bénin.',
+            quote: s.description ? s.description.substring(0, 110) + (s.description.length > 110 ? '...' : '') : 'Produits exceptionnels et savoir-faire unique du Bénin.',
             extra: s.products_count || 0,
           }))
         if (apiShops.length > 0) setVendeurs(apiShops)
@@ -35,131 +30,128 @@ export default function VendeursSection() {
   }, [])
 
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-20 bg-[#F9FAFA]">
-      <div className="max-w-[1200px] mx-auto">
+    <section className="py-28 px-6 md:px-12 lg:px-20" style={{ background: '#F7F5F0' }}>
+      <div className="max-w-[1280px] mx-auto">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16 border-b border-gray-200 pb-6">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="material-symbols-outlined text-[#EAB308] text-[20px]">verified</span>
-              <p className="text-[10px] uppercase font-extrabold tracking-[0.3em] text-[#1B6B3A]">
-                Nos Maîtres Artisans
-              </p>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#111827] tracking-tight">
-              Vendeurs à <span className="text-[#1B6B3A]">la Une</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.22em] mb-5"
+              style={{ background: 'rgba(27,107,58,0.08)', color: '#1B6B3A', border: '1px solid rgba(27,107,58,0.18)' }}>
+              <span className="material-symbols-outlined text-[14px]">verified</span>
+              Maîtres Artisans
+            </span>
+            <h2 className="text-4xl md:text-5xl font-black text-[#0D0D0D] tracking-tight leading-tight">
+              Vendeurs à <span style={{ color: '#1B6B3A' }}>la Une</span>
             </h2>
           </div>
-          <Link
-            href="/boutiques"
-            className="hidden sm:flex items-center gap-2 font-extrabold text-[11px] uppercase tracking-widest text-[#1B6B3A] hover:text-[#134e29] transition-colors py-2 px-4 rounded-full bg-[#E6F8EA] hover:bg-[#D2F4DE]"
-          >
-            Toutes les Boutiques
+          <Link href="/boutiques"
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all hover:-translate-y-0.5 hover:shadow-md"
+            style={{ background: '#0D0D0D', color: 'white' }}>
+            Toutes les boutiques
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 
-        {/* États : Loading / Vide / Liste */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white rounded-[32px] p-6 border border-gray-100 animate-pulse">
+              <div key={i} className="bg-white rounded-[28px] p-6 animate-pulse" style={{ border: '1px solid #EBEBEB' }}>
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-full bg-gray-100 flex-shrink-0" />
+                  <div className="w-16 h-16 rounded-2xl bg-gray-100 shrink-0" />
                   <div className="flex-1">
                     <div className="h-4 bg-gray-100 rounded mb-2 w-3/4" />
                     <div className="h-3 bg-gray-100 rounded w-1/2" />
                   </div>
                 </div>
-                <div className="h-20 bg-gray-100 rounded-[20px] mb-6" />
-                <div className="flex gap-3">
-                  <div className="w-16 h-16 rounded-[14px] bg-gray-100" />
-                  <div className="w-16 h-16 rounded-[14px] bg-gray-100" />
-                  <div className="w-16 h-16 rounded-[14px] bg-gray-100" />
-                </div>
+                <div className="h-20 bg-gray-100 rounded-[16px] mb-4" />
               </div>
             ))}
           </div>
         ) : vendeurs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-[32px] border border-dashed border-gray-200">
-            <div className="w-20 h-20 rounded-full bg-[#E6F8EA] flex items-center justify-center mb-6">
-              <span className="material-symbols-outlined text-[#1B6B3A] text-[36px]">storefront</span>
-            </div>
-            <h3 className="text-xl font-extrabold text-[#111827] mb-2">Aucun artisan encore inscrit</h3>
-            <p className="text-sm text-gray-500 max-w-sm mb-8 leading-relaxed">
-              La marketplace est prête — les premiers vendeurs peuvent s&apos;inscrire et présenter leurs créations dès maintenant.
-            </p>
-            <Link
-              href="/inscription"
-              className="bg-[#1B6B3A] text-white font-extrabold text-[12px] uppercase tracking-widest px-8 py-4 rounded-full hover:bg-[#134e29] transition-colors shadow-md"
-            >
+          <div className="flex flex-col items-center justify-center py-24 text-center rounded-[32px] bg-white"
+            style={{ border: '1px dashed #D1D5DB' }}>
+            <span className="material-symbols-outlined text-[48px] mb-4" style={{ color: '#D1D5DB' }}>storefront</span>
+            <h3 className="text-xl font-black text-[#0D0D0D] mb-2">Aucun artisan encore inscrit</h3>
+            <Link href="/inscription"
+              className="mt-6 px-8 py-4 rounded-full text-[12px] font-black uppercase tracking-widest text-white"
+              style={{ background: '#1B6B3A' }}>
               Devenir Vendeur →
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {vendeurs.map((vendeur) => (
-              <Link
-                key={vendeur.id}
-                href={`/boutique/${vendeur.id}`}
-                className="group bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#D2F4DE] hover:-translate-y-2 transition-all duration-300 ease-out"
-              >
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="relative shrink-0">
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md relative">
-                      <Image
-                        src={vendeur.avatar}
-                        alt={vendeur.nom}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {vendeurs.map(v => (
+              <Link key={v.id} href={`/boutique/${v.id}`}
+                className="group bg-white overflow-hidden flex flex-col transition-all duration-400 hover:-translate-y-2 hover:shadow-xl"
+                style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+
+                {/* Top color band */}
+                <div className="relative h-24 overflow-hidden"
+                  style={{ background: 'linear-gradient(135deg, #E6F8EA 0%, #D2F4DE 100%)', borderRadius: '28px 28px 0 0' }}>
+                  <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full" style={{ background: 'rgba(27,107,58,0.1)' }} />
+                  <div className="absolute -bottom-4 left-8 w-16 h-16 rounded-full" style={{ background: 'rgba(212,146,10,0.1)' }} />
+                </div>
+
+                {/* Avatar overlapping */}
+                <div className="px-6 pb-6 flex flex-col flex-1 -mt-8">
+                  <div className="flex items-end gap-4 mb-5">
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-white"
+                      style={{ border: '2px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+                      <Image src={v.avatar} alt={v.nom} fill className="object-cover" sizes="64px" />
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#1B6B3A] border-2 border-white flex items-center justify-center shadow-sm">
-                      <span className="material-symbols-outlined text-white text-[12px]">workspace_premium</span>
+                    <div className="pb-1">
+                      <h4 className="text-[16px] font-black text-[#0D0D0D] leading-tight group-hover:text-[#1B6B3A] transition-colors">{v.nom}</h4>
+                      <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide mt-0.5" style={{ color: '#D4920A' }}>
+                        <span className="material-symbols-outlined text-[12px]">location_on</span>
+                        {v.subtitle}
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="font-extrabold text-[16px] text-[#111827] group-hover:text-[#1B6B3A] transition-colors">
-                      {vendeur.nom}
-                    </h4>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#EAB308]">
-                      {vendeur.subtitle}
+
+                  {/* Badge */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wide"
+                      style={{ background: '#E6F8EA', color: '#1B6B3A', border: '1px solid rgba(27,107,58,0.2)' }}>
+                      <span className="material-symbols-outlined text-[11px]">verified</span>
+                      Vendeur Vérifié
+                    </span>
+                    <span className="text-[10px] font-bold" style={{ color: '#9CA3AF' }}>{v.extra} produits</span>
+                  </div>
+
+                  {/* Quote */}
+                  <div className="bg-[#F7F5F0] rounded-[16px] p-4 mb-5 relative">
+                    <span className="material-symbols-outlined absolute -top-3 left-3 text-[28px]" style={{ color: '#E6F8EA' }}>format_quote</span>
+                    <p className="text-[13px] leading-relaxed line-clamp-3 italic" style={{ color: '#6B7280' }}>
+                      "{v.quote}"
                     </p>
                   </div>
-                </div>
 
-                {/* Quote */}
-                <div className="relative bg-gray-50 rounded-[20px] p-5 mb-6 group-hover:bg-[#E6F8EA] transition-colors">
-                  <span className="material-symbols-outlined absolute -top-3 left-4 text-[#D2F4DE] text-[24px]">format_quote</span>
-                  <p className="text-[13px] text-gray-600 font-medium italic leading-relaxed pt-2">
-                    &quot;{vendeur.quote}&quot;
-                  </p>
-                </div>
-
-                {/* Articles count */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
-                    {vendeur.extra} article{vendeur.extra !== 1 ? 's' : ''}
-                  </span>
-                  <span className="text-[11px] font-extrabold text-[#1B6B3A] group-hover:underline">
-                    Voir la boutique →
-                  </span>
+                  {/* CTA */}
+                  <div className="flex items-center justify-between pt-4 mt-auto" style={{ borderTop: '1px solid #F3F4F6' }}>
+                    <span className="text-[11px] font-black uppercase tracking-widest transition-colors group-hover:text-[#1B6B3A]" style={{ color: '#9CA3AF' }}>
+                      Voir la boutique
+                    </span>
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center transition-all group-hover:bg-[#1B6B3A] group-hover:scale-105"
+                      style={{ background: '#E6F8EA', color: '#1B6B3A' }}>
+                      <span className="material-symbols-outlined text-[18px] group-hover:text-white transition-colors group-hover:translate-x-0.5">arrow_forward</span>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
           </div>
         )}
 
-        <div className="mt-10 flex justify-center sm:hidden">
-          <Link href="/boutiques" className="inline-flex items-center gap-2 font-extrabold text-[12px] uppercase tracking-widest text-[#1B6B3A] bg-[#E6F8EA] py-4 px-8 rounded-full shadow-sm">
-            Toutes les Boutiques
+        {/* Mobile CTA */}
+        <div className="mt-10 flex justify-center md:hidden">
+          <Link href="/boutiques"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-[11px] font-black uppercase tracking-widest text-white"
+            style={{ background: '#0D0D0D' }}>
+            Toutes les boutiques
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
-
       </div>
     </section>
   )

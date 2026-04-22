@@ -1,104 +1,122 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useSession, signOut } from 'next-auth/react'
 import InventoryTab from '@/components/vendeur/InventoryTab'
 import ReviewsTab from '@/components/vendeur/ReviewsTab'
 import SettingsTab from '@/components/vendeur/SettingsTab'
-import { getVendorDashboard, getUser, isAuthenticated, logout } from '@/lib/api'
+import { getVendorDashboard } from '@/lib/api'
 
 export default function EspaceVendeur() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [activeTab, setActiveTab] = useState('Dashboard')
   const [shopData, setShopData] = useState(null)
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 })
-  const [userName, setUserName] = useState('')
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (status === 'unauthenticated') {
       router.push('/connexion')
       return
     }
-    const user = getUser()
-    if (user) setUserName(user.name)
+    if (status !== 'authenticated' || !session?.user) return
 
-    getVendorDashboard()
+    getVendorDashboard(session.user.apiToken)
       .then(data => {
         if (data.shop) setShopData(data.shop)
         if (data.stats) setStats(data.stats)
       })
       .catch(() => {})
-  }, [])
+  }, [status, session, router])
 
   const handleLogout = async () => {
-    try { await logout() } catch {}
+    await signOut({ redirect: false })
     router.push('/connexion')
   }
 
+  const userName = session?.user?.name || ''
+
   const navItems = [
-    { name: "Dashboard", icon: "dashboard" },
-    { name: "Inventory & Stock", icon: "inventory_2" },
-    { name: "Sales Analytics", icon: "bar_chart" },
-    { name: "Customer Reviews", icon: "forum", badge: "+12" },
-    { name: "Marketing Tools", icon: "campaign" },
-    { name: "Store Settings", icon: "settings" }
+    { name: 'Tableau de bord', icon: 'dashboard' },
+    { name: 'Inventaire & Stock', icon: 'inventory_2' },
+    { name: 'Analyses des ventes', icon: 'bar_chart' },
+    { name: 'Avis clients', icon: 'forum', badge: '+12' },
+    { name: 'Outils marketing', icon: 'campaign' },
+    { name: 'Paramètres boutique', icon: 'settings' },
   ]
 
   const metrics = [
-    { title: "TOTAL REVENUE", value: stats.revenue ? `${(stats.revenue/1000000).toFixed(1)}M` : "0", suffix: " CFA", badge: "+12.4%", badgePos: true, icon: "analytics", iconColor: "text-green-600", iBg: "bg-green-100/50" },
-    { title: "AVG. RATING", value: "4.9", suffix: "/ 5.0", badge: "Top 1%", badgePos: true, badgeBg: 'bg-orange-50 text-orange-600', icon: "star", iconColor: "text-orange-500", iBg: "bg-orange-100/50" },
-    { title: "PRODUITS", value: String(stats.products), suffix: " actifs", badge: "", badgeBg: 'bg-blue-50 text-blue-600', icon: "inventory_2", iconColor: "text-blue-500", iBg: "bg-blue-100/50" },
-    { title: "RESPONSE RATE", value: "99%", suffix: " speed", badge: "< 10 min", badgeBg: 'bg-purple-50 text-purple-600', icon: "chat", iconColor: "text-purple-500", iBg: "bg-purple-100/50" },
+    { title: 'Revenus totaux', value: stats.revenue ? `${(stats.revenue/1000000).toFixed(1)}M` : '0', suffix: ' FCFA', badge: '+12.4%', icon: 'analytics', iconColor: '#1B6B3A', iBg: '#E6F8EA', badgeColor: '#1B6B3A', badgeBg: '#E6F8EA' },
+    { title: 'Note moyenne', value: '4.9', suffix: '/ 5.0', badge: 'Top 1%', icon: 'star', iconColor: '#D4920A', iBg: '#FEF3C7', badgeColor: '#D4920A', badgeBg: '#FEF3C7' },
+    { title: 'Produits actifs', value: String(stats.products || 0), suffix: ' articles', badge: '', icon: 'inventory_2', iconColor: '#7C3AED', iBg: '#EDE9FE', badgeColor: '#7C3AED', badgeBg: '#EDE9FE' },
+    { title: 'Taux de réponse', value: '99%', suffix: '', badge: '< 10 min', icon: 'chat', iconColor: '#DB2777', iBg: '#FCE7F3', badgeColor: '#DB2777', badgeBg: '#FCE7F3' },
   ]
 
   return (
-    <div className="min-h-screen pt-24 pb-20 font-sans" style={{ background: '#F5F5F3' }}>
+    <div className="min-h-screen pt-24 pb-20 font-sans" style={{ background: '#F7F5F0' }}>
       <div className="max-w-[1400px] mx-auto px-6">
 
-        {/* Top Profile Card */}
-        <div className="bg-white rounded-3xl p-5 md:p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center shadow-sm">
-          <div className="flex items-center gap-5">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2afMDoCl0cmLAnabdQvzASiobQIDKTOHjMNApDH87KmPjBzS_aicU6F06AckemvVfID8xB7JCB2oZmGUmEK0J1IzR4koyPOa9oMfT3ShMuNEUo3_YpuKqhrcLiAYayg_v5WvYUpnBCKIwCLyzE_wjTeQ-E8J9REMsow_PJ2Vt-fqHPkZV8pKrLK1FNNbrKwCHqmA3sxA5asR_V6XEbJFP-w8_l8183VSoaxqbmf0fBRORTIRkXaWjkgGAWbu73U6fUO4lDFOfNvw"
-              alt="Atelier du Dahomey"
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h2 className="text-xl font-bold text-gray-900 tracking-tight">{shopData?.name || userName || 'Ma Boutique'}</h2>
-                <span className="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
-                  <span className="material-symbols-outlined text-[12px]">verified</span> {shopData?.status === 'active' ? 'VERIFIED' : 'EN ATTENTE'}
-                </span>
+        {/* Header Vendeur premium */}
+        <div className="relative overflow-hidden rounded-[32px] mb-8 p-8"
+          style={{ background: 'linear-gradient(160deg, #1B6B3A 0%, #0D4A28 100%)' }}>
+          <div className="absolute inset-0 opacity-10 pointer-events-none"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30H15L30 0zm0 60L15 30h30L30 60z' fill='white' fill-opacity='1'/%3E%3C/svg%3E")` }} />
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="relative w-16 h-16 rounded-[20px] overflow-hidden" style={{ border: '3px solid rgba(255,255,255,0.3)' }}>
+                <Image
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(shopData?.name || userName || 'B')}&background=D4920A&color=fff&size=200`}
+                  alt="Avatar boutique" fill className="object-cover" sizes="64px"
+                />
               </div>
-              <p className="text-xs text-gray-500 font-medium">{shopData?.location || 'Artisan'} • {userName}</p>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-xl font-black text-white">{shopData?.name || userName || 'Ma Boutique'}</h1>
+                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase"
+                    style={{ background: 'rgba(212,146,10,0.25)', color: '#FDE68A', border: '1px solid rgba(212,146,10,0.4)' }}>
+                    <span className="material-symbols-outlined text-[11px]">verified</span>
+                    {shopData?.status === 'active' ? 'Vérifié' : 'En attente'}
+                  </span>
+                </div>
+                <p className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  {shopData?.location || 'Bénin'} · {userName}
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
-            <button className="flex-1 md:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs px-6 py-2.5 rounded-full transition-colors">Edit Profile</button>
-            <button className="flex-1 md:flex-none bg-[#1B6B3A] hover:bg-[#08381d] text-white font-bold text-xs px-6 py-2.5 rounded-full flex items-center justify-center gap-2 transition-colors">
-              <span className="material-symbols-outlined text-[16px]">add</span> New Product
-            </button>
+            <div className="flex gap-3">
+              <button className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider transition-all hover:opacity-80"
+                style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.25)' }}>
+                Modifier le profil
+              </button>
+              <button className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider flex items-center gap-2 transition-all hover:opacity-90"
+                style={{ background: '#D4920A', color: 'white' }}>
+                <span className="material-symbols-outlined text-[16px]">add</span>
+                Nouveau produit
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Metrics Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+        {/* Métriques */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {metrics.map((m, i) => (
-            <div key={i} className="bg-white rounded-3xl p-5 shadow-sm">
-              <div className="flex justify-between items-start mb-4">
-                <div className={`w-10 h-10 rounded-xl ${m.iBg} ${m.iconColor} flex items-center justify-center`}>
-                  <span className="material-symbols-outlined text-xl">{m.icon}</span>
+            <div key={i} className="bg-white rounded-[24px] p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
+              style={{ border: '1px solid #EBEBEB', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
+              <div className="flex justify-between items-start mb-5">
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: m.iBg }}>
+                  <span className="material-symbols-outlined text-[22px]" style={{ color: m.iconColor }}>{m.icon}</span>
                 </div>
                 {m.badge && (
-                  <span className={`text-[9px] font-bold px-2.5 py-1 rounded-full ${m.badgeBg || 'bg-green-50 text-green-700'}`}>
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full" style={{ background: m.badgeBg, color: m.badgeColor }}>
                     {m.badge}
                   </span>
                 )}
               </div>
-              <p className="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-widest">{m.title}</p>
-              <h3 className="text-2xl font-extrabold text-gray-900 flex items-baseline">
-                {m.value}
-                {m.suffix && <span className="text-xs font-semibold text-gray-400 ml-1">{m.suffix}</span>}
+              <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-1" style={{ color: '#9CA3AF' }}>{m.title}</p>
+              <h3 className="text-2xl font-black" style={{ color: '#0D0D0D' }}>
+                {m.value}<span className="text-sm font-medium ml-1" style={{ color: '#9CA3AF' }}>{m.suffix}</span>
               </h3>
             </div>
           ))}
@@ -110,42 +128,44 @@ export default function EspaceVendeur() {
           {/* Main Content (Left) */}
           <div className="flex-1 flex flex-col gap-6">
 
-            {activeTab === 'Dashboard' && (
+            {activeTab === 'Tableau de bord' && (
               <>
-                {/* Sales Performance */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm">
+                {/* Performances des ventes */}
+                <div className="bg-white rounded-[28px] p-7" style={{ border: '1px solid #EBEBEB' }}>
                   <div className="flex justify-between items-start mb-8">
                     <div>
-                      <h3 className="font-bold text-gray-900 text-base mb-1">Sales Performance</h3>
-                      <p className="text-xs text-gray-500">Monitoring your shop's growth across the last 7 days</p>
+                      <h3 className="font-black text-[16px] mb-1" style={{ color: '#0D0D0D' }}>Performances des ventes</h3>
+                      <p className="text-[12px] font-medium" style={{ color: '#9CA3AF' }}>Suivi de la croissance sur 7 jours</p>
                     </div>
-                    <div className="flex bg-gray-50 rounded-full p-1 border border-gray-100">
-                      <button className="px-4 py-1.5 text-[10px] font-bold bg-white text-gray-900 shadow-sm rounded-full">7D</button>
-                      <button className="px-4 py-1.5 text-[10px] font-bold text-gray-500 hover:text-gray-700 rounded-full transition-colors">30D</button>
-                      <button className="px-4 py-1.5 text-[10px] font-bold text-gray-500 hover:text-gray-700 rounded-full transition-colors">1Y</button>
+                    <div className="flex rounded-full p-1 gap-1" style={{ background: '#F3F4F6' }}>
+                      {['7J', '30J', '1A'].map(p => (
+                        <button key={p} className="px-4 py-1.5 text-[10px] font-black rounded-full transition-all"
+                          style={p === '7J' ? { background: '#1B6B3A', color: 'white' } : { color: '#9CA3AF' }}>{p}</button>
+                      ))}
                     </div>
                   </div>
-                  {/* Chart Mock */}
-                  <div className="h-[200px] w-full relative flex flex-col justify-end">
-                    <div className="absolute inset-x-0 bottom-6 top-0 flex items-center justify-center pointer-events-none">
-                      <svg width="100%" height="100%" viewBox="0 0 500 150" preserveAspectRatio="none">
-                        <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40 L500,150 L0,150 Z" fill="rgba(11, 74, 40, 0.05)" />
-                        <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40" fill="none" stroke="#1B6B3A" strokeWidth="3" />
-                        <circle cx="250" cy="60" r="4" fill="#1B6B3A" stroke="white" strokeWidth="2" />
-                        <circle cx="500" cy="40" r="4" fill="#1B6B3A" stroke="white" strokeWidth="2" />
-                      </svg>
-                    </div>
-                    {/* Axes */}
-                    <div className="flex justify-between text-[10px] text-gray-400 font-medium px-4 border-t border-gray-100 pt-3 relative z-10 w-full mb-2">
-                      <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                    </div>
+                  <div className="h-[200px] w-full relative">
+                    <svg width="100%" height="100%" viewBox="0 0 500 150" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#1B6B3A" stopOpacity="0.15"/>
+                          <stop offset="100%" stopColor="#1B6B3A" stopOpacity="0"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40 L500,150 L0,150 Z" fill="url(#chartGrad)" />
+                      <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40" fill="none" stroke="#1B6B3A" strokeWidth="3"/>
+                      {[[250,60],[500,40]].map(([cx,cy],i) => <circle key={i} cx={cx} cy={cy} r="5" fill="#1B6B3A" stroke="white" strokeWidth="2"/>)}
+                    </svg>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-bold px-2 pt-4 border-t border-gray-100 mt-2" style={{ color: '#9CA3AF' }}>
+                    {['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(j => <span key={j}>{j}</span>)}
                   </div>
                   <div className="flex justify-center gap-8 mt-4">
-                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500">
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#1B6B3A]"></div>Net Sales
+                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold" style={{ color: '#9CA3AF' }}>
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#1B6B3A]"></div>Ventes nettes
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold text-gray-500">
-                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>Gross Sales
+                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold" style={{ color: '#9CA3AF' }}>
+                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>Ventes brutes
                     </div>
                   </div>
                 </div>
@@ -208,7 +228,15 @@ export default function EspaceVendeur() {
                         {/* Row 1 */}
                         <tr>
                           <td className="py-4 border-b border-gray-50 flex items-center gap-3">
-                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuArFSaPLLYoQ2B9geElveMg62mhBDu-oY0qqMtyZb84vbbJiT8TjxvMRUlBWDe-5S229uLCTRp0lpRp4RKrgR474X653n_ZAC6ogOb96KdjomYMR92phme4pYG9n9tTt1ppg1YHBgl61KhKCMLW48AxsMCB5rZxcG-dADp6wXy2m3TEwOyhCR9JKzMq1bGV9G52m0JkXeRUs3HaqxzXUWIhEHyG4D7HhQBAJnJncOKKbIgcf1xPMwXfXhjjwooj4saRxcuebT3eeLw" className="w-10 h-10 rounded-lg object-cover bg-gray-100" />
+                            <div className="w-10 h-10 rounded-lg overflow-hidden relative flex-shrink-0 bg-gray-100">
+                              <Image
+                                src="https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=200"
+                                alt="Queen Mother Bronze Bust"
+                                fill
+                                className="object-cover"
+                                sizes="40px"
+                              />
+                            </div>
                             <span className="font-bold text-xs text-gray-800">Queen Mother Bronze Bust</span>
                           </td>
                           <td className="py-4 border-b border-gray-50 text-[11px] font-medium text-gray-500">MK-0091</td>
@@ -269,7 +297,13 @@ export default function EspaceVendeur() {
                     {/* Product 1 */}
                     <div className="bg-white rounded-[24px] p-4 shadow-sm flex flex-col group">
                       <div className="relative rounded-[16px] overflow-hidden bg-gray-100 mb-4 aspect-[4/3]">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQWt3NsHUOOcKgwDibsPPLilYMKO3ygaYWDdvHdsDg4LCV8TJwv0kSw5EGxRz7o_NoxtE39htKAzNOxFGDp8W7asYbM-Txolc1fRRmELgtKN-uGOi83rb0agNO706CIkerjUB4zKOMWpk7o6y6n1j30_lGgaxXcWLNJU38_Gf36l2xgHxgk9E65T8yx1xkIlN5pBnGaqj_mQWuEuzF-xXWpPd6aBEsJh6a-N9i44F-1H2mNrddeHLM_TUvy7dHjVida3nsiXz3e9E" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <Image
+                          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600"
+                          alt="Ouidah Python-Print Tote"
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
                         <span className="absolute top-3 left-3 bg-[#1B6B3A] text-white text-[8px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm">Bestseller</span>
                       </div>
                       <div className="flex justify-between items-start mb-2">
@@ -288,8 +322,14 @@ export default function EspaceVendeur() {
 
                     {/* Product 2 */}
                     <div className="bg-white rounded-[24px] p-4 shadow-sm flex flex-col group">
-                      <div className="relative rounded-[16px] overflow-hidden bg-[#1A1A1A] mb-4 aspect-[4/3] flex items-center justify-center">
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpCuM1raMH_d0yZ4seMOYQeSAXkpCLTGp8PSjBJEqnwjEtefivizDw7wYqIvFGMkRu6XapStFUssIpLwIuedznmegaIr4w4KEIqtoNOrQLpn4bGQLIxwOamAloySaxm2v_62WszW4vc0yj0Pl6AWHxoYIoNM-VgUZzsHhHQ5ASSqF05kBhhq1jZ-Y65gzhmZOuDkPpzO93rYFQAWghChe6Y_UTJrfKlJcZWYf9fwC59HtPheOUIUoZSWVvjKAPot5Fm4RfR71iOZE" className="h-[120%] object-cover opacity-90 group-hover:scale-105 transition-transform duration-500" />
+                      <div className="relative rounded-[16px] overflow-hidden bg-[#1A1A1A] mb-4 aspect-[4/3]">
+                        <Image
+                          src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600"
+                          alt="Fon Dynasty Bronze Mask"
+                          fill
+                          className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
                         <span className="absolute top-3 left-3 bg-[#EA580C] text-white text-[8px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm">High Margin</span>
                       </div>
                       <div className="flex justify-between items-start mb-2">
@@ -319,17 +359,23 @@ export default function EspaceVendeur() {
               </>
             )}
 
-            {activeTab === 'Inventory & Stock' && <InventoryTab />}
-            {activeTab === 'Customer Reviews' && <ReviewsTab />}
-            {activeTab === 'Store Settings' && <SettingsTab shop={shopData} />}
-            {activeTab === 'Sales Analytics' && (
-              <div className="bg-white rounded-[24px] p-8 shadow-sm flex items-center justify-center min-h-[400px]">
-                <p className="text-gray-400 font-bold text-sm">Sales Analytics (Coming soon)</p>
+            {activeTab === 'Inventaire & Stock' && <InventoryTab />}
+            {activeTab === 'Avis clients' && <ReviewsTab />}
+            {activeTab === 'Paramètres boutique' && <SettingsTab shop={shopData} />}
+            {activeTab === 'Analyses des ventes' && (
+              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
+                <div className="text-center">
+                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>bar_chart</span>
+                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Analyses des ventes — Bientôt disponible</p>
+                </div>
               </div>
             )}
-            {activeTab === 'Marketing Tools' && (
-              <div className="bg-white rounded-[24px] p-8 shadow-sm flex items-center justify-center min-h-[400px]">
-                <p className="text-gray-400 font-bold text-sm">Marketing Tools (Coming soon)</p>
+            {activeTab === 'Outils marketing' && (
+              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
+                <div className="text-center">
+                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>campaign</span>
+                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Outils marketing — Bientôt disponible</p>
+                </div>
               </div>
             )}
 

@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function DetailGalerie({ produit }) {
   const [imageActive, setImageActive] = useState(0)
@@ -38,10 +39,12 @@ export default function DetailGalerie({ produit }) {
         className="relative rounded-3xl overflow-hidden"
         style={{ height: '480px', background: '#F0EDE8' }}
       >
-        <img
+        <Image
           src={images[imageActive]}
           alt="Produit"
-          className="w-full h-full object-cover transition-all duration-500"
+          fill
+          className="object-cover transition-all duration-500"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
 
@@ -58,11 +61,15 @@ export default function DetailGalerie({ produit }) {
               opacity: imageActive === i ? 1 : 0.6,
             }}
           >
-            <img
+          <div className="relative w-full h-full">
+            <Image
               src={img}
               alt={`Vue ${i + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="80px"
             />
+          </div>
           </button>
         ))}
       </div>
