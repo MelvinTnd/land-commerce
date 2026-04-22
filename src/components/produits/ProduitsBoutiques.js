@@ -2,127 +2,109 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { getShops } from '@/lib/api'
+import Image from 'next/image'
 
-const FALLBACK_BOUTIQUES = [
-  { id: 1, name: 'Atelier Kanvô', location: 'Abomey', slug: 'atelier-kanvo',
-    avatar: 'https://images.unsplash.com/photo-1582641748784-8d3d06ad87e0?w=200&h=200&fit=crop', ventes: 142, note: 4.8 },
-  { id: 2, name: 'Kaba & Fils', location: 'Dassa-Zoumé', slug: 'kaba-et-fils',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop', ventes: 210, note: 4.6 },
-  { id: 3, name: 'Monteiro Fashion', location: 'Cotonou', slug: 'monteiro-fashion',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop', ventes: 76, note: 4.9 },
-]
-
-const COLORS = ['#1B6B3A', '#D4920A', '#6B3A1B', '#1B3A6B']
+const COLORS = ['#1B6B3A', '#D4920A', '#7C3AED', '#DB2777']
 
 export default function ProduitsBoutiques() {
-  const [boutiques, setBoutiques] = useState(FALLBACK_BOUTIQUES)
+  const [boutiques, setBoutiques] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     getShops()
       .then(data => {
-        const list = data.data || data
-        if (Array.isArray(list) && list.length > 0) {
-          setBoutiques(list.slice(0, 4).map((s, i) => ({
-            id: s.id,
-            name: s.name,
-            location: s.location || 'Bénin',
-            slug: s.slug || s.id,
-            avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(s.name)}&backgroundColor=${COLORS[i % COLORS.length].slice(1)}`,
-            ventes: s.products_count || 0,
-            note: 4.5 + Math.random() * 0.5,
-          })))
-        }
+        const list = Array.isArray(data) ? data : (data.data || [])
+        setBoutiques(list.slice(0, 4).map((s, i) => ({
+          id: s.id,
+          name: s.name,
+          location: s.location || 'Bénin',
+          slug: s.slug,
+          logo: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=${COLORS[i % COLORS.length].slice(1)}&color=fff&size=200`,
+          products_count: s.products_count || 0,
+          color: COLORS[i % COLORS.length],
+        })))
       })
-      .catch(() => {})
+      .catch(() => setBoutiques([]))
+      .finally(() => setLoading(false))
   }, [])
 
+  if (loading) return null
+  if (boutiques.length === 0) return null
+
   return (
-    <section className="px-6 md:px-10 py-20" style={{ background: '#F7F5F0' }}>
-      <div className="max-w-7xl mx-auto">
+    <section style={{ background: '#F7F5F0', padding: '64px 40px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* En-tête */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <span className="text-xs font-black uppercase tracking-widest text-[#1B6B3A] mb-2 block">
-              Nos partenaires
+            <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#1B6B3A', display: 'block', marginBottom: 6 }}>
+              Nos artisans
             </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold" style={{ color: '#1A1A1A' }}>
-              Boutiques d'Exception
+            <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111827', margin: 0 }}>
+              Boutiques d&apos;Exception
             </h2>
-            <p className="text-sm mt-2 max-w-sm" style={{ color: '#9CA3AF' }}>
-              Des artisans soigneusement sélectionnés pour la qualité de leur travail et leur authenticité.
+            <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 6, maxWidth: 380 }}>
+              Des artisans soigneusement sélectionnés pour la qualité et l&apos;authenticité de leur travail.
             </p>
           </div>
-          <Link
-            href="/boutiques"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border transition-all hover:bg-[#1B6B3A] hover:text-white"
-            style={{ borderColor: '#1B6B3A', color: '#1B6B3A' }}
-          >
+          <Link href="/boutiques"
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 999, border: '1.5px solid #1B6B3A', color: '#1B6B3A', fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap' }}>
             Toutes les boutiques
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </Link>
         </div>
 
         {/* Grille boutiques */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {boutiques.map((boutique, i) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+          {boutiques.map((b) => (
             <Link
-              key={boutique.id}
-              href={`/boutiques/${boutique.slug}`}
-              className="group bg-white rounded-3xl p-6 flex flex-col items-center text-center gap-4 transition-all hover:-translate-y-2 hover:shadow-2xl"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.06)', border: '1px solid #F0EDE8' }}
+              key={b.id}
+              href={`/boutiques/${b.slug}`}
+              style={{ textDecoration: 'none' }}
             >
-              {/* Badge numéro */}
-              <div className="relative">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden"
-                  style={{ border: `3px solid ${COLORS[i % COLORS.length]}20` }}>
-                  <img
-                    src={boutique.avatar}
-                    alt={boutique.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+              <div style={{
+                background: '#fff',
+                borderRadius: 24,
+                padding: '24px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                gap: 12,
+                border: '1px solid #F0EDE8',
+                boxShadow: '0 2px 16px rgba(0,0,0,0.05)',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.12)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 16px rgba(0,0,0,0.05)' }}>
+                {/* Logo */}
+                <div style={{ width: 72, height: 72, borderRadius: 18, overflow: 'hidden', border: `3px solid ${b.color}20`, position: 'relative', flexShrink: 0 }}>
+                  <Image src={b.logo} alt={b.name} fill style={{ objectFit: 'cover' }} unoptimized sizes="72px" />
                 </div>
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-black"
-                  style={{ background: COLORS[i % COLORS.length] }}>
-                  {i + 1}
+
+                {/* Infos */}
+                <div>
+                  <p style={{ fontWeight: 900, fontSize: 15, color: '#111827', margin: 0 }}>{b.name}</p>
+                  <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 3 }}>📍 {b.location}</p>
                 </div>
-              </div>
 
-              {/* Infos */}
-              <div className="flex flex-col gap-1">
-                <h4 className="font-extrabold text-[15px]" style={{ color: '#1A1A1A' }}>
-                  {boutique.name}
-                </h4>
-                <p className="text-xs font-medium" style={{ color: '#9CA3AF' }}>
-                  📍 {boutique.location}
-                </p>
-              </div>
+                {/* Badge produits */}
+                <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 999, background: `${b.color}15`, color: b.color }}>
+                  {b.products_count} produit{b.products_count > 1 ? 's' : ''}
+                </span>
 
-              {/* Étoiles */}
-              <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map(star => (
-                  <svg key={star} width="13" height="13"
-                    fill={star <= Math.round(boutique.note) ? '#F5B731' : 'none'}
-                    stroke="#F5B731" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-                <span className="text-xs font-bold ml-1" style={{ color: '#374151' }}>
-                  {boutique.note.toFixed(1)}
+                {/* CTA */}
+                <span style={{ fontSize: 11, fontWeight: 800, color: b.color }}>
+                  Voir la boutique →
                 </span>
               </div>
-
-              {/* CTA */}
-              <span className="text-xs font-bold px-4 py-1.5 rounded-full transition-all group-hover:text-white"
-                style={{ background: `${COLORS[i % COLORS.length]}15`, color: COLORS[i % COLORS.length] }}>
-                Voir la boutique →
-              </span>
             </Link>
           ))}
         </div>
-
       </div>
     </section>
   )

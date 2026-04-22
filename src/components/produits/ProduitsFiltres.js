@@ -41,9 +41,13 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, p
     return () => clearTimeout(timer)
   }, [localRecherche, setRecherche])
 
-  // Slider prix : affichage instantané, envoi seulement au mouseup
-  const handlePrixChange = (e) => setLocalPrix(Number(e.target.value))
-  const handlePrixCommit = () => setPrixMax(localPrix)
+  // Slider prix : filtre client-side → temps réel
+  const handlePrixChange = (e) => {
+    const val = Number(e.target.value)
+    setLocalPrix(val)
+    setPrixMax(val) // instantané → ProduitsGrille filtre côté client
+  }
+  const handlePrixCommit = () => {} // conservé pour compatibilité
 
   const resetFiltres = () => {
     setCategorieActive(null)

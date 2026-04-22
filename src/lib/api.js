@@ -212,3 +212,10 @@ export async function cancelOrder(orderId) {
 export async function getOrder(orderId) {
   return apiFetch(`/orders/${orderId}`)
 }
+
+// ========================
+// PUBLIC - Boutiques
+// ========================
+export async function getShopBySlug(slug) {
+  return apiFetch(`/shops/${slug}`)
+}

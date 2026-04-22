@@ -12,8 +12,8 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
-  const [produits, setProduits] = useState([])
   const [loading, setLoading] = useState(true)
+  const [allProduits, setAllProduits] = useState([])
 
   useEffect(() => {
     setLoading(true)
@@ -21,8 +21,8 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
     getProducts({
       search: recherche || undefined,
       category: categorieActive || undefined,
-      prix_max: prixMax < 1500000 ? prixMax : undefined,
       tri: triMap[triActif] || 'recent',
+      // NE PAS envoyer prix_max à l'API — on filtre côté client pour fiabilité
     })
       .then(data => {
         const prods = (data.data || []).map(p => ({
@@ -36,12 +36,19 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
         }))
-        setProduits(prods)
-        if (onCountChange) onCountChange(prods.length)
+        setAllProduits(prods)
         setLoading(false)
       })
-      .catch(() => { setProduits([]); if (onCountChange) onCountChange(0); setLoading(false) })
-  }, [recherche, categorieActive, prixMax, triActif])
+      .catch(() => { setAllProduits([]); setLoading(false) })
+  }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Filtre prix côté client — instantané
+  const produits = allProduits.filter(p => p.prix <= prixMax)
+
+  useEffect(() => {
+    if (onCountChange) onCountChange(produits.length)
+  }, [produits.length, onCountChange])
+
 
   const toggleFav = (e, id) => {
     e.preventDefault()
