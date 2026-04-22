@@ -7,13 +7,16 @@ import { useSession, signOut } from 'next-auth/react'
 import InventoryTab from '@/components/vendeur/InventoryTab'
 import ReviewsTab from '@/components/vendeur/ReviewsTab'
 import SettingsTab from '@/components/vendeur/SettingsTab'
+import CreateShopWizard from '@/components/vendeur/CreateShopWizard'
 import { getVendorDashboard } from '@/lib/api'
 
 export default function EspaceVendeur() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [activeTab, setActiveTab] = useState('Dashboard')
+  const [activeTab, setActiveTab] = useState('Tableau de bord')
   const [shopData, setShopData] = useState(null)
+  const [shopLoading, setShopLoading] = useState(true)
+  const [noShop, setNoShop] = useState(false)
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 })
 
   useEffect(() => {
@@ -23,12 +26,24 @@ export default function EspaceVendeur() {
     }
     if (status !== 'authenticated' || !session?.user) return
 
+    setShopLoading(true)
     getVendorDashboard(session.user.apiToken)
       .then(data => {
-        if (data.shop) setShopData(data.shop)
+        if (data.shop) {
+          setShopData(data.shop)
+          setNoShop(false)
+        } else {
+          setNoShop(true)
+        }
         if (data.stats) setStats(data.stats)
       })
-      .catch(() => {})
+      .catch((err) => {
+        // 404 = pas de boutique créée
+        if (err.message?.includes('404') || err.message?.includes('shop')) {
+          setNoShop(true)
+        }
+      })
+      .finally(() => setShopLoading(false))
   }, [status, session, router])
 
   const handleLogout = async () => {
@@ -58,6 +73,22 @@ export default function EspaceVendeur() {
     <div className="min-h-screen pt-24 pb-20 font-sans" style={{ background: '#F7F5F0' }}>
       <div className="max-w-[1400px] mx-auto px-6">
 
+        {/* === Pas encore de boutique → Wizard création === */}
+        {!shopLoading && noShop && (
+          <CreateShopWizard
+            token={session?.user?.apiToken}
+            onCreated={(shop) => { setShopData(shop); setNoShop(false) }}
+          />
+        )}
+
+        {shopLoading && (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="w-12 h-12 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
+        {!shopLoading && !noShop && (
+          <>
         {/* Header Vendeur premium */}
         <div className="relative overflow-hidden rounded-[32px] mb-8 p-8"
           style={{ background: 'linear-gradient(160deg, #1B6B3A 0%, #0D4A28 100%)' }}>
@@ -359,9 +390,9 @@ export default function EspaceVendeur() {
               </>
             )}
 
-            {activeTab === 'Inventaire & Stock' && <InventoryTab />}
+            {activeTab === 'Inventaire & Stock' && <InventoryTab token={session?.user?.apiToken} />}
             {activeTab === 'Avis clients' && <ReviewsTab />}
-            {activeTab === 'Paramètres boutique' && <SettingsTab shop={shopData} />}
+            {activeTab === 'Paramètres boutique' && <SettingsTab shop={shopData} token={session?.user?.apiToken} onUpdated={(s) => setShopData(s)} />}
             {activeTab === 'Analyses des ventes' && (
               <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
                 <div className="text-center">
@@ -490,6 +521,8 @@ export default function EspaceVendeur() {
 
           </div>
         </div>
+      </>
+      )}
       </div>
     </div>
   )

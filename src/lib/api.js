@@ -81,18 +81,18 @@ export function isAuthenticated() {
 // ========================
 // SHOP (Vendeur)
 // ========================
-export async function createShop(name, location, description) {
+export async function createShop(name, location, description, token = null) {
   return apiFetch('/shops', {
     method: 'POST',
     body: JSON.stringify({ name, location, description }),
-  })
+  }, token)
 }
 
-export async function updateShop(shopId, data) {
+export async function updateShop(shopId, data, token = null) {
   return apiFetch(`/shops/${shopId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
-  })
+  }, token)
 }
 
 export async function getVendorDashboard(authToken = null) {
