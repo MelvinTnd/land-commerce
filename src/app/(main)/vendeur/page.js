@@ -7,7 +7,7 @@ import { useSession, signOut } from 'next-auth/react'
 import InventoryTab from '@/components/vendeur/InventoryTab'
 import ReviewsTab from '@/components/vendeur/ReviewsTab'
 import SettingsTab from '@/components/vendeur/SettingsTab'
-import CreateShopWizard from '@/components/vendeur/CreateShopWizard'
+import OrdersTab from '@/components/vendeur/OrdersTab'
 import { getVendorDashboard } from '@/lib/api'
 
 export default function EspaceVendeur() {
@@ -268,14 +268,7 @@ export default function EspaceVendeur() {
                 </div>
               </div>
             )}
-            {activeTab === 'Commandes' && (
-              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>package_2</span>
-                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Mes Commandes — Bientôt disponible</p>
-                </div>
-              </div>
-            )}
+            {activeTab === 'Commandes' && <OrdersTab token={session?.user?.apiToken} />}
 
           </div>
 

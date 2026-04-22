@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { getVendorProducts, createProduct, getCategories } from '@/lib/api'
+import { getVendorProducts, createProduct, deleteProduct, getCategories } from '@/lib/api'
 import { getProductImage } from '@/lib/images'
 
 export default function InventoryTab({ token }) {
@@ -88,6 +88,16 @@ export default function InventoryTab({ token }) {
       alert('Erreur: ' + err.message)
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.')) return
+    try {
+      await deleteProduct(id, token)
+      setProduits(produits.filter(p => p.id !== id))
+    } catch (err) {
+      alert('Erreur: ' + err.message)
     }
   }
 
@@ -308,8 +318,8 @@ export default function InventoryTab({ token }) {
             <table className="w-full text-left">
               <thead>
                 <tr style={{ borderBottom: '1px solid #F3F4F6' }}>
-                  {['Produit', 'Catégorie', 'Prix', 'Stock', 'Statut'].map(h => (
-                    <th key={h} className="pb-4 text-[9px] font-black uppercase tracking-[0.15em]" style={{ color: '#9CA3AF' }}>{h}</th>
+                  {['Produit', 'Catégorie', 'Prix', 'Stock', 'Statut', 'Actions'].map(h => (
+                    <th key={h} className="pb-4 text-[9px] font-black uppercase tracking-[0.15em] text-right" style={{ color: '#9CA3AF', textAlign: h === 'Produit' ? 'left' : h === 'Actions' ? 'right' : 'center' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -352,13 +362,18 @@ export default function InventoryTab({ token }) {
                           {p.stock} · {sb.label}
                         </span>
                       </td>
-                      <td className="py-4">
+                      <td className="py-4 text-center">
                         <span className="px-2.5 py-1 rounded-lg text-[10px] font-black"
                           style={p.status === 'active' || p.status === 'publié'
                             ? { background: '#F0FDF4', color: '#16A34A' }
                             : { background: '#F3F4F6', color: '#6B7280' }}>
                           {p.status === 'active' ? 'Actif' : (p.status || 'Brouillon')}
                         </span>
+                      </td>
+                      <td className="py-4 text-right pr-2">
+                        <button onClick={() => handleDelete(p.id)} className="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors ml-auto tooltip-delete" title="Supprimer le produit">
+                          <span className="material-symbols-outlined text-[16px]">delete</span>
+                        </button>
                       </td>
                     </tr>
                   )

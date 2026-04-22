@@ -110,6 +110,12 @@ export async function createProduct(productData, authToken = null) {
   }, authToken)
 }
 
+export async function deleteProduct(productId, authToken = null) {
+  return apiFetch(`/vendor/products/${productId}`, {
+    method: 'DELETE',
+  }, authToken)
+}
+
 // ========================
 // PUBLIC - Produits
 // ========================
