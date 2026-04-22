@@ -36,6 +36,8 @@ function ProduitsContent() {
           setCategorieActive={setCategorieActive}
           prixMax={prixMax}
           setPrixMax={setPrixMax}
+          recherche={recherche}
+          setRecherche={setRecherche}
         />
         <div className="flex-1">
           <ProduitsGrille

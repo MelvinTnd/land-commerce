@@ -1,529 +1,541 @@
 'use client'
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useSession, signOut } from 'next-auth/react'
+import Image from 'next/image'
+import Link from 'next/link'
 import InventoryTab from '@/components/vendeur/InventoryTab'
-import ReviewsTab from '@/components/vendeur/ReviewsTab'
 import SettingsTab from '@/components/vendeur/SettingsTab'
 import CreateShopWizard from '@/components/vendeur/CreateShopWizard'
 import { getVendorDashboard } from '@/lib/api'
 
+// ─── Sous-composants internes ────────────────────────────────────────────────
+
+function StatCard({ icon, label, value, sub, color, bg, trend }) {
+  return (
+    <div className="bg-white rounded-3xl p-6 flex flex-col gap-3 hover:-translate-y-1 hover:shadow-lg transition-all"
+      style={{ border: '1px solid #F0F0F0', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+      <div className="flex justify-between items-start">
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: bg }}>
+          <span className="material-symbols-outlined text-[24px]" style={{ color }}>{icon}</span>
+        </div>
+        {trend && (
+          <span className="text-[10px] font-black px-2.5 py-1 rounded-full" style={{ background: bg, color }}>
+            {trend}
+          </span>
+        )}
+      </div>
+      <div>
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-1" style={{ color: '#9CA3AF' }}>{label}</p>
+        <p className="text-2xl font-black" style={{ color: '#111827' }}>{value}</p>
+        {sub && <p className="text-[11px] mt-0.5" style={{ color: '#9CA3AF' }}>{sub}</p>}
+      </div>
+    </div>
+  )
+}
+
+function TabBtn({ active, icon, label, badge, onClick }) {
+  return (
+    <button onClick={onClick}
+      className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-[13px] font-semibold transition-all"
+      style={active
+        ? { background: 'rgba(255,255,255,0.15)', color: 'white' }
+        : { background: 'transparent', color: 'rgba(255,255,255,0.55)' }}>
+      <span className="material-symbols-outlined text-[20px]">{icon}</span>
+      <span className="flex-1 text-left">{label}</span>
+      {badge && (
+        <span className="text-[9px] font-black px-2 py-0.5 rounded-full"
+          style={{ background: '#D4920A', color: 'white' }}>{badge}</span>
+      )}
+      {active && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+    </button>
+  )
+}
+
+function OrdersTab() {
+  return (
+    <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #F0F0F0' }}>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: '#E6F8EA' }}>
+          <span className="material-symbols-outlined text-[20px]" style={{ color: '#1B6B3A' }}>package_2</span>
+        </div>
+        <div>
+          <h3 className="font-black text-lg" style={{ color: '#111827' }}>Commandes reçues</h3>
+          <p className="text-xs" style={{ color: '#9CA3AF' }}>0 commandes en attente</p>
+        </div>
+      </div>
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <span className="material-symbols-outlined text-[64px] mb-4" style={{ color: '#E5E7EB' }}>package_2</span>
+        <p className="font-black text-base mb-2" style={{ color: '#374151' }}>Aucune commande pour l'instant</p>
+        <p className="text-sm max-w-xs" style={{ color: '#9CA3AF' }}>
+          Quand des clients achèteront vos produits, leurs commandes apparaîtront ici.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function AnalyticsTab({ stats }) {
+  const data = [40, 65, 45, 80, 55, 90, 70, 85, 60, 75, 88, 95]
+  const maxVal = Math.max(...data)
+  const months = ['Jan','Fév','Mar','Avr','Mai','Juin','Jul','Aoû','Sep','Oct','Nov','Déc']
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #F0F0F0' }}>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="font-black text-lg" style={{ color: '#111827' }}>Performances des ventes</h3>
+            <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>Évolution sur 12 mois</p>
+          </div>
+        </div>
+        {/* Graphique en barres */}
+        <div className="flex items-end gap-2 h-48">
+          {data.map((v, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <div className="w-full rounded-t-lg transition-all hover:opacity-80"
+                style={{
+                  height: `${(v / maxVal) * 160}px`,
+                  background: i === data.length - 1
+                    ? 'linear-gradient(180deg, #1B6B3A, #0D4A28)'
+                    : 'linear-gradient(180deg, #E6F8EA, #BBF7D0)',
+                }} />
+              <span className="text-[9px] font-bold" style={{ color: '#9CA3AF' }}>{months[i]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Répartition par catégorie */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-3xl p-6" style={{ border: '1px solid #F0F0F0' }}>
+          <h4 className="font-black text-sm mb-4" style={{ color: '#111827' }}>Indicateurs clés</h4>
+          {[
+            { label: 'Taux de conversion', val: '3.2%', icon: 'trending_up', color: '#1B6B3A' },
+            { label: 'Panier moyen', val: '24 500 CFA', icon: 'shopping_cart', color: '#D4920A' },
+            { label: 'Taux de retour', val: '0.8%', icon: 'undo', color: '#7C3AED' },
+            { label: 'Satisfaction client', val: '4.9/5', icon: 'star', color: '#DB2777' },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center justify-between py-3"
+              style={{ borderBottom: i < 3 ? '1px solid #F9F9F9' : 'none' }}>
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-[18px]" style={{ color: item.color }}>{item.icon}</span>
+                <span className="text-[13px] font-semibold" style={{ color: '#4B5563' }}>{item.label}</span>
+              </div>
+              <span className="font-black text-[13px]" style={{ color: '#111827' }}>{item.val}</span>
+            </div>
+          ))}
+        </div>
+        <div className="bg-white rounded-3xl p-6" style={{ border: '1px solid #F0F0F0' }}>
+          <h4 className="font-black text-sm mb-4" style={{ color: '#111827' }}>Produits les plus vus</h4>
+          <div className="flex flex-col gap-3">
+            {[
+              { name: 'Masque Gèlèdè', views: 842, bar: 90 },
+              { name: 'Statue Royale', views: 631, bar: 67 },
+              { name: 'Tabouret Nago', views: 412, bar: 44 },
+              { name: 'Porte Miniature', views: 289, bar: 31 },
+            ].map((p, i) => (
+              <div key={i}>
+                <div className="flex justify-between text-[12px] mb-1">
+                  <span className="font-semibold" style={{ color: '#374151' }}>{p.name}</span>
+                  <span className="font-black" style={{ color: '#1B6B3A' }}>{p.views} vues</span>
+                </div>
+                <div className="w-full h-1.5 rounded-full" style={{ background: '#F3F4F6' }}>
+                  <div className="h-1.5 rounded-full" style={{ width: `${p.bar}%`, background: '#1B6B3A' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ReviewsTab() {
+  const avis = [
+    { nom: 'Ama K.', note: 5, date: 'Il y a 2 jours', msg: 'Superbe qualité, livraison rapide ! Je recommande vivement cet artisan.', produit: 'Masque Gèlèdè' },
+    { nom: 'Boris T.', note: 5, date: 'Il y a 5 jours', msg: 'Travail remarquable, pièce vraiment authentique et bien emballée.', produit: 'Statue Royale' },
+    { nom: 'Fatouma D.', note: 4, date: 'Il y a 1 semaine', msg: 'Très beau produit mais la livraison a pris un peu de temps.', produit: 'Tabouret Nago' },
+  ]
+  return (
+    <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #F0F0F0' }}>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="font-black text-lg" style={{ color: '#111827' }}>Avis clients</h3>
+          <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>{avis.length} avis récents</p>
+        </div>
+        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl" style={{ background: '#FEF3C7' }}>
+          <span className="material-symbols-outlined text-[18px]" style={{ color: '#D4920A' }}>star</span>
+          <span className="font-black" style={{ color: '#D4920A' }}>4.9 / 5</span>
+        </div>
+      </div>
+      <div className="flex flex-col gap-4">
+        {avis.map((a, i) => (
+          <div key={i} className="p-5 rounded-2xl" style={{ background: '#F9F9F9', border: '1px solid #F0F0F0' }}>
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full flex items-center justify-center font-black text-sm text-white"
+                  style={{ background: '#1B6B3A' }}>
+                  {a.nom.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-black text-sm" style={{ color: '#111827' }}>{a.nom}</p>
+                  <p className="text-[10px]" style={{ color: '#9CA3AF' }}>{a.date} · {a.produit}</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[1,2,3,4,5].map(s => (
+                  <span key={s} className="material-symbols-outlined text-[14px]"
+                    style={{ color: s <= a.note ? '#D4920A' : '#E5E7EB' }}>star</span>
+                ))}
+              </div>
+            </div>
+            <p className="text-sm" style={{ color: '#4B5563' }}>{a.msg}</p>
+            <button className="mt-2 text-[11px] font-bold" style={{ color: '#1B6B3A' }}>
+              Répondre →
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MarketingTab() {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="bg-white rounded-3xl p-8" style={{ border: '1px solid #F0F0F0' }}>
+        <h3 className="font-black text-lg mb-6" style={{ color: '#111827' }}>Outils Marketing</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            { icon: 'campaign', title: 'Créer une promotion', desc: 'Définissez des réductions temporaires sur vos produits pour booster les ventes.', color: '#1B6B3A', bg: '#E6F8EA', cta: 'Créer une promo' },
+            { icon: 'share', title: 'Partager ma boutique', desc: 'Générez un lien de partage pour vos réseaux sociaux et messageries.', color: '#D4920A', bg: '#FEF3C7', cta: 'Copier le lien' },
+            { icon: 'qr_code', title: 'QR Code boutique', desc: "Téléchargez votre QR Code pour vos flyers, cartes de visite et emballages.", color: '#7C3AED', bg: '#EDE9FE', cta: 'Télécharger' },
+            { icon: 'star', title: 'Programme fidélité', desc: 'Récompensez vos clients réguliers avec des points de fidélité BéninMarket.', color: '#DB2777', bg: '#FCE7F3', cta: 'Bientôt disponible', disabled: true },
+          ].map((tool, i) => (
+            <div key={i} className="p-5 rounded-2xl flex flex-col gap-3"
+              style={{ background: '#F9F9F9', border: '1px solid #F0F0F0' }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: tool.bg }}>
+                <span className="material-symbols-outlined text-[20px]" style={{ color: tool.color }}>{tool.icon}</span>
+              </div>
+              <div>
+                <p className="font-black text-sm mb-1" style={{ color: '#111827' }}>{tool.title}</p>
+                <p className="text-[12px]" style={{ color: '#6B7280' }}>{tool.desc}</p>
+              </div>
+              <button
+                disabled={tool.disabled}
+                className="mt-auto px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-40"
+                style={{ background: tool.disabled ? '#F3F4F6' : tool.color, color: tool.disabled ? '#9CA3AF' : 'white' }}>
+                {tool.cta}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Tableau de bord principal ───────────────────────────────────────────────
+
 export default function EspaceVendeur() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [activeTab, setActiveTab] = useState('Tableau de bord')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [shopData, setShopData] = useState(null)
   const [shopLoading, setShopLoading] = useState(true)
   const [noShop, setNoShop] = useState(false)
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 })
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const userName = session?.user?.name || 'Vendeur'
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/connexion')
-      return
-    }
+    if (status === 'unauthenticated') { router.push('/connexion'); return }
     if (status !== 'authenticated' || !session?.user) return
 
     setShopLoading(true)
     getVendorDashboard(session.user.apiToken)
       .then(data => {
-        if (data.shop) {
-          setShopData(data.shop)
-          setNoShop(false)
-        } else {
-          setNoShop(true)
-        }
+        if (data.shop) { setShopData(data.shop); setNoShop(false) }
+        else setNoShop(true)
         if (data.stats) setStats(data.stats)
       })
-      .catch((err) => {
-        // 404 = pas de boutique créée
-        if (err.message?.includes('404') || err.message?.includes('shop')) {
-          setNoShop(true)
-        }
-      })
+      .catch(() => setNoShop(true))
       .finally(() => setShopLoading(false))
   }, [status, session, router])
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false })
-    router.push('/connexion')
+  const navItems = [
+    { id: 'dashboard',    icon: 'dashboard',     label: 'Tableau de bord' },
+    { id: 'inventory',    icon: 'inventory_2',   label: 'Inventaire & Stock' },
+    { id: 'orders',       icon: 'package_2',     label: 'Commandes' },
+    { id: 'analytics',   icon: 'bar_chart',     label: 'Analyses des ventes' },
+    { id: 'reviews',     icon: 'star',          label: 'Avis clients', badge: '3' },
+    { id: 'marketing',   icon: 'campaign',      label: 'Marketing' },
+    { id: 'settings',    icon: 'settings',      label: 'Paramètres boutique' },
+  ]
+
+  const metricCards = [
+    { icon: 'payments',    label: 'Revenus totaux',  value: stats.revenue ? `${(stats.revenue/1000).toFixed(0)}K` : '0', sub: 'FCFA ce mois',    color: '#1B6B3A', bg: '#E6F8EA', trend: '+12.4%' },
+    { icon: 'inventory_2', label: 'Produits actifs',  value: String(stats.products || 0),               sub: 'articles en ligne',  color: '#7C3AED', bg: '#EDE9FE' },
+    { icon: 'package_2',   label: 'Commandes',       value: String(stats.orders || 0),                  sub: 'total reçues',       color: '#D4920A', bg: '#FEF3C7' },
+    { icon: 'star',        label: 'Note moyenne',    value: '4.9',                                       sub: '/ 5 — Top 1%',      color: '#DB2777', bg: '#FCE7F3', trend: '🏆 Top' },
+  ]
+
+  // ─── Loading ────────────────────────────────────────────────────────────────
+  if (status === 'loading' || shopLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F0F4F0' }}>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-t-[#1B6B3A] border-[#E6F8EA] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm font-semibold" style={{ color: '#6B7280' }}>Chargement de votre espace vendeur...</p>
+        </div>
+      </div>
+    )
   }
 
-  const userName = session?.user?.name || ''
+  // ─── Wizard création boutique ────────────────────────────────────────────────
+  if (noShop) {
+    return (
+      <div className="min-h-screen pt-20" style={{ background: '#F0F4F0' }}>
+        <CreateShopWizard
+          token={session?.user?.apiToken}
+          onCreated={(shop) => { setShopData(shop); setNoShop(false) }}
+        />
+      </div>
+    )
+  }
 
-  const navItems = [
-    { name: 'Tableau de bord', icon: 'dashboard' },
-    { name: 'Inventaire & Stock', icon: 'inventory_2' },
-    { name: 'Analyses des ventes', icon: 'bar_chart' },
-    { name: 'Avis clients', icon: 'forum', badge: '+12' },
-    { name: 'Outils marketing', icon: 'campaign' },
-    { name: 'Paramètres boutique', icon: 'settings' },
-  ]
-
-  const metrics = [
-    { title: 'Revenus totaux', value: stats.revenue ? `${(stats.revenue/1000000).toFixed(1)}M` : '0', suffix: ' FCFA', badge: '+12.4%', icon: 'analytics', iconColor: '#1B6B3A', iBg: '#E6F8EA', badgeColor: '#1B6B3A', badgeBg: '#E6F8EA' },
-    { title: 'Note moyenne', value: '4.9', suffix: '/ 5.0', badge: 'Top 1%', icon: 'star', iconColor: '#D4920A', iBg: '#FEF3C7', badgeColor: '#D4920A', badgeBg: '#FEF3C7' },
-    { title: 'Produits actifs', value: String(stats.products || 0), suffix: ' articles', badge: '', icon: 'inventory_2', iconColor: '#7C3AED', iBg: '#EDE9FE', badgeColor: '#7C3AED', badgeBg: '#EDE9FE' },
-    { title: 'Taux de réponse', value: '99%', suffix: '', badge: '< 10 min', icon: 'chat', iconColor: '#DB2777', iBg: '#FCE7F3', badgeColor: '#DB2777', badgeBg: '#FCE7F3' },
-  ]
-
+  // ─── Dashboard principal ─────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen pt-24 pb-20 font-sans" style={{ background: '#F7F5F0' }}>
-      <div className="max-w-[1400px] mx-auto px-6">
+    <div className="min-h-screen font-sans flex" style={{ background: '#F0F4F0', paddingTop: '64px' }}>
 
-        {/* === Pas encore de boutique → Wizard création === */}
-        {!shopLoading && noShop && (
-          <CreateShopWizard
-            token={session?.user?.apiToken}
-            onCreated={(shop) => { setShopData(shop); setNoShop(false) }}
-          />
-        )}
+      {/* ══════════════════ SIDEBAR ══════════════════ */}
+      <aside className="hidden lg:flex flex-col w-72 shrink-0 min-h-[calc(100vh-64px)] sticky top-16"
+        style={{ background: 'linear-gradient(180deg, #1B6B3A 0%, #0D4A28 100%)' }}>
 
-        {shopLoading && (
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="w-12 h-12 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
-          </div>
-        )}
-
-        {!shopLoading && !noShop && (
-          <>
-        {/* Header Vendeur premium */}
-        <div className="relative overflow-hidden rounded-[32px] mb-8 p-8"
-          style={{ background: 'linear-gradient(160deg, #1B6B3A 0%, #0D4A28 100%)' }}>
-          <div className="absolute inset-0 opacity-10 pointer-events-none"
-            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30H15L30 0zm0 60L15 30h30L30 60z' fill='white' fill-opacity='1'/%3E%3C/svg%3E")` }} />
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="relative w-16 h-16 rounded-[20px] overflow-hidden" style={{ border: '3px solid rgba(255,255,255,0.3)' }}>
-                <Image
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(shopData?.name || userName || 'B')}&background=D4920A&color=fff&size=200`}
-                  alt="Avatar boutique" fill className="object-cover" sizes="64px"
-                />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-xl font-black text-white">{shopData?.name || userName || 'Ma Boutique'}</h1>
-                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase"
-                    style={{ background: 'rgba(212,146,10,0.25)', color: '#FDE68A', border: '1px solid rgba(212,146,10,0.4)' }}>
-                    <span className="material-symbols-outlined text-[11px]">verified</span>
-                    {shopData?.status === 'active' ? 'Vérifié' : 'En attente'}
-                  </span>
-                </div>
-                <p className="text-[13px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  {shopData?.location || 'Bénin'} · {userName}
-                </p>
-              </div>
+        {/* Profil boutique */}
+        <div className="p-6 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 relative"
+              style={{ border: '2px solid rgba(255,255,255,0.25)' }}>
+              <Image
+                src={shopData?.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(shopData?.name || 'B')}&background=D4920A&color=fff&size=200`}
+                alt="Logo boutique" fill className="object-cover" sizes="56px"
+                unoptimized
+              />
             </div>
-            <div className="flex gap-3">
-              <button className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider transition-all hover:opacity-80"
-                style={{ background: 'rgba(255,255,255,0.15)', color: 'white', border: '1px solid rgba(255,255,255,0.25)' }}>
-                Modifier le profil
-              </button>
-              <button className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider flex items-center gap-2 transition-all hover:opacity-90"
-                style={{ background: '#D4920A', color: 'white' }}>
-                <span className="material-symbols-outlined text-[16px]">add</span>
-                Nouveau produit
-              </button>
+            <div className="min-w-0">
+              <h2 className="font-black text-white text-[15px] truncate">{shopData?.name || 'Ma Boutique'}</h2>
+              <p className="text-[11px] truncate" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                📍 {shopData?.location || 'Bénin'} · {userName}
+              </p>
+              <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[9px] font-black"
+                style={{ background: shopData?.status === 'active' ? 'rgba(212,146,10,0.3)' : 'rgba(255,255,255,0.15)', color: '#FDE68A' }}>
+                <span className="material-symbols-outlined text-[10px]">
+                  {shopData?.status === 'active' ? 'verified' : 'pending'}
+                </span>
+                {shopData?.status === 'active' ? 'Boutique vérifiée' : 'En attente'}
+              </span>
             </div>
           </div>
+
+          {/* Lien vers ma boutique */}
+          {shopData?.slug && (
+            <Link href={`/boutiques/${shopData.slug}`} target="_blank"
+              className="flex items-center gap-2 w-full py-2 px-3 rounded-xl text-[11px] font-bold transition-all hover:opacity-80"
+              style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)' }}>
+              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              Voir ma boutique publique
+            </Link>
+          )}
         </div>
 
-        {/* Métriques */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {metrics.map((m, i) => (
-            <div key={i} className="bg-white rounded-[24px] p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
-              style={{ border: '1px solid #EBEBEB', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-              <div className="flex justify-between items-start mb-5">
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: m.iBg }}>
-                  <span className="material-symbols-outlined text-[22px]" style={{ color: m.iconColor }}>{m.icon}</span>
-                </div>
-                {m.badge && (
-                  <span className="text-[9px] font-black px-2 py-1 rounded-full" style={{ background: m.badgeBg, color: m.badgeColor }}>
-                    {m.badge}
-                  </span>
-                )}
-              </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-1" style={{ color: '#9CA3AF' }}>{m.title}</p>
-              <h3 className="text-2xl font-black" style={{ color: '#0D0D0D' }}>
-                {m.value}<span className="text-sm font-medium ml-1" style={{ color: '#9CA3AF' }}>{m.suffix}</span>
-              </h3>
-            </div>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 flex flex-col gap-1">
+          {navItems.map(item => (
+            <TabBtn
+              key={item.id}
+              active={activeTab === item.id}
+              icon={item.icon}
+              label={item.label}
+              badge={item.badge}
+              onClick={() => setActiveTab(item.id)}
+            />
           ))}
+        </nav>
+
+        {/* Footer sidebar */}
+        <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          <Link href="/" className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all hover:opacity-80"
+            style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <span className="material-symbols-outlined text-[18px]">home</span>
+            Retour à l&apos;accueil
+          </Link>
+        </div>
+      </aside>
+
+      {/* ══════════════════ CONTENU PRINCIPAL ══════════════════ */}
+      <main className="flex-1 overflow-x-hidden">
+
+        {/* ─── Header Mobile + Breadcrumb ─────────────────────── */}
+        <div className="sticky top-16 z-10 bg-white/80 backdrop-blur-md px-6 py-4 flex items-center justify-between"
+          style={{ borderBottom: '1px solid #E5E7EB' }}>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>
+              Espace Vendeur
+            </p>
+            <h1 className="font-black text-lg" style={{ color: '#111827' }}>
+              {navItems.find(n => n.id === activeTab)?.label || 'Tableau de bord'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setActiveTab('inventory')}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-black text-[12px] text-white transition-all hover:opacity-90"
+              style={{ background: '#D4920A' }}>
+              <span className="material-symbols-outlined text-[16px]">add</span>
+              Ajouter un produit
+            </button>
+          </div>
         </div>
 
-        {/* Main Grid Layout */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        {/* ─── Contenu des onglets ─────────────────────────────── */}
+        <div className="p-6 lg:p-8">
 
-          {/* Main Content (Left) */}
-          <div className="flex-1 flex flex-col gap-6">
+          {/* === TABLEAU DE BORD === */}
+          {activeTab === 'dashboard' && (
+            <div className="flex flex-col gap-6">
 
-            {activeTab === 'Tableau de bord' && (
-              <>
-                {/* Performances des ventes */}
-                <div className="bg-white rounded-[28px] p-7" style={{ border: '1px solid #EBEBEB' }}>
-                  <div className="flex justify-between items-start mb-8">
-                    <div>
-                      <h3 className="font-black text-[16px] mb-1" style={{ color: '#0D0D0D' }}>Performances des ventes</h3>
-                      <p className="text-[12px] font-medium" style={{ color: '#9CA3AF' }}>Suivi de la croissance sur 7 jours</p>
-                    </div>
-                    <div className="flex rounded-full p-1 gap-1" style={{ background: '#F3F4F6' }}>
-                      {['7J', '30J', '1A'].map(p => (
-                        <button key={p} className="px-4 py-1.5 text-[10px] font-black rounded-full transition-all"
-                          style={p === '7J' ? { background: '#1B6B3A', color: 'white' } : { color: '#9CA3AF' }}>{p}</button>
-                      ))}
-                    </div>
+              {/* Message de bienvenue */}
+              <div className="relative overflow-hidden rounded-3xl p-6"
+                style={{ background: 'linear-gradient(135deg, #1B6B3A 0%, #0D4A28 60%, #D4920A 100%)' }}>
+                <div className="absolute inset-0 opacity-10"
+                  style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30H15L30 0zm0 60L15 30h30L30 60z' fill='white'/%3E%3C/svg%3E\")" }} />
+                <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-bold mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      Mercredi, 23 Avril 2026
+                    </p>
+                    <h2 className="text-2xl font-black text-white mb-1">
+                      Bonjour, {userName.split(' ')[0]} 👋
+                    </h2>
+                    <p className="text-sm" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                      Votre boutique <strong>{shopData?.name}</strong> est{' '}
+                      {shopData?.status === 'active' ? 'active et visible' : 'en cours de validation'}.
+                    </p>
                   </div>
-                  <div className="h-[200px] w-full relative">
-                    <svg width="100%" height="100%" viewBox="0 0 500 150" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#1B6B3A" stopOpacity="0.15"/>
-                          <stop offset="100%" stopColor="#1B6B3A" stopOpacity="0"/>
-                        </linearGradient>
-                      </defs>
-                      <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40 L500,150 L0,150 Z" fill="url(#chartGrad)" />
-                      <path d="M0,100 C50,80 150,130 250,60 C320,10 400,90 500,40" fill="none" stroke="#1B6B3A" strokeWidth="3"/>
-                      {[[250,60],[500,40]].map(([cx,cy],i) => <circle key={i} cx={cx} cy={cy} r="5" fill="#1B6B3A" stroke="white" strokeWidth="2"/>)}
-                    </svg>
-                  </div>
-                  <div className="flex justify-between text-[10px] font-bold px-2 pt-4 border-t border-gray-100 mt-2" style={{ color: '#9CA3AF' }}>
-                    {['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'].map(j => <span key={j}>{j}</span>)}
-                  </div>
-                  <div className="flex justify-center gap-8 mt-4">
-                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold" style={{ color: '#9CA3AF' }}>
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#1B6B3A]"></div>Ventes nettes
-                    </div>
-                    <div className="flex items-center gap-2 text-[10px] uppercase font-bold" style={{ color: '#9CA3AF' }}>
-                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>Ventes brutes
-                    </div>
-                  </div>
-                </div>
-
-                {/* Performance & Reputation */}
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-4 px-1 text-sm">Performance & Reputation</h3>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-green-50/50 border border-green-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center">
-                      <div className="w-10 h-10 rounded-full bg-white text-green-600 shadow-sm flex items-center justify-center mb-3">
-                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
-                      </div>
-                      <p className="text-xs font-bold text-green-900 mb-1">Top Seller</p>
-                      <p className="text-[9px] text-green-600 font-medium">Ranked top 10% this month</p>
-                    </div>
-                    <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center">
-                      <div className="w-10 h-10 rounded-full bg-white text-blue-600 shadow-sm flex items-center justify-center mb-3">
-                        <span className="material-symbols-outlined text-lg">bolt</span>
-                      </div>
-                      <p className="text-xs font-bold text-blue-900 mb-1">Fast Shipper</p>
-                      <p className="text-[9px] text-blue-600 font-medium">Ships within 24 hours</p>
-                    </div>
-                    <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center">
-                      <div className="w-10 h-10 rounded-full bg-white text-orange-600 shadow-sm flex items-center justify-center mb-3">
-                        <span className="material-symbols-outlined text-lg">thumb_up</span>
-                      </div>
-                      <p className="text-xs font-bold text-orange-900 mb-1">Fan Favorite</p>
-                      <p className="text-[9px] text-orange-600 font-medium">98% 5-star reviews</p>
-                    </div>
-                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 flex flex-col items-center justify-center text-center opacity-80">
-                      <div className="w-10 h-10 rounded-full bg-white text-gray-400 shadow-sm flex items-center justify-center mb-3">
-                        <span className="material-symbols-outlined text-lg">eco</span>
-                      </div>
-                      <p className="text-xs font-bold text-gray-500 mb-1">Eco-Artisan</p>
-                      <p className="text-[9px] text-gray-400 font-medium">Not yet achieved</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent Orders */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm mt-2">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-bold text-gray-900 text-base">Recent Orders</h3>
-                    <button className="text-[9px] font-bold text-green-700 bg-green-50 hover:bg-green-100 transition-colors px-4 py-2 rounded-full uppercase tracking-wider">
-                      View All Orders
+                  <div className="flex gap-2">
+                    <button onClick={() => setActiveTab('inventory')}
+                      className="px-4 py-2.5 rounded-2xl font-black text-[12px] transition-all hover:opacity-90"
+                      style={{ background: '#D4920A', color: 'white' }}>
+                      + Ajouter un produit
+                    </button>
+                    <button onClick={() => setActiveTab('settings')}
+                      className="px-4 py-2.5 rounded-2xl font-black text-[12px] transition-all hover:opacity-80"
+                      style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}>
+                      Paramètres
                     </button>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left whitespace-nowrap">
-                      <thead>
-                        <tr className="border-b border-gray-100 text-[9px] uppercase tracking-wider text-gray-400 font-bold">
-                          <th className="pb-4 w-5/12">Product</th>
-                          <th className="pb-4 w-2/12">Order ID</th>
-                          <th className="pb-4 w-2/12">Date</th>
-                          <th className="pb-4 w-2/12">Amount</th>
-                          <th className="pb-4 w-1/12 text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-sm">
-                        {/* Row 1 */}
-                        <tr>
-                          <td className="py-4 border-b border-gray-50 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg overflow-hidden relative flex-shrink-0 bg-gray-100">
-                              <Image
-                                src="https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=200"
-                                alt="Queen Mother Bronze Bust"
-                                fill
-                                className="object-cover"
-                                sizes="40px"
-                              />
-                            </div>
-                            <span className="font-bold text-xs text-gray-800">Queen Mother Bronze Bust</span>
-                          </td>
-                          <td className="py-4 border-b border-gray-50 text-[11px] font-medium text-gray-500">MK-0091</td>
-                          <td className="py-4 border-b border-gray-50 text-[11px] font-medium text-gray-500">Oct 24, 14:20</td>
-                          <td className="py-4 border-b border-gray-50 font-bold text-xs text-green-700">45,000 CFA</td>
-                          <td className="py-4 border-b border-gray-50 text-right">
-                            <span className="bg-orange-50 text-orange-600 text-[9px] font-bold px-3 py-1.5 rounded-md uppercase tracking-wide">Processing</span>
-                          </td>
-                        </tr>
-                        {/* Row 2 */}
-                        <tr>
-                          <td className="py-4 border-b border-gray-50 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-blue-900 object-cover flex-shrink-0" />
-                            <span className="font-bold text-xs text-gray-800">Indigo Ceremonial Wrap</span>
-                          </td>
-                          <td className="py-4 border-b border-gray-50 text-[11px] font-medium text-gray-500">MK-0182</td>
-                          <td className="py-4 border-b border-gray-50 text-[11px] font-medium text-gray-500">Oct 24, 11:45</td>
-                          <td className="py-4 border-b border-gray-50 font-bold text-xs text-green-700">12,500 CFA</td>
-                          <td className="py-4 border-b border-gray-50 text-right">
-                            <span className="bg-green-50 text-green-600 text-[9px] font-bold px-3 py-1.5 rounded-md uppercase tracking-wide">Shipped</span>
-                          </td>
-                        </tr>
-                        {/* Row 3 */}
-                        <tr>
-                          <td className="py-4 flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                              <span className="material-symbols-outlined text-gray-400 text-xl">shopping_bag</span>
-                            </div>
-                            <span className="font-bold text-xs text-gray-800">Ouidah Python Tote</span>
-                          </td>
-                          <td className="py-4 text-[11px] font-medium text-gray-500">MK-0185</td>
-                          <td className="py-4 text-[11px] font-medium text-gray-500">Oct 23, 16:10</td>
-                          <td className="py-4 font-bold text-xs text-green-700">85,000 CFA</td>
-                          <td className="py-4 text-right">
-                            <span className="bg-blue-50 text-blue-600 text-[9px] font-bold px-3 py-1.5 rounded-md uppercase tracking-wide">Delivered</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {/* Best Selling Crafts */}
-                <div className="mt-4">
-                  <div className="flex justify-between items-center mb-5 px-1">
-                    <h3 className="font-bold text-gray-900 text-sm">Best Selling Crafts</h3>
-                    <div className="flex gap-1 bg-white p-1 rounded-lg">
-                      <button className="w-8 h-8 flex items-center justify-center rounded-md bg-transparent text-gray-400 hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-[18px]">grid_view</span>
-                      </button>
-                      <button className="w-8 h-8 bg-[#1B6B3A] flex items-center justify-center rounded-md text-white shadow-sm">
-                        <span className="material-symbols-outlined text-[18px] transform rotate-90">format_list_bulleted</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {/* Product 1 */}
-                    <div className="bg-white rounded-[24px] p-4 shadow-sm flex flex-col group">
-                      <div className="relative rounded-[16px] overflow-hidden bg-gray-100 mb-4 aspect-[4/3]">
-                        <Image
-                          src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=600"
-                          alt="Ouidah Python-Print Tote"
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                        <span className="absolute top-3 left-3 bg-[#1B6B3A] text-white text-[8px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm">Bestseller</span>
-                      </div>
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-bold text-xs text-gray-900 leading-tight">Ouidah Python-Print Tote</h4>
-                        <span className="text-[11px] font-bold text-green-700 shrink-0">85k CFA</span>
-                      </div>
-                      <div className="flex gap-4 text-[10px] text-gray-500 mb-6 font-medium">
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[12px] text-gray-400">shopping_cart</span>142 Sold</span>
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[12px] text-gray-400">inventory_2</span>12 Stock</span>
-                      </div>
-                      <div className="flex gap-2 w-full mt-auto">
-                        <button className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold py-2.5 rounded-xl transition-colors border border-gray-100">Edit Listing</button>
-                        <button className="w-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-colors border border-gray-100"><span className="material-symbols-outlined text-sm">more_horiz</span></button>
-                      </div>
-                    </div>
-
-                    {/* Product 2 */}
-                    <div className="bg-white rounded-[24px] p-4 shadow-sm flex flex-col group">
-                      <div className="relative rounded-[16px] overflow-hidden bg-[#1A1A1A] mb-4 aspect-[4/3]">
-                        <Image
-                          src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600"
-                          alt="Fon Dynasty Bronze Mask"
-                          fill
-                          className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-500"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                        <span className="absolute top-3 left-3 bg-[#EA580C] text-white text-[8px] font-bold px-2.5 py-1 rounded-md uppercase tracking-widest shadow-sm">High Margin</span>
-                      </div>
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-bold text-xs text-gray-900 leading-tight pr-2">Fon Dynasty Bronze Mask</h4>
-                        <span className="text-[11px] font-bold text-green-700 shrink-0">120k CFA</span>
-                      </div>
-                      <div className="flex gap-4 text-[10px] text-gray-500 mb-6 font-medium">
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[12px] text-gray-400">shopping_cart</span>88 Sold</span>
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[12px] text-gray-400">inventory_2</span>2 Stock</span>
-                      </div>
-                      <div className="flex gap-2 w-full mt-auto">
-                        <button className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold py-2.5 rounded-xl transition-colors border border-gray-100">Edit Listing</button>
-                        <button className="w-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-colors border border-gray-100"><span className="material-symbols-outlined text-sm">more_horiz</span></button>
-                      </div>
-                    </div>
-
-                    {/* Add New Craft Blank Card */}
-                    <div className="border-2 border-dashed border-gray-200 rounded-[24px] p-6 flex flex-col items-center justify-center text-center bg-transparent hover:bg-gray-50/50 transition-colors cursor-pointer min-h-[300px]">
-                      <div className="w-12 h-12 rounded-full bg-gray-200/50 flex items-center justify-center text-gray-500 mb-4 transition-transform hover:scale-110">
-                        <span className="material-symbols-outlined">add</span>
-                      </div>
-                      <h4 className="font-bold text-sm text-gray-800 mb-2">Add New Craft</h4>
-                      <p className="text-[10px] text-gray-400 max-w-[160px] leading-relaxed">List a new product to your showcase and reach global buyers.</p>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {activeTab === 'Inventaire & Stock' && <InventoryTab token={session?.user?.apiToken} />}
-            {activeTab === 'Avis clients' && <ReviewsTab />}
-            {activeTab === 'Paramètres boutique' && <SettingsTab shop={shopData} token={session?.user?.apiToken} onUpdated={(s) => setShopData(s)} />}
-            {activeTab === 'Analyses des ventes' && (
-              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>bar_chart</span>
-                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Analyses des ventes — Bientôt disponible</p>
-                </div>
-              </div>
-            )}
-            {activeTab === 'Outils marketing' && (
-              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>campaign</span>
-                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Outils marketing — Bientôt disponible</p>
-                </div>
-              </div>
-            )}
-
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="w-full lg:w-[320px] xl:w-[380px] shrink-0 flex flex-col gap-6">
-
-            {/* Marketplace Balance */}
-            <div className="bg-[#1B6B3A] rounded-3xl p-7 text-white shadow-xl relative overflow-hidden">
-              {/* Decorative faint icon in bg */}
-              <span className="material-symbols-outlined absolute -right-6 -bottom-6 text-[140px] opacity-5 pointer-events-none">account_balance</span>
-
-              <div className="flex justify-between items-start mb-8 relative z-10">
-                <div>
-                  <p className="text-[9px] font-bold text-green-200/80 tracking-widest mb-1.5 uppercase">Marketplace Balance</p>
-                  <h3 className="text-[34px] font-extrabold flex items-baseline gap-1.5 tracking-tight">
-                    452,300 <span className="text-sm font-medium text-green-200 mb-1">CFA</span>
-                  </h3>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/5">
-                  <span className="material-symbols-outlined text-white text-[20px]">account_balance_wallet</span>
                 </div>
               </div>
 
-              <div className="space-y-4 mb-8 relative z-10">
-                <div>
-                  <div className="flex justify-between text-[9px] font-bold mb-2 uppercase text-green-100/90 tracking-wider">
-                    <span>Available for payout</span>
-                    <span className="text-white">387,300 CFA</span>
-                  </div>
-                  <div className="w-full bg-[#052e18] rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-[#22c55e] h-full rounded-full w-[85%]"></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 text-[9px] font-bold mb-2 uppercase text-green-100/90 tracking-wider">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#EAB308]"></div>
-                    <span>Pending settlement</span>
-                    <span className="ml-auto text-white">65,000 CFA</span>
-                  </div>
-                </div>
+              {/* Stats */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {metricCards.map((m, i) => (
+                  <StatCard key={i} {...m} />
+                ))}
               </div>
 
-              <button className="w-full bg-[#EAB308] hover:bg-[#dca506] text-gray-900 font-extrabold text-[13px] py-4 rounded-xl transition-all shadow-md flex justify-center items-center gap-2 relative z-10">
-                <span className="material-symbols-outlined text-[18px]">payments</span>
-                Withdraw Funds
-              </button>
-            </div>
+              {/* Activité récente + Conseils */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* Linked Accounts */}
-            <div className="bg-white rounded-3xl p-7 shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-gray-900 text-sm">Linked Accounts</h3>
-                <button className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors">
-                  <span className="material-symbols-outlined text-gray-500 text-[18px]">settings</span>
-                </button>
-              </div>
-              <div className="flex flex-col gap-5">
-                {/* MoMo */}
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#FFCC00] flex items-center justify-center font-extrabold text-[11px] text-[#003366] shadow-sm">MTN</div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-900">MTN MoMo</p>
-                    <p className="text-[10px] text-gray-500 font-medium">**** 8291 • Active</p>
-                  </div>
-                </div>
-                {/* Moov */}
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[#0066CC] flex items-center justify-center font-extrabold text-[11px] text-white shadow-sm">Moov</div>
-                  <div>
-                    <p className="text-xs font-bold text-gray-900">Moov Money</p>
-                    <p className="text-[10px] text-gray-500 font-medium">**** 4032 • Primary</p>
+                {/* Activité */}
+                <div className="lg:col-span-2 bg-white rounded-3xl p-6" style={{ border: '1px solid #F0F0F0' }}>
+                  <h3 className="font-black text-base mb-5" style={{ color: '#111827' }}>Activité récente</h3>
+                  <div className="flex flex-col gap-0">
+                    {[
+                      { icon: 'star', color: '#D4920A', bg: '#FEF3C7', msg: 'Nouvel avis 5 étoiles sur « Masque Gèlèdè »', time: 'Il y a 2h' },
+                      { icon: 'visibility', color: '#7C3AED', bg: '#EDE9FE', msg: 'Votre boutique a reçu 48 visites aujourd\'hui', time: 'Il y a 3h' },
+                      { icon: 'inventory_2', color: '#1B6B3A', bg: '#E6F8EA', msg: 'Stock faible : Tabouret Nago (2 restants)', time: 'Il y a 1j' },
+                      { icon: 'verified', color: '#1B6B3A', bg: '#E6F8EA', msg: 'Boutique vérifiée par l\'équipe BéninMarket', time: 'Il y a 3j' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-4 py-3.5"
+                        style={{ borderBottom: i < 3 ? '1px solid #F9F9F9' : 'none' }}>
+                        <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center" style={{ background: item.bg }}>
+                          <span className="material-symbols-outlined text-[18px]" style={{ color: item.color }}>{item.icon}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] font-semibold truncate" style={{ color: '#374151' }}>{item.msg}</p>
+                          <p className="text-[10px]" style={{ color: '#9CA3AF' }}>{item.time}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <button className="mt-2 w-full border border-gray-200 text-[#1B6B3A] font-bold text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors border-dashed">
-                  <span className="material-symbols-outlined text-[16px]">add</span> Add New Method
-                </button>
-              </div>
-            </div>
-
-            {/* Navigation Menu */}
-            <div className="bg-white rounded-3xl p-4 shadow-sm flex flex-col gap-1 hidden md:flex">
-              {navItems.map((item, i) => {
-                const isActive = activeTab === item.name
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setActiveTab(item.name)}
-                    className={`flex items-center justify-between px-5 py-4 rounded-2xl transition-all ${isActive
-                        ? 'bg-[#1B6B3A] text-white shadow-md'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}
-                  >
-                    <div className="flex items-center gap-4 font-bold text-xs">
-                      <span className={`material-symbols-outlined text-xl ${isActive ? 'text-white' : 'text-gray-400'}`}>
-                        {item.icon}
-                      </span>
-                      {item.name}
-                    </div>
-                    {isActive && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
-                    {!isActive && item.badge && (
-                      <span className="bg-green-50 text-green-700 text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                        {item.badge}
-                      </span>
-                    )}
+                {/* Conseils */}
+                <div className="bg-white rounded-3xl p-6" style={{ border: '1px solid #F0F0F0' }}>
+                  <h3 className="font-black text-base mb-5" style={{ color: '#111827' }}>💡 Conseils du jour</h3>
+                  <div className="flex flex-col gap-4">
+                    {[
+                      { tip: 'Ajoutez des photos de qualité pour multiplier vos ventes par 3.', done: true },
+                      { tip: 'Répondez aux avis rapidement pour améliorer votre note.', done: false },
+                      { tip: 'Activez les promotions sur vos articles les moins vus.', done: false },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ background: item.done ? '#1B6B3A' : '#F3F4F6' }}>
+                          <span className="material-symbols-outlined text-[12px]"
+                            style={{ color: item.done ? 'white' : '#9CA3AF' }}>
+                            {item.done ? 'check' : 'radio_button_unchecked'}
+                          </span>
+                        </div>
+                        <p className="text-[12px] font-medium leading-relaxed"
+                          style={{ color: item.done ? '#9CA3AF' : '#374151', textDecoration: item.done ? 'line-through' : 'none' }}>
+                          {item.tip}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={() => setActiveTab('marketing')}
+                    className="mt-5 w-full py-2.5 rounded-xl text-[12px] font-black transition-all hover:opacity-90"
+                    style={{ background: '#E6F8EA', color: '#1B6B3A' }}>
+                    Voir les outils marketing →
                   </button>
-                )
-              })}
+                </div>
+              </div>
             </div>
+          )}
 
-          </div>
+          {/* === INVENTAIRE === */}
+          {activeTab === 'inventory' && (
+            <InventoryTab token={session?.user?.apiToken} />
+          )}
+
+          {/* === COMMANDES === */}
+          {activeTab === 'orders' && <OrdersTab />}
+
+          {/* === ANALYSES === */}
+          {activeTab === 'analytics' && <AnalyticsTab stats={stats} />}
+
+          {/* === AVIS === */}
+          {activeTab === 'reviews' && <ReviewsTab />}
+
+          {/* === MARKETING === */}
+          {activeTab === 'marketing' && <MarketingTab />}
+
+          {/* === PARAMÈTRES === */}
+          {activeTab === 'settings' && (
+            <SettingsTab
+              shop={shopData}
+              token={session?.user?.apiToken}
+              onUpdated={(s) => setShopData(s)}
+            />
+          )}
         </div>
-      </>
-      )}
-      </div>
+      </main>
     </div>
   )
 }
