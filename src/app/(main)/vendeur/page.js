@@ -57,9 +57,6 @@ export default function EspaceVendeur() {
     { name: 'Tableau de bord', icon: 'dashboard' },
     { name: 'Inventaire & Stock', icon: 'inventory_2' },
     { name: 'Commandes', icon: 'package_2' },
-    { name: 'Analyses des ventes', icon: 'bar_chart' },
-    { name: 'Avis clients', icon: 'forum', badge: '+12' },
-    { name: 'Outils marketing', icon: 'campaign' },
     { name: 'Paramètres boutique', icon: 'settings' },
   ]
 
@@ -252,22 +249,7 @@ export default function EspaceVendeur() {
             {activeTab === 'Inventaire & Stock' && <InventoryTab token={session?.user?.apiToken} />}
             {activeTab === 'Avis clients' && <ReviewsTab />}
             {activeTab === 'Paramètres boutique' && <SettingsTab shop={shopData} token={session?.user?.apiToken} onUpdated={(s) => setShopData(s)} />}
-            {activeTab === 'Analyses des ventes' && (
-              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>bar_chart</span>
-                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Analyses des ventes — Bientôt disponible</p>
-                </div>
-              </div>
-            )}
-            {activeTab === 'Outils marketing' && (
-              <div className="bg-white rounded-[28px] p-8 flex items-center justify-center min-h-[400px]" style={{ border: '1px solid #EBEBEB' }}>
-                <div className="text-center">
-                  <span className="material-symbols-outlined text-[48px] mb-4 block" style={{ color: '#E6F8EA' }}>campaign</span>
-                  <p className="font-black text-[14px]" style={{ color: '#9CA3AF' }}>Outils marketing — Bientôt disponible</p>
-                </div>
-              </div>
-            )}
+
             {activeTab === 'Commandes' && <OrdersTab token={session?.user?.apiToken} />}
 
           </div>
