@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function InscriptionVendeurSuite() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [step, setStep] = useState(1)
   const [ville, setVille] = useState('Cotonou')
   const [valeurs, setValeurs] = useState(['Fait main'])
@@ -34,13 +36,15 @@ export default function InscriptionVendeurSuite() {
     setError('')
 
     try {
-      const token = localStorage.getItem('auth_token')
+      // Priorité : token NextAuth session, fallback localStorage
+      const token = session?.user?.apiToken || localStorage.getItem('auth_token')
       if (!token) {
-        router.push('/inscription')
+        router.push('/connexion')
         return
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/shops`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
+      const response = await fetch(`${apiUrl}/shops`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +52,7 @@ export default function InscriptionVendeurSuite() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          name: shopName || 'Atelier du Bénin',
+          name: shopName || 'Ma Boutique',
           location: ville,
           description: shopDescription,
         })
