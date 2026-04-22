@@ -4,58 +4,65 @@ import GoogleProvider from 'next-auth/providers/google'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+// Google OAuth est optionnel — ne charge que si les credentials sont configurées
+const googleClientId = process.env.GOOGLE_CLIENT_ID
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+const hasGoogle = googleClientId
+  && googleClientId !== 'your-google-client-id'
+  && googleClientSecret
+  && googleClientSecret !== 'your-google-client-secret'
 
-  providers: [
-    // ─── 1. Connexion par Email/Mot de passe via API Laravel ───────────────
-    CredentialsProvider({
-      id: 'credentials',
-      name: 'Email & Mot de passe',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Mot de passe', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+const providers = [
+  // ─── 1. Connexion par Email/Mot de passe via API Laravel ───────────────
+  CredentialsProvider({
+    id: 'credentials',
+    name: 'Email & Mot de passe',
+    credentials: {
+      email: { label: 'Email', type: 'email' },
+      password: { label: 'Mot de passe', type: 'password' },
+    },
+    async authorize(credentials) {
+      if (!credentials?.email || !credentials?.password) return null
 
-        try {
-          const res = await fetch(`${API_BASE}/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-          })
+      try {
+        const res = await fetch(`${API_BASE}/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
+        })
 
-          const data = await res.json()
+        const data = await res.json()
 
-          if (!res.ok || !data.access_token) {
-            throw new Error(data.message || 'Identifiants invalides')
-          }
-
-          // Retourne l'objet utilisateur qui sera stocké dans le token JWT
-          return {
-            id: String(data.user?.id),
-            name: data.user?.name,
-            email: data.user?.email,
-            role: data.user?.role || 'acheteur',
-            apiToken: data.access_token,
-          }
-        } catch (err) {
-          throw new Error(err.message || 'Erreur de connexion')
+        if (!res.ok || !data.access_token) {
+          throw new Error(data.message || 'Identifiants invalides')
         }
-      },
-    }),
 
-    // ─── 2. Google OAuth ────────────────────────────────────────────────────
+        return {
+          id: String(data.user?.id),
+          name: data.user?.name,
+          email: data.user?.email,
+          role: data.user?.role || 'acheteur',
+          apiToken: data.access_token,
+        }
+      } catch (err) {
+        throw new Error(err.message || 'Erreur de connexion')
+      }
+    },
+  }),
+]
+
+// ─── 2. Google OAuth — uniquement si credentials configurées ──────────────
+if (hasGoogle) {
+  providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
       authorization: {
         params: {
           prompt: 'consent',
@@ -63,8 +70,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           response_type: 'code',
         },
       },
-    }),
-  ],
+    })
+  )
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET || 'beninmarket-fallback-secret-change-in-production',
+
+  providers,
 
   // ─── Session via JWT (sans base de données) ────────────────────────────
   session: {
