@@ -62,7 +62,7 @@ export default function ProduitsBoutiques() {
           {boutiques.map((b) => (
             <Link
               key={b.id}
-              href={`/boutiques/${b.slug}`}
+              href={`/boutique/${b.slug}`}
               style={{ textDecoration: 'none' }}
             >
               <div style={{
