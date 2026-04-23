@@ -71,15 +71,18 @@ export default function InventoryTab({ token }) {
     e.preventDefault()
     setSaving(true)
     try {
-      await createProduct({
+      // Construction du payload - on n'envoie image que si fournie
+      const payload = {
         name: form.name,
         price: parseFloat(form.price),
-        promo_price: form.promo_price ? parseFloat(form.promo_price) : null,
         stock: parseInt(form.stock) || 0,
-        description: form.description,
-        category_id: form.category_id || null,
-        image: form.image || null,
-      }, token)
+        description: form.description || '',
+      }
+      if (form.promo_price) payload.promo_price = parseFloat(form.promo_price)
+      if (form.category_id) payload.category_id = form.category_id
+      if (form.image) payload.image = form.image
+
+      await createProduct(payload, token)
       setShowModal(false)
       setForm({ name: '', price: '', promo_price: '', stock: '', description: '', category_id: '', image: '' })
       setImagePreview('')
