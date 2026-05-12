@@ -5,8 +5,8 @@ import { NextResponse } from 'next/server'
 const PROTECTED_ROUTES = [
   { path: '/vendeur', roles: ['vendeur', 'admin'] },
   { path: '/compte', roles: ['acheteur', 'vendeur', 'admin'] },
+  { path: '/messages', roles: null },     // connexion requise pour la messagerie
   { path: '/panier', roles: null },       // connexion requise pour voir le panier
-  { path: '/paiement', roles: null },     // connexion requise pour payer
 ]
 
 export default auth(async (req) => {
@@ -46,8 +46,8 @@ export const config = {
   matcher: [
     '/vendeur/:path*',
     '/compte/:path*',
+    '/messages/:path*',
     '/panier/:path*',
-    '/paiement/:path*',
   ],
 }
 

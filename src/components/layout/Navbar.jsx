@@ -5,26 +5,40 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useCart } from '@/lib/CartContext'
+import { getUnreadCount } from '@/lib/api'
+import GlobalSearch from '@/components/search/GlobalSearch'
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
   { label: 'Produits', href: '/produits' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Boutiques', href: '/boutiques' },
+  { label: 'Promotions', href: '/promotions' },
 ]
 
 export default function Navbar() {
-  const [recherche, setRecherche] = useState('')
-  const [searchFocus, setSearchFocus] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const { data: session } = useSession()
   const { totalArticles } = useCart()
-  const searchRef = useRef(null)
   const userRef = useRef(null)
+  const [unreadMessages, setUnreadMessages] = useState(0)
+
+  // Polling messages non lus
+  useEffect(() => {
+    if (!session?.user?.apiToken) return
+    const fetchUnread = () => {
+      getUnreadCount(session.user.apiToken)
+        .then(data => setUnreadMessages(data.unread || 0))
+        .catch(() => {})
+    }
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 30000)
+    return () => clearInterval(interval)
+  }, [session])
 
   // Scroll detection
   useEffect(() => {
@@ -33,24 +47,26 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Raccourci clavier ⌘K / Ctrl+K
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setShowSearch(s => !s)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClick = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) setSearchFocus(false)
       if (userRef.current && !userRef.current.contains(e.target)) setUserMenu(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault()
-    if (recherche.trim()) {
-      router.push(`/produits?q=${encodeURIComponent(recherche.trim())}`)
-      setRecherche('')
-      setSearchFocus(false)
-    }
-  }
 
   const handleLogout = async () => {
     setUserMenu(false)
@@ -62,6 +78,7 @@ export default function Navbar() {
   const role = user?.role
 
   return (
+    <>
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 md:px-6"
       style={{
         background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
@@ -81,30 +98,16 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Search bar */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4 relative" ref={searchRef}>
-          <form onSubmit={handleSearchSubmit} className="w-full">
-            <div className="flex items-center w-full px-4 py-2.5 rounded-full gap-2 transition-all duration-300"
-              style={{
-                background: searchFocus ? '#fff' : '#F1EFEA',
-                border: searchFocus ? '2px solid #1B6B3A' : '2px solid transparent',
-                boxShadow: searchFocus ? '0 0 0 4px rgba(27,107,58,0.08)' : 'none',
-              }}>
-              <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>search</span>
-              <input type="text" value={recherche} onChange={e => setRecherche(e.target.value)}
-                onFocus={() => setSearchFocus(true)}
-                placeholder="Rechercher un produit, un artisan..."
-                className="bg-transparent outline-none text-[13px] font-medium w-full"
-                style={{ color: '#374151' }} />
-              {recherche && (
-                <button type="button" onClick={() => { setRecherche(''); setSearchFocus(false) }}
-                  className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <span className="material-symbols-outlined text-[16px]">close</span>
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
+        {/* Search bar — bouton qui ouvre le modal */}
+        <button
+          onClick={() => setShowSearch(true)}
+          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-200 text-left"
+          style={{ background: '#F1EFEA', border: '2px solid transparent' }}
+        >
+          <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>search</span>
+          <span className="text-[13px] font-medium flex-1" style={{ color: '#9CA3AF' }}>Rechercher un produit, un artisan...</span>
+          <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold" style={{ background: '#E5E7EB', color: '#9CA3AF' }}>⌘K</kbd>
+        </button>
 
         {/* Nav links */}
         <div className="hidden lg:flex items-center gap-1">
@@ -128,9 +131,24 @@ export default function Navbar() {
 
           {/* Mobile search */}
           <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
-            onClick={() => router.push('/produits')}>
+            onClick={() => setShowSearch(true)}>
             <span className="material-symbols-outlined text-[20px]" style={{ color: '#374151' }}>search</span>
           </button>
+
+          {/* Messages */}
+          {user && (
+            <Link href="/messages"
+              className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+              style={{ color: '#374151' }}>
+              <span className="material-symbols-outlined text-[22px]">chat</span>
+              {unreadMessages > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
+                  style={{ background: '#EF4444' }}>
+                  {unreadMessages}
+                </span>
+              )}
+            </Link>
+          )}
 
           {/* Vendeur space */}
           {role === 'vendeur' && (
@@ -197,6 +215,7 @@ export default function Navbar() {
 
                 {[
                   { href: '/compte', icon: 'person', label: 'Mon compte' },
+                  { href: '/messages', icon: 'chat', label: 'Mes messages' },
                   { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
                   ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
                 ].map(item => (
@@ -264,5 +283,23 @@ export default function Navbar() {
         </div>
       )}
     </nav>
+
+      {/* Modal Recherche Globale */}
+      {showSearch && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-start justify-center pt-[10vh] px-4"
+          style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setShowSearch(false)}
+        >
+          <div
+            className="w-full max-w-xl bg-white rounded-[24px] overflow-hidden shadow-2xl"
+            style={{ maxHeight: '80vh' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <GlobalSearch onClose={() => setShowSearch(false)} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }

@@ -1,9 +1,15 @@
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+      { protocol: 'https', hostname: '**.googleusercontent.com' },
       { protocol: 'https', hostname: 'ui-avatars.com' },
       { protocol: 'https', hostname: 'upload.wikimedia.org' },
       { protocol: 'https', hostname: 'www.svgrepo.com' },
@@ -16,6 +22,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: '**.amazonaws.com' },
     ],
+  },
+  // Fix Turbopack : résoudre tailwindcss depuis node_modules local
+  turbopack: {
+    resolveAlias: {
+      tailwindcss: path.resolve(__dirname, 'node_modules/tailwindcss'),
+    },
   },
 }
 

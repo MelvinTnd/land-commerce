@@ -36,7 +36,7 @@ export default function DetailProduitPage() {
     name: 'Statue Royale d\'Abomey',
     price: 45000,
     description: 'Bois d\'Ébène précieux, sculpté par le Maître Kodjo.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQWt3NsHUOOcKgwDibsPPLilYMKO3ygaYWDdvHdsDg4LCV8TJwv0kSw5EGxRz7o_NoxtE39htKAzNOxFGDp8W7asYbM-Txolc1fRRmELgtKN-uGOi83rb0agNO706CIkerjUB4zKOMWpk7o6y6n1j30_lGgaxXcWLNJU38_Gf36l2xgHxgk9E65T8yx1xkIlN5pBnGaqj_mQWuEuzF-xXWpPd6aBEsJh6a-N9i44F-1H2mNrddeHLM_TUvy7dHjVida3nsiXz3e9E',
+    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800',
     shop: { name: 'Atelier Kanvô', location: 'Abomey, Bénin', slug: 'atelier-kanvo' },
     category: { name: 'Artisanat' },
     avg_rating: 4.8,
@@ -61,15 +61,15 @@ export default function DetailProduitPage() {
       </div>
 
       {/* Hero — galerie + infos */}
-      <div className="max-w-7xl mx-auto px-10 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-6 md:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <DetailGalerie produit={p} />
           <DetailInfos produit={p} />
         </div>
       </div>
 
       {/* Vendeur + fiche + avis */}
-      <div className="max-w-7xl mx-auto px-10 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-12">
         <DetailVendeur shop={p.shop} rating={p.avg_rating} reviews={p.total_reviews} />
       </div>
 

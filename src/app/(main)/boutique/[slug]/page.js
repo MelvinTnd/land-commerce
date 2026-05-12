@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
-import { useParams } from 'next/navigation'
-import { getShop } from '@/lib/api'
+import { useParams, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { getShop, sendMessage, getShopReviews } from '@/lib/api'
 
 const boutiquesData = {
   'atelier-kanvo': {
@@ -56,11 +57,7 @@ const produitsParBoutique = {
   ],
 }
 
-const avisExemple = [
-  { nom: 'Rachida A.', note: 5, date: 'Mars 2026', commentaire: 'Qualité exceptionnelle ! Emballage soigné, livraison rapide.' },
-  { nom: 'Pierre D.', note: 4, date: 'Fév. 2026', commentaire: 'Très beau produit. Vendeur sérieux et agréable.' },
-  { nom: 'Amina K.', note: 5, date: 'Jan. 2026', commentaire: 'Vendeur réactif et professionnel. Le produit correspond.' },
-]
+
 
 export default function BoutiquePage() {
   const params = useParams()
@@ -70,6 +67,15 @@ export default function BoutiquePage() {
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [onglet, setOnglet] = useState('produits')
   const [showContact, setShowContact] = useState(false)
+  const [contactMsg, setContactMsg] = useState('')
+  const [contactSending, setContactSending] = useState(false)
+  const [reviews, setReviews] = useState([])
+  const [reviewsData, setReviewsData] = useState({ avg_rating: 0, total_reviews: 0, distribution: {} })
+  const [reviewsLoading, setReviewsLoading] = useState(false)
+  const [contactSent, setContactSent] = useState(false)
+  const [apiShopId, setApiShopId] = useState(null)
+  const router = useRouter()
+  const { data: session } = useSession()
 
   // Tenter de charger depuis l'API, sinon fallback sur données locales
   useEffect(() => {
@@ -103,9 +109,27 @@ export default function BoutiquePage() {
             sold: 0,
           })))
         }
+        setApiShopId(data.id)
       })
       .catch(() => {}) // Garder les données locales
   }, [slug])
+
+  // Charger les avis depuis l'API quand l'onglet avis est ouvert
+  useEffect(() => {
+    if (onglet !== 'avis' || reviews.length > 0) return
+    setReviewsLoading(true)
+    getShopReviews(slug)
+      .then(data => {
+        setReviews(data.reviews || [])
+        setReviewsData({
+          avg_rating:    data.avg_rating    || 0,
+          total_reviews: data.total_reviews || 0,
+          distribution:  data.distribution  || {},
+        })
+      })
+      .catch(() => {})
+      .finally(() => setReviewsLoading(false))
+  }, [onglet, slug])
 
   if (!boutique) {
     return (
@@ -231,11 +255,49 @@ export default function BoutiquePage() {
              <div className="w-12 h-12 rounded-full bg-green-50 text-green-700 flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-xl">forum</span>
              </div>
-             <div className="w-full flex-1">
-               <p className="text-xs font-bold text-gray-900 mb-2">Envoyer un message à la boutique</p>
-               <input type="text" placeholder="Bonjour, je souhaiterais savoir si..." className="w-full bg-gray-50 border border-transparent focus:border-green-700 outline-none rounded-xl px-4 py-3 text-sm font-medium transition-colors" />
-             </div>
-             <button onClick={() => setShowContact(false)} className="bg-[#1B6B3A] text-white font-bold text-xs px-8 py-3.5 rounded-xl whitespace-nowrap lg:mt-6">Envoyer</button>
+             {!session?.user ? (
+               <div className="flex-1 flex flex-col items-center gap-2">
+                 <p className="text-sm font-bold text-gray-700">Connectez-vous pour envoyer un message</p>
+                 <Link href="/connexion" className="px-6 py-2.5 rounded-xl text-xs font-bold text-white" style={{ background: '#1B6B3A' }}>
+                   Se connecter
+                 </Link>
+               </div>
+             ) : contactSent ? (
+               <div className="flex-1 flex items-center gap-3">
+                 <span className="material-symbols-outlined text-[#1B6B3A] text-xl">check_circle</span>
+                 <div>
+                   <p className="text-sm font-bold text-gray-900">Message envoyé !</p>
+                   <button onClick={() => router.push('/messages')} className="text-xs font-bold text-[#1B6B3A] hover:underline mt-1">Voir mes messages →</button>
+                 </div>
+               </div>
+             ) : (
+               <>
+                 <div className="w-full flex-1">
+                   <p className="text-xs font-bold text-gray-900 mb-2">Envoyer un message à la boutique</p>
+                   <input type="text" value={contactMsg} onChange={e => setContactMsg(e.target.value)}
+                     placeholder="Bonjour, je souhaiterais savoir si..."
+                     className="w-full bg-gray-50 border border-transparent focus:border-green-700 outline-none rounded-xl px-4 py-3 text-sm font-medium transition-colors" />
+                 </div>
+                 <button
+                   disabled={!contactMsg.trim() || contactSending}
+                   onClick={async () => {
+                     if (!apiShopId || !contactMsg.trim()) return
+                     setContactSending(true)
+                     try {
+                       await sendMessage(apiShopId, contactMsg.trim(), session.user.apiToken)
+                       setContactSent(true)
+                       setContactMsg('')
+                     } catch (err) {
+                       alert(err.message || 'Erreur lors de l\'envoi')
+                     }
+                     setContactSending(false)
+                   }}
+                   className="bg-[#1B6B3A] text-white font-bold text-xs px-8 py-3.5 rounded-xl whitespace-nowrap lg:mt-6 disabled:opacity-50 transition-all"
+                 >
+                   {contactSending ? 'Envoi...' : 'Envoyer'}
+                 </button>
+               </>
+             )}
           </div>
         </div>
       )}
@@ -305,61 +367,90 @@ export default function BoutiquePage() {
 
         {/* REVIEWS */}
         {onglet === 'avis' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            {/* Reviews Summary */}
-            <div className="lg:col-span-4">
-              <div className="bg-white rounded-[24px] p-8 shadow-sm text-center">
-                 <p className="text-[56px] font-extrabold text-gray-900 leading-none mb-2">{boutique.note}</p>
-                 <div className="flex justify-center text-[#F5B731] mb-2">
+          reviewsLoading ? (
+            <div className="flex justify-center py-16">
+              <div className="w-10 h-10 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+              {/* Résumé des notes */}
+              <div className="lg:col-span-4">
+                <div className="bg-white rounded-[24px] p-8 shadow-sm text-center">
+                  <p className="text-[56px] font-extrabold text-gray-900 leading-none mb-2">
+                    {reviewsData.avg_rating > 0 ? reviewsData.avg_rating.toFixed(1) : '—'}
+                  </p>
+                  <div className="flex justify-center text-[#F5B731] mb-2">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className="material-symbols-outlined text-[20px]">{i < Math.floor(boutique.note) ? 'star' : 'star_outline'}</span>
+                      <span key={i} className="material-symbols-outlined text-[20px]">
+                        {i < Math.floor(reviewsData.avg_rating) ? 'star' : 'star_outline'}
+                      </span>
                     ))}
-                 </div>
-                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Basé sur {boutique.totalAvis} avis</p>
-                 
-                 <div className="flex flex-col gap-3">
-                   {[5,4,3,2,1].map(n => {
-                      const pct = n === 5 ? 75 : n === 4 ? 20 : n === 3 ? 5 : 0;
+                  </div>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">
+                    Basé sur {reviewsData.total_reviews} avis
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {[5, 4, 3, 2, 1].map(n => {
+                      const pct = reviewsData.distribution[n]?.pct || 0
                       return (
-                       <div key={n} className="flex items-center gap-3">
-                         <span className="text-xs font-bold text-gray-600 w-2 shrink-0">{n}</span>
-                         <span className="material-symbols-outlined text-[#F5B731] text-[12px]">star</span>
-                         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                           <div className="h-full bg-green-600 rounded-full" style={{ width: `${pct}%` }}></div>
-                         </div>
-                         <span className="text-[10px] font-bold text-gray-400 w-6 text-right">{pct}%</span>
-                       </div>
+                        <div key={n} className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-gray-600 w-2 shrink-0">{n}</span>
+                          <span className="material-symbols-outlined text-[#F5B731] text-[12px]">star</span>
+                          <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-green-600 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-gray-400 w-6 text-right">{pct}%</span>
+                        </div>
                       )
-                   })}
-                 </div>
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Liste des avis */}
+              <div className="lg:col-span-8 flex flex-col gap-4">
+                {reviews.length === 0 ? (
+                  <div className="bg-white rounded-[24px] p-10 text-center shadow-sm">
+                    <span className="material-symbols-outlined text-4xl text-gray-300 mb-3 block">rate_review</span>
+                    <p className="text-sm font-bold text-gray-500">Aucun avis pour le moment</p>
+                    <p className="text-xs text-gray-400 mt-1">Soyez le premier à évaluer cette boutique après votre achat</p>
+                  </div>
+                ) : (
+                  reviews.map((avis, i) => (
+                    <div key={avis.id || i} className="bg-white rounded-[20px] p-6 shadow-sm flex gap-5">
+                      <div className="w-12 h-12 rounded-full overflow-hidden relative shrink-0 bg-gray-100">
+                        <img
+                          src={avis.user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(avis.user?.name || 'A')}&background=1B6B3A&color=fff&size=100`}
+                          alt={avis.user?.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-3 mb-1">
+                          <h4 className="font-bold text-sm text-gray-900">{avis.user?.name || 'Anonyme'}</h4>
+                          <span className="text-[10px] text-gray-400 font-medium">
+                            {new Date(avis.created_at).toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' })}
+                          </span>
+                        </div>
+                        <div className="flex text-[#F5B731] mb-3">
+                          {[...Array(5)].map((_, j) => (
+                            <span key={j} className="material-symbols-outlined text-[14px]">
+                              {j < avis.rating ? 'star' : 'star_outline'}
+                            </span>
+                          ))}
+                        </div>
+                        {avis.comment && (
+                          <p className="text-[13px] text-gray-600 font-medium leading-relaxed">
+                            &ldquo;{avis.comment}&rdquo;
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
-
-            {/* Reviews List */}
-            <div className="lg:col-span-8 flex flex-col gap-4">
-              {avisExemple.map((avis, i) => (
-                <div key={i} className="bg-white rounded-[20px] p-6 shadow-sm flex gap-5">
-                   <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center font-bold text-lg text-gray-400 shrink-0">
-                     {avis.nom[0]}
-                   </div>
-                   <div>
-                     <div className="flex items-center gap-3 mb-1">
-                       <h4 className="font-bold text-sm text-gray-900">{avis.nom}</h4>
-                       <span className="text-[10px] text-gray-400 font-medium">{avis.date}</span>
-                     </div>
-                     <div className="flex text-[#F5B731] mb-3">
-                        {[...Array(5)].map((_, j) => (
-                          <span key={j} className="material-symbols-outlined text-[14px]">{j < avis.note ? 'star' : 'star_outline'}</span>
-                        ))}
-                     </div>
-                     <p className="text-[13px] text-gray-600 font-medium leading-relaxed">
-                       "{avis.commentaire}"
-                     </p>
-                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          )
         )}
 
       </div>

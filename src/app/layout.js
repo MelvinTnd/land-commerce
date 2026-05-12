@@ -19,6 +19,12 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Preload Material Symbols pour éviter le FOUT */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
+          as="style"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
@@ -34,11 +40,12 @@ export default function RootLayout({ children }) {
             {children}
           </CartProvider>
         </AuthProvider>
+        {/* FOUT fix : affiche les icônes dès que la police est chargée, max 400ms */}
         <Script
           id="mso-loader"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `(function(){function u(){document.documentElement.classList.add('mso-loaded');}if(document.fonts&&document.fonts.check('1em "Material Symbols Outlined"')){u();}else if(document.fonts){document.fonts.load('1em "Material Symbols Outlined"').then(u).catch(u);setTimeout(u,2500);}else{setTimeout(u,600);}})();`,
+            __html: `(function(){function u(){document.documentElement.classList.add('mso-loaded');}if(document.fonts&&document.fonts.check('1em "Material Symbols Outlined"')){u();}else if(document.fonts){document.fonts.load('1em "Material Symbols Outlined"').then(u).catch(u);}setTimeout(u,400);})();`,
           }}
         />
       </body>

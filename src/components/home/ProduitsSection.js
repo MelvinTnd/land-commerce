@@ -23,7 +23,7 @@ export default function ProduitsSection() {
   useEffect(() => {
     getProducts({ featured: true })
       .then(data => {
-        const apiProducts = (data.data || []).map(p => ({
+        const apiProducts = (data.data || []).slice(0, 4).map(p => ({
           id: p.id, slug: p.slug, nom: p.name,
           lieu: p.shop?.location || 'Bénin',
           prix: parseFloat(p.price),
@@ -40,7 +40,7 @@ export default function ProduitsSection() {
   }, [])
 
   return (
-    <section className="py-28 px-6 md:px-12 lg:px-20" style={{ background: 'white' }}>
+    <section className="py-16 md:py-28 px-4 sm:px-6 md:px-12 lg:px-20" style={{ background: 'white' }}>
       <div className="max-w-[1280px] mx-auto">
 
         {/* Header */}
@@ -90,8 +90,8 @@ export default function ProduitsSection() {
             <p className="text-sm text-gray-400 font-medium">Aucun produit disponible pour le moment.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {produits.map(p => {
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            {produits.slice(0, 4).map(p => {
               const inCart = estDansPanier(p.id)
               const isFav = favoris.includes(p.id)
               const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null

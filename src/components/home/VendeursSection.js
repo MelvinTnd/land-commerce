@@ -30,7 +30,7 @@ export default function VendeursSection() {
   }, [])
 
   return (
-    <section className="py-28 px-6 md:px-12 lg:px-20" style={{ background: '#F7F5F0' }}>
+    <section className="py-16 md:py-28 px-4 sm:px-6 md:px-12 lg:px-20" style={{ background: '#F7F5F0' }}>
       <div className="max-w-[1280px] mx-auto">
 
         {/* Header */}
@@ -80,9 +80,9 @@ export default function VendeursSection() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {vendeurs.map(v => (
-              <Link key={v.id} href={`/boutique/${v.id}`}
+              <Link key={v.id} href={`/boutiques/${v.id}`}
                 className="group bg-white overflow-hidden flex flex-col transition-all duration-400 hover:-translate-y-2 hover:shadow-xl"
                 style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
 

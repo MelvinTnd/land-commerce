@@ -122,12 +122,13 @@ export async function deleteProduct(productId, authToken = null) {
 export async function getProducts(params = {}) {
   const searchParams = new URLSearchParams()
   if (params.category) searchParams.set('category', params.category)
-  if (params.shop) searchParams.set('shop', params.shop)
-  if (params.search) searchParams.set('search', params.search)
+  if (params.shop)     searchParams.set('shop', params.shop)
+  if (params.search)   searchParams.set('search', params.search)
   if (params.featured) searchParams.set('featured', '1')
-  if (params.page) searchParams.set('page', params.page)
+  if (params.page)     searchParams.set('page', params.page)
   if (params.prix_max) searchParams.set('prix_max', params.prix_max)
-  if (params.tri) searchParams.set('tri', params.tri)
+  if (params.tri)      searchParams.set('tri', params.tri)
+  if (params.limit)    searchParams.set('limit', params.limit)
 
   const query = searchParams.toString()
   return apiFetch(`/products${query ? '?' + query : ''}`)
@@ -147,13 +148,21 @@ export async function getCategories() {
 // ========================
 // PUBLIC - Boutiques
 // ========================
-export async function getShops() {
-  return apiFetch('/shops')
+export async function getShops(params = {}) {
+  const searchParams = new URLSearchParams()
+  if (params.search) searchParams.set('search', params.search)
+  if (params.limit)  searchParams.set('limit', params.limit)
+  const query = searchParams.toString()
+  return apiFetch(`/shops${query ? '?' + query : ''}`)
 }
 
 export async function getShop(slug) {
   return apiFetch(`/shops/${slug}`)
 }
+
+// Alias explicite utilisé dans la page boutique individuelle
+export const getShopBySlug = getShop
+
 
 // ========================
 // COMMANDES / PAYEMENT
@@ -170,42 +179,32 @@ export async function getOrders(authToken = null) {
 }
 
 // ========================
-// PUBLIC - Blog & Forum
+// MESSAGERIE
 // ========================
-export async function getArticles(params = {}) {
-  const searchParams = new URLSearchParams()
-  if (params.categorie) searchParams.set('categorie', params.categorie)
-  if (params.search) searchParams.set('search', params.search)
-  if (params.page) searchParams.set('page', params.page)
-  const query = searchParams.toString()
-  return apiFetch(`/articles${query ? '?' + query : ''}`)
+export async function getConversations(authToken = null) {
+  return apiFetch('/conversations', {}, authToken)
 }
 
-export async function getArticle(slugOrId) {
-  return apiFetch(`/articles/${slugOrId}`)
+export async function getConversation(conversationId, authToken = null) {
+  return apiFetch(`/conversations/${conversationId}`, {}, authToken)
 }
 
-export async function createArticle(data) {
-  return apiFetch('/articles', { method: 'POST', body: JSON.stringify(data) })
-}
-
-export async function getForumTopics(params = {}) {
-  const searchParams = new URLSearchParams()
-  if (params.tag) searchParams.set('tag', params.tag)
-  if (params.page) searchParams.set('page', params.page)
-  const query = searchParams.toString()
-  return apiFetch(`/forum-topics${query ? '?' + query : ''}`)
-}
-
-export async function createForumTopic(data) {
-  return apiFetch('/forum-topics', { method: 'POST', body: JSON.stringify(data) })
-}
-
-export async function voteForumTopic(topicId, direction) {
-  return apiFetch(`/forum-topics/${topicId}/vote`, {
+export async function sendMessage(shopId, content, authToken = null) {
+  return apiFetch(`/shops/${shopId}/message`, {
     method: 'POST',
-    body: JSON.stringify({ direction }),
-  })
+    body: JSON.stringify({ content }),
+  }, authToken)
+}
+
+export async function replyToConversation(conversationId, content, authToken = null) {
+  return apiFetch(`/conversations/${conversationId}/reply`, {
+    method: 'POST',
+    body: JSON.stringify({ content }),
+  }, authToken)
+}
+
+export async function getUnreadCount(authToken = null) {
+  return apiFetch('/conversations/unread', {}, authToken)
 }
 
 // ========================
@@ -220,8 +219,37 @@ export async function getOrder(orderId) {
 }
 
 // ========================
-// PUBLIC - Boutiques
+// COMMANDES VENDEUR
 // ========================
-export async function getShopBySlug(slug) {
-  return apiFetch(`/shops/${slug}`)
+export async function getVendorOrders(authToken = null) {
+  return apiFetch('/vendor/orders', {}, authToken)
+}
+
+export async function updateOrderStatus(orderId, status, authToken = null) {
+  return apiFetch(`/vendor/orders/${orderId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  }, authToken)
+}
+
+// ========================
+// AVIS & NOTATIONS
+// ========================
+export async function getShopReviews(slug) {
+  return apiFetch(`/shops/${slug}/reviews`)
+}
+
+export async function submitReview(reviewData, authToken = null) {
+  return apiFetch('/reviews', {
+    method: 'POST',
+    body: JSON.stringify(reviewData),
+  }, authToken)
+}
+
+export async function getEligibleShops(authToken = null) {
+  return apiFetch('/reviews/eligible-shops', {}, authToken)
+}
+
+export async function canReviewShop(shopId, authToken = null) {
+  return apiFetch(`/shops/${shopId}/can-review`, {}, authToken)
 }

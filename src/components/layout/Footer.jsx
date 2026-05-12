@@ -10,14 +10,8 @@ const footerLinks = {
     { label: 'Devenir vendeur', href: '/inscription-vendeur' },
   ],
   Support: [
-    { label: "Centre d'aide", href: '/faq' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Livraison', href: '/livraison' },
-    { label: 'Retours', href: '/retours' },
-  ],
-  Légal: [
-    { label: "Conditions d'utilisation", href: '/cgu' },
-    { label: 'Confidentialité', href: '/confidentialite' },
+    { label: 'Mon compte', href: '/compte' },
   ],
 }
 

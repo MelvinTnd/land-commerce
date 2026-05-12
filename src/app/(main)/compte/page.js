@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { getOrders } from '@/lib/api'
+import ReviewsSection from '@/components/compte/ReviewsSection'
 
 const adresses = [
   { id: 1, label: 'Domicile', nom: 'Marie Adjovi', telephone: '+229 96 12 34 56', rue: '15 Rue du Commerce', quartier: 'Cadjèhoun', ville: 'Cotonou', defaut: true },
@@ -70,6 +71,7 @@ export default function ComptePage() {
 
   const onglets = [
     { id: 'commandes', label: 'Mes Commandes', icon: 'receipt_long', count: commandes.length },
+    { id: 'avis', label: 'Mes Avis', icon: 'star' },
     { id: 'profil', label: 'Mon Profil', icon: 'person' },
     { id: 'adresses', label: 'Mes Adresses', icon: 'location_on', count: adresses.length },
     { id: 'securite', label: 'Sécurité', icon: 'lock' },
@@ -213,6 +215,9 @@ export default function ComptePage() {
                 })}
               </div>
             )}
+
+            {/* === AVIS === */}
+            {onglet === 'avis' && <ReviewsSection />}
 
             {/* === PROFIL === */}
             {onglet === 'profil' && (

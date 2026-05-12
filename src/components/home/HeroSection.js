@@ -6,17 +6,17 @@ export default function HeroSection() {
     <section className="relative w-full min-h-[85vh] flex items-center bg-[#F9FAFA] overflow-hidden">
 
       {/* Background Decor */}
-      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#E6F8EA] rounded-full opacity-50 pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[350px] h-[350px] bg-[#fbf3d3] rounded-full opacity-50 pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-5%] w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-[#E6F8EA] rounded-full opacity-50 pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] bg-[#fbf3d3] rounded-full opacity-50 pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-20 lg:py-0">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 py-16 lg:py-0">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-20">
 
           {/* Left Content */}
           <div className="flex-1 flex flex-col items-start w-full">
 
             {/* Tagline */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-5 md:mb-6">
               <span className="flex items-center gap-1.5 bg-[#1B6B3A]/10 text-[#1B6B3A] text-[10px] font-extrabold uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-[#1B6B3A]/20">
                 <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
                 Artisanat Certifié
@@ -24,7 +24,7 @@ export default function HeroSection() {
             </div>
 
             {/* Main Title */}
-            <h1 className="text-5xl md:text-6xl lg:text-[72px] font-extrabold text-[#111827] leading-[1.05] tracking-tight mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-extrabold text-[#111827] leading-[1.05] tracking-tight mb-6 md:mb-8">
               L&apos;Âme du <span className="text-[#1B6B3A]">Bénin</span> <br />
               <span className="relative inline-block">
                 à portée de main.
@@ -34,18 +34,18 @@ export default function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base md:text-lg text-gray-600 font-medium max-w-xl leading-relaxed mb-10">
+            <p className="text-base md:text-lg text-gray-600 font-medium max-w-xl leading-relaxed mb-8 md:mb-10">
               Découvrez la plus grande marketplace du savoir-faire béninois. Qu&apos;il s&apos;agisse des miels purs de Dassa ou des sculptures d&apos;Abomey, commandez en direct et soutenez les maîtres créateurs.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 mb-12 w-full">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-10 md:mb-12 w-full sm:w-auto">
               <Link href="/produits"
-                className="bg-[#1B6B3A] hover:bg-[#134e29] text-white font-extrabold text-[13px] uppercase tracking-widest px-8 md:px-10 py-5 rounded-full transition-transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-3 w-full sm:w-auto">
+                className="bg-[#1B6B3A] hover:bg-[#134e29] text-white font-extrabold text-[13px] uppercase tracking-widest px-8 md:px-10 py-4 md:py-5 rounded-full transition-transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-3">
                 Explorer la Boutique
                 <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
               </Link>
               <Link href="/boutiques"
-                className="bg-white hover:bg-gray-50 text-[#111827] border-2 border-gray-200 font-extrabold text-[13px] uppercase tracking-widest px-8 md:px-10 py-5 rounded-full transition-all hover:border-[#1B6B3A] flex items-center justify-center gap-3 w-full sm:w-auto">
+                className="bg-white hover:bg-gray-50 text-[#111827] border-2 border-gray-200 font-extrabold text-[13px] uppercase tracking-widest px-8 md:px-10 py-4 md:py-5 rounded-full transition-all hover:border-[#1B6B3A] flex items-center justify-center gap-3">
                 Nos Artisans
                 <span className="material-symbols-outlined text-[20px]">storefront</span>
               </Link>
@@ -53,12 +53,12 @@ export default function HeroSection() {
 
             <div className="flex items-center gap-6 sm:gap-12 pt-6 border-t border-gray-200 w-full">
               <div className="flex flex-col">
-                <span className="text-3xl font-black text-[#111827]">500+</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#111827]">500+</span>
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Vendeurs Vérifiés</span>
               </div>
               <div className="w-px h-12 bg-gray-200" />
               <div className="flex flex-col">
-                <span className="text-3xl font-black text-[#111827]">12K+</span>
+                <span className="text-2xl sm:text-3xl font-black text-[#111827]">12K+</span>
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Produits Uniques</span>
               </div>
             </div>
@@ -69,9 +69,9 @@ export default function HeroSection() {
             <div className="relative w-full pl-20">
 
               {/* Image flottante épices — positionnée derrière */}
-              <div className="absolute top-6 left-0 w-[140px] h-[140px] rounded-[24px] overflow-hidden shadow-xl z-10" style={{ border: '5px solid white' }}>
+              <div className="absolute top-6 left-0 w-[120px] h-[120px] lg:w-[140px] lg:h-[140px] rounded-[24px] overflow-hidden shadow-xl z-10" style={{ border: '5px solid white' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=400"
+                  src="/images/products/epices.jpg"
                   alt="Épices du Bénin"
                   fill className="object-cover" sizes="140px"
                 />
@@ -80,7 +80,7 @@ export default function HeroSection() {
               {/* Image principale */}
               <div className="relative w-full aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl z-20" style={{ border: '8px solid white' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800"
+                  src="/images/products/art.jpg"
                   alt="Artisanat Béninois"
                   fill className="object-cover" priority
                   sizes="(max-width: 1024px) 340px, 420px"

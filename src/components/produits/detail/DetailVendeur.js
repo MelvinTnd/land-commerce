@@ -23,8 +23,8 @@ const avis = [
     note: 5,
     commentaire: '"Une pièce absolument magnifique qui trône désormais dans mon salon. Le travail du bois est d\'une finesse incroyable. La livraison s\'est faite en moins de 24h."',
     images: [
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuArFSaPLLYoQ2B9geElveMg62mhBDu-oY0qqMtyZb84vbbJiT8TjxvMRUlBWDe-5S229uLCTRp0lpRp4RKrgR474X653n_ZAC6ogOb96KdjomYMR92phme4pYG9n9tTt1ppg1YHBgl61KhKCMLW48AxsMCB5rZxcG-dADp6wXy2m3TEwOyhCR9JKzMq1bGV9G52m0JkXeRUs3HaqxzXUWIhEHyG4D7HhQBAJnJncOKKbIgcf1xPMwXfXhjjwooj4saRxcuebT3eeLw',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBxqRAaWkBT_0J6MyJUKQptYmi09bDLjIrnAn3LtsruJQcpMGvAy-7lia7UjiXjhx4Ld3MU5dJxj7VvKmnWcAIF1_4CTFFjQkNQ1bjPtdsGvHspnR8KuFEynmT_V71KDzup3hGiQYeQV2b877cHCsEhE-85oCOwl4GFgbakDqUeOlSdZSCEeAPMa21yn5D6uRhzM29Q_GfjiXwCNe1292st0ewZ-BVwGimnDmL5Qrl6tXBpbEUNlXhfCyAO8OUOAoURxoH4GJVTPBw',
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200',
+      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=200',
     ],
   },
   {
@@ -49,7 +49,7 @@ export default function DetailVendeur({ shop, rating, reviews }) {
         {/* Image vendeur + citation */}
         <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
           <img
-            src={shop.logo || "https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80"}
+            src={shop.logo || "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80"}
             alt={shop.name}
             className="w-full h-full object-cover"
           />

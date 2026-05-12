@@ -13,7 +13,7 @@ const promosDefaut = [
     reduction: 30,
     description: "Sculptures, masques et mobilier d'exception à prix réduit pendant 48h.",
     date_fin: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
-    image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1493106641515-5a31f1543e56?auto=format&fit=crop&q=80&w=800',
     categorie: 'FLASH',
     color: '#EF4444',
   },
@@ -23,7 +23,7 @@ const promosDefaut = [
     reduction: 20,
     description: 'Miel, épices et produits bio des collines à prix doux.',
     date_fin: new Date(Date.now() + 8 * 24 * 3600 * 1000).toISOString(),
-    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?auto=format&fit=crop&q=80&w=800',
     categorie: 'TERROIR',
     color: '#F59E0B',
   },
@@ -33,7 +33,7 @@ const promosDefaut = [
     reduction: 25,
     description: 'Tuniques, bijoux et accessoires de créateurs béninois.',
     date_fin: new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString(),
-    image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=800',
     categorie: 'MODE',
     color: '#8B5CF6',
   },
@@ -65,7 +65,7 @@ function getReduction(promo) {
 }
 
 function getImage(promo) {
-  return promo.image || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=800'
+  return promo.image || 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800'
 }
 
 function useCountdown(finDate) {
@@ -85,11 +85,11 @@ function useCountdown(finDate) {
 function CountdownUnit({ value, label }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-[28px]"
+      <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-[18px] sm:text-[22px] md:text-[28px]"
         style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}>
         {String(value).padStart(2, '0')}
       </div>
-      <span className="text-[9px] font-black uppercase tracking-widest mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</span>
+      <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest mt-1 sm:mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</span>
     </div>
   )
 }
@@ -158,7 +158,7 @@ export default function PromotionsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
           {/* Big promo card */}
-          <div className="lg:col-span-3 relative overflow-hidden group" style={{ borderRadius: '32px', minHeight: '460px' }}>
+          <div className="lg:col-span-3 relative overflow-hidden group" style={{ borderRadius: '32px', minHeight: '360px' }}>
             {promos.map((pr, i) => (
               <div key={pr.id || i} className="absolute inset-0 transition-opacity duration-700"
                 style={{ opacity: i === actif ? 1 : 0, pointerEvents: i === actif ? 'auto' : 'none' }}>
@@ -172,14 +172,14 @@ export default function PromotionsSection() {
             ))}
 
             {/* Content overlay */}
-            <div className="absolute inset-0 flex flex-col justify-between p-8 z-10">
+            <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-8 z-10">
               {/* Top row */}
               <div className="flex items-start justify-between">
-                <span className="px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest text-white"
+                <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-white"
                   style={{ background: color }}>
                   {tag}
                 </span>
-                <span className="text-[28px] font-black text-white px-4 py-1.5 rounded-[12px]"
+                <span className="text-[22px] sm:text-[28px] font-black text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-[12px]"
                   style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}>
                   {reduction}
                 </span>
@@ -187,27 +187,27 @@ export default function PromotionsSection() {
 
               {/* Bottom content */}
               <div>
-                <h3 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">{p.titre}</h3>
-                <p className="text-white/60 text-sm font-medium mb-6 max-w-sm">{p.description}</p>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">{p.titre}</h3>
+                <p className="text-white/60 text-xs sm:text-sm font-medium mb-4 sm:mb-6 max-w-sm">{p.description}</p>
 
                 {/* Countdown */}
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>Expire dans</span>
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 flex-wrap">
+                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>Expire dans</span>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
                     <CountdownUnit value={t.h} label="H" />
-                    <span className="text-xl font-black text-white/40">:</span>
+                    <span className="text-lg sm:text-xl font-black text-white/40">:</span>
                     <CountdownUnit value={t.m} label="M" />
-                    <span className="text-xl font-black text-white/40">:</span>
+                    <span className="text-lg sm:text-xl font-black text-white/40">:</span>
                     <CountdownUnit value={t.s} label="S" />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between flex-wrap gap-3">
                   <Link href="/produits"
-                    className="flex items-center gap-2 px-8 py-4 rounded-full text-[12px] font-black uppercase tracking-widest text-black transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-black transition-all hover:-translate-y-0.5 hover:shadow-lg"
                     style={{ background: '#D4920A' }}>
                     Profiter de l&apos;offre
-                    <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    <span className="material-symbols-outlined text-[16px] sm:text-[18px]">arrow_forward</span>
                   </Link>
 
                   {/* Dots nav */}
