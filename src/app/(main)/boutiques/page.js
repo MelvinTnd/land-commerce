@@ -221,7 +221,7 @@ export default function BoutiquesPage() {
                     {b.description}
                   </p>
 
-                  <Link href={`/boutiques/${b.slug}`}
+                  <Link href={`/boutique/${b.slug}`}
                     className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-wider transition-all group-hover:bg-[#1B6B3A] group-hover:text-white"
                     style={{ background: '#F0FDF4', color: '#1B6B3A', border: '1.5px solid rgba(27,107,58,0.2)' }}>
                     Visiter la boutique

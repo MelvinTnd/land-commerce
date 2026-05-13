@@ -200,7 +200,8 @@ export default function EspaceVendeur() {
             })}
 
             <p className="text-[9px] font-black uppercase tracking-[0.2em] px-4 mt-4 mb-2" style={{ color: '#C4C4C4' }}>Compte</p>
-            <Link href="/" className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition-all">
+            <Link href={shopData?.slug ? `/boutique/${shopData.slug}` : '#'}
+              className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition-all ${!shopData?.slug ? 'opacity-40 pointer-events-none' : ''}`}>
               <span className="material-symbols-outlined text-[20px] text-gray-400">open_in_new</span>
               <span className="font-bold text-[13px]">Voir ma boutique</span>
             </Link>

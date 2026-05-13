@@ -150,32 +150,10 @@ function ConnexionForm() {
                 </Link>
               </p>
 
-              {/* Bouton Google */}
-              <button
-                onClick={handleGoogleSignIn}
-                disabled={loadingGoogle}
-                className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-full font-bold text-sm transition-all hover:bg-gray-50 mb-8 disabled:opacity-70"
-                style={{
-                  background: 'white',
-                  border: '1px solid #E5E7EB',
-                  color: '#1A1A1A',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                }}
-              >
-                <div className="w-5 h-5 relative shrink-0">
-                  <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" fill className="object-contain" sizes="20px" />
-                </div>
-                {loadingGoogle ? 'Redirection...' : 'Continuer avec Google'}
-              </button>
+              {/* Bouton Google — désactivé (non configuré) */}
+              {/* <button ... Continuer avec Google ... /> */}
 
-              <div className="relative flex items-center justify-center mb-8">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-100" />
-                </div>
-                <span className="relative px-4 text-[10px] font-bold uppercase tracking-widest" style={{ background: 'white', color: '#9CA3AF' }}>
-                  Ou par email
-                </span>
-              </div>
+              {/* Séparateur supprimé car Google est désactivé */}
 
               {/* Message d'erreur */}
               {error && (

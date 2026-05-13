@@ -6,7 +6,7 @@ const PROTECTED_ROUTES = [
   { path: '/vendeur', roles: ['vendeur', 'admin'] },
   { path: '/compte', roles: ['acheteur', 'vendeur', 'admin'] },
   { path: '/messages', roles: null },     // connexion requise pour la messagerie
-  { path: '/panier', roles: null },       // connexion requise pour voir le panier
+  // /panier est public — pas besoin d'être connecté pour consulter son panier
 ]
 
 export default auth(async (req) => {
@@ -47,7 +47,6 @@ export const config = {
     '/vendeur/:path*',
     '/compte/:path*',
     '/messages/:path*',
-    '/panier/:path*',
   ],
 }
 
