@@ -1,9 +1,12 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
 
+/** Timeout avant fallback sur données locales (Render peut dormir 50s au 1er démarrage) */
+const API_TIMEOUT_MS = 5000
+
 /**
- * Fonction utilitaire pour les appels API.
- * authToken : token Laravel passé depuis la session NextAuth (optionnel).
- *             Si absent, on tente le fallback localStorage (rétrocompatibilité).
+ * Fonction utilitaire pour les appels API avec timeout de 5 secondes.
+ * Si Render est endormi (cold start ~50s), l'appel est annulé proprement
+ * et les composants basculent immédiatement sur defaultData sans blocage.
  */
 async function apiFetch(endpoint, options = {}, authToken = null) {
   const token = authToken
@@ -16,22 +19,35 @@ async function apiFetch(endpoint, options = {}, authToken = null) {
     ...options.headers,
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers,
-  })
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
 
-  const data = await response.json()
+  try {
+    const response = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    })
 
-  if (!response.ok) {
-    if (data.errors) {
-      const firstError = Object.values(data.errors)[0][0]
-      throw new Error(firstError)
+    clearTimeout(timeoutId)
+    const data = await response.json()
+
+    if (!response.ok) {
+      if (data.errors) {
+        const firstError = Object.values(data.errors)[0][0]
+        throw new Error(firstError)
+      }
+      throw new Error(data.message || 'Une erreur est survenue')
     }
-    throw new Error(data.message || 'Une erreur est survenue')
-  }
 
-  return data
+    return data
+  } catch (err) {
+    clearTimeout(timeoutId)
+    if (err.name === 'AbortError') {
+      throw new Error('API_TIMEOUT')
+    }
+    throw err
+  }
 }
 
 // ========================
