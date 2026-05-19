@@ -51,7 +51,8 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
         }))
-        setAllProduits(prods)
+        // Si l'API répond vide (base non seedée, cold-start...) → garder le fallback
+        setAllProduits(prods.length > 0 ? prods : FALLBACK_PRODUITS)
         setLoading(false)
       })
       .catch(() => { setAllProduits(FALLBACK_PRODUITS); setLoading(false) })

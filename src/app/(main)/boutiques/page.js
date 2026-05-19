@@ -90,7 +90,7 @@ export default function BoutiquesPage() {
   useEffect(() => {
     getShops()
       .then(data => {
-        setBoutiques(data.map(s => ({
+        const shops = (Array.isArray(data) ? data : []).map(s => ({
           nom: s.name,
           slug: s.slug,
           lieu: s.location || 'Bénin',
@@ -98,10 +98,12 @@ export default function BoutiquesPage() {
           logo: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
           banner: s.banner || null,
           badge: s.status === 'active',
-          description: s.description || 'Découvrez cette magnifique boutique et son artisanat d\'exception.',
+          description: s.description || "Découvrez cette magnifique boutique et son artisanat d'exception.",
           avgRating: parseFloat(s.avg_rating) || 0,
           totalReviews: parseInt(s.total_reviews) || 0,
-        })))
+        }))
+        // Si l'API répond vide (base non seedée, cold-start...) → garder le fallback
+        setBoutiques(shops.length > 0 ? shops : FALLBACK_BOUTIQUES)
         setLoading(false)
       })
       .catch(() => { setBoutiques(FALLBACK_BOUTIQUES); setLoading(false) })
