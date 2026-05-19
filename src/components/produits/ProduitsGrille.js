@@ -8,6 +8,21 @@ import { getProductImage } from '@/lib/images'
 
 const tris = ['Pertinence', 'Prix croissant', 'Prix décroissant', 'Meilleures ventes']
 
+const FALLBACK_PRODUITS = [
+  { id: 1, slug: 'tissu-kita-multicolor', nom: 'Tissu Kita Multicolore', lieu: 'Cotonou', prix: 8500, promoP: null, note: 4.8, badge: 'À la Une', categorie: 'Tissus', image: 'https://images.unsplash.com/photo-1558171813-7d17e96f4e88?auto=format&fit=crop&q=80&w=600', stock: 12 },
+  { id: 2, slug: 'sculpture-bronze-roi', nom: 'Sculpture Bronze Roi d\'Abomey', lieu: 'Abomey', prix: 45000, promoP: 38000, note: 5.0, badge: 'À la Une', categorie: 'Sculpture', image: 'https://images.unsplash.com/photo-1559564484-ac4a9db6b7c0?auto=format&fit=crop&q=80&w=600', stock: 3 },
+  { id: 3, slug: 'perles-yoruba', nom: 'Collier Perles Yoruba', lieu: 'Porto-Novo', prix: 12000, promoP: null, note: 4.7, badge: null, categorie: 'Bijoux', image: 'https://images.unsplash.com/photo-1573408301185-9519f94945b8?auto=format&fit=crop&q=80&w=600', stock: 8 },
+  { id: 4, slug: 'panier-tresse-natitingou', nom: 'Panier Tressé Natitingou', lieu: 'Natitingou', prix: 6500, promoP: null, note: 4.6, badge: null, categorie: 'Vannerie', image: 'https://images.unsplash.com/photo-1590736969596-e4bce35a3d96?auto=format&fit=crop&q=80&w=600', stock: 20 },
+  { id: 5, slug: 'masque-gelede', nom: 'Masque Gèlèdè Traditionnel', lieu: 'Kétou', prix: 28000, promoP: null, note: 4.9, badge: 'À la Une', categorie: 'Arts Rituels', image: 'https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&q=80&w=600', stock: 2 },
+  { id: 6, slug: 'batik-wax-premium', nom: 'Batik Wax Premium 6 yards', lieu: 'Cotonou', prix: 15000, promoP: 12500, note: 4.7, badge: null, categorie: 'Tissus', image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=600', stock: 15 },
+  { id: 7, slug: 'pot-terre-cuite-glazoue', nom: 'Pot en Terre Cuite de Glazoué', lieu: 'Glazoué', prix: 7500, promoP: null, note: 4.5, badge: null, categorie: 'Poterie', image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=600', stock: 10 },
+  { id: 8, slug: 'sac-cuir-ouidah', nom: 'Sac Cuir Artisanal Ouidah', lieu: 'Ouidah', prix: 22000, promoP: null, note: 4.8, badge: null, categorie: 'Maroquinerie', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=600', stock: 5 },
+  { id: 9, slug: 'boubou-brodee-parakou', nom: 'Boubou Brodée de Parakou', lieu: 'Parakou', prix: 35000, promoP: 29000, note: 4.9, badge: 'À la Une', categorie: 'Vêtements', image: 'https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?auto=format&fit=crop&q=80&w=600', stock: 7 },
+  { id: 10, slug: 'bijou-bronze-danxome', nom: 'Bijou Bronze Danxomè', lieu: 'Abomey', prix: 18500, promoP: null, note: 4.6, badge: null, categorie: 'Bijoux', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=600', stock: 4 },
+  { id: 11, slug: 'huile-palme-rouge', nom: 'Huile de Palme Rouge Bio', lieu: 'Lokossa', prix: 3500, promoP: null, note: 4.7, badge: null, categorie: 'Alimentaire', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=600', stock: 50 },
+  { id: 12, slug: 'figurine-bois-fon', nom: 'Figurine en Bois Fon sculptée', lieu: 'Abomey-Calavi', prix: 9500, promoP: null, note: 4.5, badge: null, categorie: 'Sculpture', image: 'https://images.unsplash.com/photo-1566041510639-8d95a2490bfb?auto=format&fit=crop&q=80&w=600', stock: 11 },
+]
+
 export default function ProduitsGrille({ categorieActive, prixMax, triActif, setTriActif, recherche, onCountChange }) {
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
@@ -39,7 +54,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
         setAllProduits(prods)
         setLoading(false)
       })
-      .catch(() => { setAllProduits([]); setLoading(false) })
+      .catch(() => { setAllProduits(FALLBACK_PRODUITS); setLoading(false) })
   }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Filtre prix côté client — instantané

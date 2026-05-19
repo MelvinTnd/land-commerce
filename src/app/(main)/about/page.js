@@ -87,7 +87,7 @@ export default function AboutPage() {
               Né de la passion pour le patrimoine béninois
             </h2>
             <p className="text-[15px] leading-relaxed mb-4" style={{ color: '#6B7280' }}>
-              Fondé en 2024 à Cotonou, BéninMarket est né d&apos;un constat simple : les artisans béninois créent des merveilles, mais peinent à atteindre un marché plus large. Notre plateforme brise cette barrière en offrant une vitrine digitale premium à chaque créateur.
+              Fondé en 2026 à Cotonou, BéninMarket est né d&apos;un constat simple : les artisans béninois créent des merveilles, mais peinent à atteindre un marché plus large. Notre plateforme brise cette barrière en offrant une vitrine digitale premium à chaque créateur.
             </p>
             <p className="text-[15px] leading-relaxed" style={{ color: '#6B7280' }}>
               De Porto-Novo à Natitingou, de Ouidah à Parakou, nous parcourons le pays pour dénicher les meilleurs artisans et leurs créations uniques. Chaque produit raconte une histoire que nous voulons partager avec le monde.
@@ -108,7 +108,7 @@ export default function AboutPage() {
               </div>
               <div>
                 <p className="font-black text-[12px]" style={{ color: '#0D0D0D' }}>Cotonou, Bénin</p>
-                <p className="text-[10px]" style={{ color: '#9CA3AF' }}>Depuis 2024</p>
+                <p className="text-[10px]" style={{ color: '#9CA3AF' }}>Depuis 2026</p>
               </div>
             </div>
           </div>
