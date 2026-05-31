@@ -1,34 +1,39 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 import { getProducts } from '@/lib/api'
 import { getProductImage } from '@/lib/images'
+import ProductImage from '@/components/ui/ProductImage'
 
 const tris = ['Pertinence', 'Prix croissant', 'Prix décroissant', 'Meilleures ventes']
 
-const FALLBACK_PRODUITS = [
-  { id: 1, slug: 'tissu-kita-multicolor', nom: 'Tissu Kita Multicolore', lieu: 'Cotonou', prix: 8500, promoP: null, note: 4.8, badge: 'À la Une', categorie: 'Tissus', image: '/images/products/wax.jpg', stock: 12 },
-  { id: 2, slug: 'sculpture-bronze-roi', nom: 'Sculpture Bronze Roi d\'Abomey', lieu: 'Abomey', prix: 45000, promoP: 38000, note: 5.0, badge: 'À la Une', categorie: 'Sculpture', image: '/images/products/art.jpg', stock: 3 },
-  { id: 3, slug: 'perles-yoruba', nom: 'Collier Perles Yoruba', lieu: 'Porto-Novo', prix: 12000, promoP: null, note: 4.7, badge: null, categorie: 'Bijoux', image: '/images/products/artisanat.jpg', stock: 8 },
-  { id: 4, slug: 'panier-tresse-natitingou', nom: 'Panier Tressé Natitingou', lieu: 'Natitingou', prix: 6500, promoP: null, note: 4.6, badge: null, categorie: 'Vannerie', image: '/images/products/maison.jpg', stock: 20 },
-  { id: 5, slug: 'masque-gelede', nom: 'Masque Gèlèdè Traditionnel', lieu: 'Kétou', prix: 28000, promoP: null, note: 4.9, badge: 'À la Une', categorie: 'Arts Rituels', image: '/images/products/artisanat.jpg', stock: 2 },
-  { id: 6, slug: 'batik-wax-premium', nom: 'Batik Wax Premium 6 yards', lieu: 'Cotonou', prix: 15000, promoP: 12500, note: 4.7, badge: null, categorie: 'Tissus', image: '/images/products/wax.jpg', stock: 15 },
-  { id: 7, slug: 'pot-terre-cuite-glazoue', nom: 'Pot en Terre Cuite de Glazoué', lieu: 'Glazoué', prix: 7500, promoP: null, note: 4.5, badge: null, categorie: 'Poterie', image: '/images/products/maison.jpg', stock: 10 },
-  { id: 8, slug: 'sac-cuir-ouidah', nom: 'Sac Cuir Artisanal Ouidah', lieu: 'Ouidah', prix: 22000, promoP: null, note: 4.8, badge: null, categorie: 'Maroquinerie', image: '/images/products/sac.jpg', stock: 5 },
-  { id: 9, slug: 'boubou-brodee-parakou', nom: 'Boubou Brodée de Parakou', lieu: 'Parakou', prix: 35000, promoP: 29000, note: 4.9, badge: 'À la Une', categorie: 'Vêtements', image: '/images/products/textile.jpg', stock: 7 },
-  { id: 10, slug: 'bijou-bronze-danxome', nom: 'Bijou Bronze Danxomè', lieu: 'Abomey', prix: 18500, promoP: null, note: 4.6, badge: null, categorie: 'Bijoux', image: '/images/products/artisanat.jpg', stock: 4 },
-  { id: 11, slug: 'huile-palme-rouge', nom: 'Huile de Palme Rouge Bio', lieu: 'Lokossa', prix: 3500, promoP: null, note: 4.7, badge: null, categorie: 'Alimentaire', image: '/images/products/epices.jpg', stock: 50 },
-  { id: 12, slug: 'figurine-bois-fon', nom: 'Figurine en Bois Fon sculptée', lieu: 'Abomey-Calavi', prix: 9500, promoP: null, note: 4.5, badge: null, categorie: 'Sculpture', image: '/images/products/art.jpg', stock: 11 },
+const FALLBACK_PRODUITS_RAW = [
+  { id: 1, slug: 'tissu-kita-multicolor',      nom: 'Tissu Kita Multicolore',           lieu: 'Cotonou',        prix: 8500,  promoP: null,  note: 4.8, badge: 'À la Une', categorie: 'Tissus',       categorieSlug: 'tissus', stock: 12 },
+  { id: 2, slug: 'sculpture-bronze-roi',       nom: 'Sculpture Bronze Roi d\'Abomey',    lieu: 'Abomey',         prix: 45000, promoP: 38000, note: 5.0, badge: 'À la Une', categorie: 'Sculpture',    categorieSlug: 'sculpture', stock: 3 },
+  { id: 3, slug: 'perles-yoruba',              nom: 'Collier Perles Yoruba',             lieu: 'Porto-Novo',     prix: 12000, promoP: null,  note: 4.7, badge: null,       categorie: 'Bijoux',       categorieSlug: 'bijoux', stock: 8 },
+  { id: 4, slug: 'panier-tresse-natitingou',   nom: 'Panier Tressé Natitingou',          lieu: 'Natitingou',     prix: 6500,  promoP: null,  note: 4.6, badge: null,       categorie: 'Vannerie',     categorieSlug: 'vannerie', stock: 20 },
+  { id: 5, slug: 'masque-gelede',              nom: 'Masque Gèlèdè Traditionnel',        lieu: 'Kétou',          prix: 28000, promoP: null,  note: 4.9, badge: 'À la Une', categorie: 'Arts Rituels', categorieSlug: 'arts-rituels', stock: 2 },
+  { id: 6, slug: 'batik-wax-premium',          nom: 'Batik Wax Premium 6 yards',         lieu: 'Cotonou',        prix: 15000, promoP: 12500, note: 4.7, badge: null,       categorie: 'Tissus',       categorieSlug: 'tissus', stock: 15 },
+  { id: 7, slug: 'pot-terre-cuite-glazoue',    nom: 'Pot en Terre Cuite de Glazoué',     lieu: 'Glazoué',        prix: 7500,  promoP: null,  note: 4.5, badge: null,       categorie: 'Poterie',      categorieSlug: 'poterie', stock: 10 },
+  { id: 8, slug: 'sac-cuir-ouidah',            nom: 'Sac Cuir Artisanal Ouidah',         lieu: 'Ouidah',         prix: 22000, promoP: null,  note: 4.8, badge: null,       categorie: 'Maroquinerie', categorieSlug: 'maroquinerie', stock: 5 },
+  { id: 9, slug: 'boubou-brodee-parakou',      nom: 'Boubou Brodée de Parakou',          lieu: 'Parakou',        prix: 35000, promoP: 29000, note: 4.9, badge: 'À la Une', categorie: 'Vêtements',    categorieSlug: 'vetements', stock: 7 },
+  { id: 10, slug: 'bijou-bronze-danxome',      nom: 'Bijou Bronze Danxomè',              lieu: 'Abomey',         prix: 18500, promoP: null,  note: 4.6, badge: null,       categorie: 'Bijoux',       categorieSlug: 'bijoux', stock: 4 },
+  { id: 11, slug: 'huile-palme-rouge',         nom: 'Huile de Palme Rouge Bio',          lieu: 'Lokossa',        prix: 3500,  promoP: null,  note: 4.7, badge: null,       categorie: 'Alimentaire',  categorieSlug: 'alimentation', stock: 50 },
+  { id: 12, slug: 'figurine-bois-fon',         nom: 'Figurine en Bois Fon sculptée',     lieu: 'Abomey-Calavi',  prix: 9500,  promoP: null,  note: 4.5, badge: null,       categorie: 'Sculpture',    categorieSlug: 'sculpture', stock: 11 },
 ]
+// Enrichir chaque produit fallback avec la bonne image via getProductImage
+const FALLBACK_PRODUITS = FALLBACK_PRODUITS_RAW.map(p => ({
+  ...p,
+  image: getProductImage({ slug: p.slug, categorie: p.categorie }),
+}))
 
 export default function ProduitsGrille({ categorieActive, prixMax, triActif, setTriActif, recherche, onCountChange }) {
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
-  const [loading, setLoading] = useState(true)
-  const [allProduits, setAllProduits] = useState([])
+  const [loading, setLoading] = useState(false)  // false car fallback immédiat
+  const [allProduits, setAllProduits] = useState(FALLBACK_PRODUITS)  // fallback visible dès le montage
 
   useEffect(() => {
     setLoading(true)
@@ -48,18 +53,33 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           note: parseFloat(p.avg_rating) || 5.0,
           badge: p.is_featured ? 'À la Une' : null,
           categorie: p.category?.name || 'Artisanat',
+          categorieSlug: p.category?.slug || '',
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
         }))
-        // Si l'API répond vide (base non seedée, cold-start...) → garder le fallback
-        setAllProduits(prods.length > 0 ? prods : FALLBACK_PRODUITS)
+        // Si l'API répond vide → garder le fallback déjà affiché
+        if (prods.length > 0) setAllProduits(prods)
         setLoading(false)
       })
-      .catch(() => { setAllProduits(FALLBACK_PRODUITS); setLoading(false) })
+      .catch(() => { setLoading(false) })  // fallback déjà dans l'état initial
   }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Filtre prix côté client — instantané
-  const produits = allProduits.filter(p => p.prix <= prixMax)
+  // Filtre côté client : prix + catégorie + recherche (double-couche de sécurité)
+  const produits = allProduits.filter(p => {
+    if (p.prix > prixMax) return false
+    if (categorieActive && categorieActive !== null) {
+      // filtre par slug ou par nom de catégorie
+      const matchSlug = p.categorieSlug?.toLowerCase() === categorieActive?.toLowerCase()
+      const matchNom  = p.categorie?.toLowerCase().includes(categorieActive?.toLowerCase())
+      if (!matchSlug && !matchNom) return false
+    }
+    if (recherche && recherche.trim()) {
+      const q = recherche.toLowerCase()
+      if (!p.nom.toLowerCase().includes(q) && !p.categorie.toLowerCase().includes(q) && !p.lieu.toLowerCase().includes(q)) return false
+    }
+    return true
+  })
+
 
   useEffect(() => {
     if (onCountChange) onCountChange(produits.length)
@@ -152,10 +172,13 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
 
                 {/* Image — ratio carré pour plus de lisibilité */}
                 <div className="relative overflow-hidden bg-[#F7F5F0]" style={{ aspectRatio: '1/1' }}>
-                  <Link href={`/produits/${p.slug || p.id}`}>
-                    <Image src={p.image} alt={p.nom} fill
+                  <Link href={`/produits/${p.slug || p.id}`} style={{ display: 'block', width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
+                    <ProductImage
+                      nom={p.nom}
+                      categorie={p.categorie}
+                      fill
                       className="object-cover transition-transform duration-600 group-hover:scale-105"
-                      sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" />
+                    />
                   </Link>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 

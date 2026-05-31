@@ -6,6 +6,7 @@ import { useCart } from '@/lib/CartContext'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { getShop, sendMessage, getShopReviews } from '@/lib/api'
+import { getShopBannerImage } from '@/lib/images'
 
 /* ─── Fallback data ──────────────────────────────────────────────────────── */
 const FALLBACK_SHOPS = {
@@ -106,7 +107,21 @@ export default function BoutiquePage() {
   const { data: session } = useSession()
   const { ajouterAuPanier, estDansPanier } = useCart()
 
-  const [boutique, setBoutique]       = useState(FALLBACK_SHOPS[slug] || null)
+  // Calcul fallback immédiat basé sur le slug
+  const staticFallback = FALLBACK_SHOPS[slug] || {
+    nom: slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    slug,
+    proprietaire: 'Artisan',
+    localisation: 'Bénin',
+    categorie: 'Artisanat',
+    description: "Découvrez cette boutique et son artisanat d'exception.",
+    banner: getShopBannerImage({ name: slug }),
+    logo: `https://ui-avatars.com/api/?name=${encodeURIComponent(slug)}&background=1B6B3A&color=fff&size=200`,
+    note: 0, totalAvis: 0, totalProduits: 0, totalVentes: 0,
+    membreDepuis: '', certifie: false, tags: [], whatsapp: '', instagram: '',
+  }
+
+  const [boutique, setBoutique]       = useState(staticFallback)  // visible immédiatement
   const [produits, setProduits]       = useState(FALLBACK_PRODUCTS[slug] || [])
   const [onglet, setOnglet]           = useState('produits')
   const [search, setSearch]           = useState('')
@@ -118,12 +133,11 @@ export default function BoutiquePage() {
   const [reviews, setReviews]         = useState([])
   const [reviewsData, setReviewsData] = useState({ avg_rating: 0, total_reviews: 0, distribution: {} })
   const [reviewsLoading, setReviewsLoading] = useState(false)
-  const [loading, setLoading]         = useState(true)
+  const [loading, setLoading]         = useState(false)
   const [shareCopied, setShareCopied] = useState(false)
 
-  /* ── Charger boutique depuis l'API ── */
+  /* ── Charger boutique depuis l'API (en arrière-plan) ── */
   useEffect(() => {
-    setLoading(true)
     getShop(slug)
       .then(data => {
         setBoutique({
@@ -133,26 +147,26 @@ export default function BoutiquePage() {
           localisation:   data.location   || 'Bénin',
           categorie:      data.category   || 'Artisanat',
           description:    data.description || '',
-          banner:         data.banner      || FALLBACK_SHOPS[slug]?.banner || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80',
-          logo:           data.logo        || FALLBACK_SHOPS[slug]?.logo   || '',
-          note:           data.avg_rating  || 4.8,
-          totalAvis:      data.reviews_count || 0,
-          totalProduits:  data.products?.length || 0,
-          totalVentes:    data.total_sales  || 0,
+          banner:         data.banner      || FALLBACK_SHOPS[slug]?.banner || getShopBannerImage({ name: data.name }),
+          logo:           data.logo        || FALLBACK_SHOPS[slug]?.logo   || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B6B3A&color=fff&size=200`,
+          note:           parseFloat(data.avg_rating)  || 0,
+          totalAvis:      parseInt(data.reviews_count) || 0,
+          totalProduits:  data.products?.length        || 0,
+          totalVentes:    parseInt(data.total_sales)   || 0,
           membreDepuis:   data.created_at
             ? new Date(data.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
             : '',
           certifie:       data.status === 'active',
           tags:           data.tags || [],
-          whatsapp:       data.whatsapp   || '',
-          instagram:      data.instagram  || '',
+          whatsapp:       data.whatsapp  || '',
+          instagram:      data.instagram || '',
         })
         if (data.products?.length > 0) {
           setProduits(data.products.map(p => ({
             id:    p.id,
             nom:   p.name,
             prix:  parseFloat(p.price),
-            image: p.image || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80',
+            image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
             stock: p.stock,
             note:  parseFloat(p.avg_rating) || 4.5,
             sold:  p.sales_count || 0,
@@ -160,7 +174,7 @@ export default function BoutiquePage() {
         }
         setApiShopId(data.id)
       })
-      .catch(() => {})
+      .catch(() => {})  // fallback déjà en état initial
       .finally(() => setLoading(false))
   }, [slug])
 
@@ -241,14 +255,16 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           HERO BANNIÈRE
       ══════════════════════════════════════════════ */}
-      <div className="relative h-[320px] lg:h-[400px] w-full overflow-hidden bg-gray-900">
+      <div className="relative h-[320px] lg:h-[400px] w-full overflow-hidden" style={{ background: 'linear-gradient(135deg, #0D2B1A 0%, #1B6B3A 60%, #0D4A28 100%)' }}>
         <Image
-          src={boutique.banner}
+          src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
           alt={boutique.nom}
           fill
-          className="object-cover opacity-70"
+          className="object-cover opacity-60"
           sizes="100vw"
           priority
+          onError={e => { e.target.style.opacity = '0' }}
+          unoptimized
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />

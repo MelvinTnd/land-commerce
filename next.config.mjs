@@ -1,6 +1,5 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 /** @type {import('next').NextConfig} */
@@ -14,15 +13,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'upload.wikimedia.org' },
       { protocol: 'https', hostname: 'www.svgrepo.com' },
       { protocol: 'https', hostname: 'flagcdn.com' },
-      // API Backend (Render)
       { protocol: 'https', hostname: 'land-commerce-api.onrender.com' },
-      // CDNs courants utilisés par l'API
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'storage.googleapis.com' },
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: '**.amazonaws.com' },
       { protocol: 'https', hostname: 's3.amazonaws.com' },
-      // Autres CDNs éventuels
       { protocol: 'https', hostname: 'imgur.com' },
       { protocol: 'https', hostname: 'i.imgur.com' },
       { protocol: 'https', hostname: 'loremflickr.com' },
@@ -31,7 +27,6 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
-  // Fix Turbopack : résoudre tailwindcss depuis node_modules local
   turbopack: {
     resolveAlias: {
       tailwindcss: path.resolve(__dirname, 'node_modules/tailwindcss'),

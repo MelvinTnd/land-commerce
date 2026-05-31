@@ -82,8 +82,8 @@ const FALLBACK_BOUTIQUES = [
 
 
 export default function BoutiquesPage() {
-  const [boutiques, setBoutiques] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [boutiques, setBoutiques] = useState(FALLBACK_BOUTIQUES)  // fallback immédiat
+  const [loading, setLoading] = useState(false)  // pas de spinner bloquant
   const [search, setSearch] = useState('')
   const [tri, setTri] = useState('recent')
 
@@ -96,17 +96,15 @@ export default function BoutiquesPage() {
           lieu: s.location || 'Bénin',
           produits: s.products_count || 0,
           logo: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
-          banner: s.banner || null,
+          banner: s.banner || getShopBannerImage({ name: s.name, description: s.description }),
           badge: s.status === 'active',
           description: s.description || "Découvrez cette magnifique boutique et son artisanat d'exception.",
           avgRating: parseFloat(s.avg_rating) || 0,
           totalReviews: parseInt(s.total_reviews) || 0,
         }))
-        // Si l'API répond vide (base non seedée, cold-start...) → garder le fallback
-        setBoutiques(shops.length > 0 ? shops : FALLBACK_BOUTIQUES)
-        setLoading(false)
+        if (shops.length > 0) setBoutiques(shops)
       })
-      .catch(() => { setBoutiques(FALLBACK_BOUTIQUES); setLoading(false) })
+      .catch(() => {})  // fallback déjà en place
   }, [])
 
   const filtered = boutiques
@@ -243,20 +241,22 @@ export default function BoutiquesPage() {
                 style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.05)' }}>
 
                 {/* Banner avec fallback image locale */}
-                <div className="relative h-48 overflow-hidden" style={{ borderRadius: '28px 28px 0 0' }}>
+                <div className="relative h-48 overflow-hidden" style={{ borderRadius: '28px 28px 0 0', background: 'linear-gradient(135deg, #0D2B1A, #1B6B3A)' }}>
                   <Image
                     src={b.banner || getShopBannerImage({ name: b.nom, description: b.description })}
                     alt={b.nom}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="400px"
+                    unoptimized
+                    onError={e => { e.target.style.opacity = '0' }}
                   />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.9) 100%)' }} />
 
                   {/* Logo avatar */}
                   <div className="absolute bottom-0 left-6 translate-y-1/2 w-16 h-16 rounded-2xl overflow-hidden relative z-10 bg-white"
                     style={{ border: '2px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}>
-                    <Image src={b.logo} alt={b.nom} fill className="object-cover" sizes="64px" />
+                    <Image src={b.logo} alt={b.nom} fill className="object-cover" sizes="64px" unoptimized />
                   </div>
 
                   {/* Badge vérifié */}
