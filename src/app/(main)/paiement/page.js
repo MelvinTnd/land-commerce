@@ -23,6 +23,7 @@ export default function PaiementPage() {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [orderRef, setOrderRef] = useState(null)
+  const [orderData, setOrderData] = useState(null)
   const [addresses, setAddresses] = useState([])
   const [selectedAddressId, setSelectedAddressId] = useState(null)
   const [showAddressForm, setShowAddressForm] = useState(false)
@@ -107,11 +108,13 @@ export default function PaiementPage() {
       const res = await checkout(orderData, token)
       const ref = res?.order?.reference || res?.reference || `BM-${Date.now()}`
       setOrderRef(ref)
+      setOrderData(res?.order || null)
       viderPanier?.()
       setStep(2)
     } catch (err) {
       const ref = `BM-${Date.now()}`
       setOrderRef(ref)
+      setOrderData(null)
       viderPanier?.()
       setStep(2)
     } finally {
@@ -395,7 +398,7 @@ export default function PaiementPage() {
           </div>
         )}
 
-        {/* ── STEP 2 : CONFIRMATION ── */}
+        {/* ── STEP 2 : CONFIRMATION + REÇU ── */}
         {step === 2 && (
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-[32px] p-10 text-center" style={{ border: '1px solid #EBEBEB', boxShadow: '0 8px 40px rgba(27,107,58,0.1)' }}>
@@ -413,6 +416,55 @@ export default function PaiementPage() {
                   <span className="font-black text-[13px]" style={{ color: '#1B6B3A' }}>Réf : {orderRef}</span>
                 </div>
               )}
+
+              {/* ── REÇU DE PAIEMENT ── */}
+              {orderData && (
+                <div className="bg-white rounded-2xl border text-left my-6" style={{ borderColor: '#E5E7EB' }}>
+                  <div className="p-6" style={{ background: '#FAFAF8', borderBottom: '1px solid #E5E7EB', borderRadius: '16px 16px 0 0' }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-black text-[15px]" style={{ color: '#0D0D0D' }}>Reçu de paiement</h3>
+                      <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: '#F0FDF4', color: '#1B6B3A' }}>Payée</span>
+                    </div>
+                    <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                  <div className="p-6 flex flex-col gap-3">
+                    {(orderData.items || []).map((item, i) => (
+                      <div key={i} className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[13px] font-bold" style={{ color: '#0D0D0D' }}>{item.product_name}</p>
+                          <p className="text-[11px]" style={{ color: '#9CA3AF' }}>Qté : {item.quantity}</p>
+                        </div>
+                        <p className="text-[13px] font-black" style={{ color: '#0D0D0D' }}>
+                          {(parseFloat(item.unit_price) * parseInt(item.quantity)).toLocaleString('fr-FR')} FCFA
+                        </p>
+                      </div>
+                    ))}
+                    <div style={{ borderTop: '1px solid #E5E7EB', marginTop: 8, paddingTop: 12 }} />
+                    <div className="flex justify-between items-center">
+                      <span className="text-[12px] font-medium" style={{ color: '#6B7280' }}>Sous-total</span>
+                      <span className="text-[12px] font-bold" style={{ color: '#0D0D0D' }}>
+                        {parseFloat(orderData.total_amount || 0).toLocaleString('fr-FR')} FCFA
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[12px] font-medium" style={{ color: '#6B7280' }}>Livraison</span>
+                      <span className="text-[12px] font-bold" style={{ color: '#1B6B3A' }}>Incluse</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-3" style={{ borderTop: '2px solid #1B6B3A' }}>
+                      <span className="font-black text-[16px]" style={{ color: '#0D0D0D' }}>Total</span>
+                      <span className="font-black text-[20px]" style={{ color: '#1B6B3A' }}>
+                        {parseFloat(orderData.total_amount || 0).toLocaleString('fr-FR')}
+                        <span className="text-[11px] font-bold ml-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="px-6 py-4 flex items-center gap-2 text-[11px]" style={{ background: '#FAFAF8', borderTop: '1px solid #E5E7EB', borderRadius: '0 0 16px 16px', color: '#9CA3AF' }}>
+                    <span className="material-symbols-outlined text-[14px]">receipt</span>
+                    Paiement Mobile Money — Réf: {orderRef}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-[#F7F5F0] rounded-2xl p-6 text-left my-6" style={{ border: '1px solid #E5E7EB' }}>
                 <h3 className="font-black text-[13px] mb-4" style={{ color: '#0D0D0D' }}>Prochaines étapes</h3>
                 <div className="flex flex-col gap-3">
@@ -437,11 +489,11 @@ export default function PaiementPage() {
                   <span className="material-symbols-outlined text-[16px]">explore</span>
                   Continuer mes achats
                 </Link>
-                <Link href="/"
+                <Link href="/compte"
                   className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-[12px] uppercase tracking-wider text-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
                   style={{ background: 'linear-gradient(135deg, #1B6B3A, #2E8B57)' }}>
-                  <span className="material-symbols-outlined text-[16px]">home</span>
-                  Accueil
+                  <span className="material-symbols-outlined text-[16px]">receipt_long</span>
+                  Voir mes commandes
                 </Link>
               </div>
             </div>

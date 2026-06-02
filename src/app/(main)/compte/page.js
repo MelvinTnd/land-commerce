@@ -42,6 +42,7 @@ export default function ComptePage() {
   const [profileMsg, setProfileMsg] = useState('')
 
   const [deletingAccount, setDeletingAccount] = useState(false)
+  const [receiptOpen, setReceiptOpen] = useState(null)
 
   const loadAddresses = useCallback(async () => {
     if (!session?.user?.apiToken) return
@@ -335,6 +336,16 @@ export default function ComptePage() {
                       </div>
                       <div className="flex items-center justify-between px-6 py-4" style={{ background: '#FAFAF8', borderTop: '1px solid #F0EDE8' }}>
                         <div className="flex gap-3">
+                          <button
+                            onClick={() => setReceiptOpen(receiptOpen === cmd.id ? null : cmd.id)}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all"
+                            style={{
+                              background: receiptOpen === cmd.id ? '#1B6B3A' : '#F0FDF4',
+                              color: receiptOpen === cmd.id ? 'white' : '#1B6B3A',
+                            }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>receipt</span>
+                            {receiptOpen === cmd.id ? 'Masquer' : 'Voir le reçu'}
+                          </button>
                           {cmd.statut === 'livree' && (
                             <button onClick={() => setOnglet('avis')} className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white" style={{ background: '#1B6B3A' }}>
                               <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>star</span>
@@ -346,6 +357,49 @@ export default function ComptePage() {
                           {cmd.total.toLocaleString('fr-FR')} FCFA
                         </p>
                       </div>
+                      {receiptOpen === cmd.id && (
+                        <div style={{ borderTop: '1px dashed #D1D5DB', background: '#FAFAF8' }}>
+                          <div className="px-6 py-5 flex flex-col gap-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="material-symbols-outlined text-[16px]" style={{ color: '#1B6B3A' }}>receipt_long</span>
+                              <span className="text-xs font-extrabold uppercase tracking-wider" style={{ color: '#0D0D0D' }}>Reçu de paiement</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid #E5E7EB' }}>
+                              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>Référence</span>
+                              <span className="text-xs font-extrabold" style={{ color: '#0D0D0D' }}>{cmd.id}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid #E5E7EB' }}>
+                              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>Date</span>
+                              <span className="text-xs font-bold" style={{ color: '#374151' }}>{cmd.date}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2" style={{ borderBottom: '1px solid #E5E7EB' }}>
+                              <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>Statut</span>
+                              <span className="text-xs font-bold" style={{ color: s.color }}>{s.label}</span>
+                            </div>
+                            {cmd.articles.map((a, i) => (
+                              <div key={i} className="flex justify-between items-center">
+                                <div>
+                                  <span className="text-xs font-medium" style={{ color: '#374151' }}>{a.nom}</span>
+                                  <span className="text-[10px] ml-2" style={{ color: '#9CA3AF' }}>x{a.qte}</span>
+                                </div>
+                                <span className="text-xs font-bold" style={{ color: '#0D0D0D' }}>{(a.prix * a.qte).toLocaleString('fr-FR')} FCFA</span>
+                              </div>
+                            ))}
+                            <div style={{ borderTop: '1.5px solid #1B6B3A', marginTop: 4, paddingTop: 10 }}>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm font-extrabold" style={{ color: '#0D0D0D' }}>Total</span>
+                                <span className="text-sm font-extrabold" style={{ color: '#1B6B3A' }}>
+                                  {cmd.total.toLocaleString('fr-FR')} FCFA
+                                </span>
+                              </div>
+                            </div>
+                            <div className="mt-2 flex items-center gap-1.5 text-[10px]" style={{ color: '#9CA3AF' }}>
+                              <span className="material-symbols-outlined text-[12px]">check_circle</span>
+                              Paiement Mobile Money confirmé
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })}
