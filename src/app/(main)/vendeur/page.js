@@ -9,7 +9,7 @@ import ReviewsTab from '@/components/vendeur/ReviewsTab'
 import SettingsTab from '@/components/vendeur/SettingsTab'
 import OrdersTab from '@/components/vendeur/OrdersTab'
 import { getVendorDashboard } from '@/lib/api'
-import { getShopBannerImage } from '@/lib/images'
+import { getShopBannerImage, getStorageUrl } from '@/lib/images'
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -100,7 +100,7 @@ export default function EspaceVendeur() {
 
   const userName = session?.user?.name || 'Vendeur'
   const bannerSrc = shopData ? getShopBannerImage(shopData) : '/images/shops/default.jpg'
-  const avatarSrc = shopData?.logo ||
+  const avatarSrc = getStorageUrl(shopData?.logo) ||
     `https://ui-avatars.com/api/?name=${encodeURIComponent(shopData?.name || userName)}&background=1B6B3A&color=fff&size=200`
 
   // ── Loading ──

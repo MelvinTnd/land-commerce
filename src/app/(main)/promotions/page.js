@@ -34,6 +34,7 @@ function useCountdown(finDate) {
 function PromoCard({ p }) {
   const t = useCountdown(p.finDate)
   const urgency = new Date(p.finDate) - Date.now() < 72 * 3600 * 1000
+  const [imgErr, setImgErr] = useState(false)
 
   return (
     <div className="group relative bg-white overflow-hidden transition-all duration-400 hover:-translate-y-2"
@@ -41,7 +42,13 @@ function PromoCard({ p }) {
 
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
-        <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" />
+        {imgErr ? (
+          <div className="w-full h-full flex items-center justify-center" style={{ background: '#F3F4F6' }}>
+            <span className="material-symbols-outlined text-[48px]" style={{ color: '#D1D5DB' }}>broken_image</span>
+          </div>
+        ) : (
+          <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" onError={() => setImgErr(true)} />
+        )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)' }} />
         <div className="absolute top-4 left-4 flex gap-2">
           <span className="px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide text-white" style={{ background: p.color }}>{p.tag}</span>

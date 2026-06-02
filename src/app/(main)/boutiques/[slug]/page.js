@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { getShopBySlug } from '@/lib/api'
 import { useCart } from '@/lib/CartContext'
-import { getProductImage, getShopBannerImage } from '@/lib/images'
+import { getProductImage, getShopBannerImage, getStorageUrl } from '@/lib/images'
 
 export default function BoutiqueDetailPage() {
   const { slug } = useParams()
@@ -49,9 +49,9 @@ export default function BoutiqueDetailPage() {
 
   const products = shop.products || []
   const logoSrc = shop.logo
-    ? shop.logo
+    ? getStorageUrl(shop.logo)
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(shop.name)}&background=1B6B3A&color=fff&size=200`
-  const bannerSrc = shop.banner || getShopBannerImage(shop)
+  const bannerSrc = getStorageUrl(shop.banner) || getShopBannerImage(shop)
   const contactUrl = session?.user
     ? `/messages?shop=${shop.slug}&vendeur=${shop.user_id}`
     : '/connexion'

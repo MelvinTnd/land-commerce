@@ -3,87 +3,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getShops } from '@/lib/api'
-import { getShopBannerImage } from '@/lib/images'
-
-const FALLBACK_BOUTIQUES = [
-  {
-    nom: 'Dahomey Crafts',
-    slug: 'dahomey-crafts',
-    lieu: 'Abomey',
-    produits: 12,
-    logo: 'https://ui-avatars.com/api/?name=Dahomey+Crafts&background=1B6B3A&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1578330740121-657805126f5f?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Objets d\'art et sculptures authentiques du plateau d\'Abomey.',
-    avgRating: 5.0,
-    totalReviews: 12,
-  },
-  {
-    nom: 'Indigo Mode',
-    slug: 'indigo-mode',
-    lieu: 'Cotonou',
-    produits: 8,
-    logo: 'https://ui-avatars.com/api/?name=Indigo+Mode&background=D4920A&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1544441892-0b263bc33061?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Prêt-à-porter en pagne Indigo et tissus traditionnels revisités.',
-    avgRating: 4.8,
-    totalReviews: 24,
-  },
-  {
-    nom: 'Saveurs du Plateau',
-    slug: 'saveurs-du-plateau',
-    lieu: 'Pobè',
-    produits: 15,
-    logo: 'https://ui-avatars.com/api/?name=Saveurs+Plateau&background=7C3AED&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Épices, huiles et produits naturels transformés localement.',
-    avgRating: 4.9,
-    totalReviews: 31,
-  },
-  {
-    nom: 'Atelier Abomey Bronze',
-    slug: 'atelier-abomey-bronze',
-    lieu: 'Abomey',
-    produits: 24,
-    logo: 'https://ui-avatars.com/api/?name=Atelier+Abomey&background=1B6B3A&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1578330740121-657805126f5f?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Sculptures et bronzes traditionnels du Royaume du Danxomè, forgés selon les méthodes ancestrales.',
-    avgRating: 4.9,
-    totalReviews: 87,
-  },
-  {
-    nom: 'Tissus & Couleurs',
-    slug: 'tissus-couleurs',
-    lieu: 'Cotonou',
-    produits: 58,
-    logo: 'https://ui-avatars.com/api/?name=Tissus+Couleurs&background=D4920A&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1544441892-0b263bc33061?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Wax, Kita, batik et tissus teints à la main. La créativité textile béninoise à votre service.',
-    avgRating: 4.7,
-    totalReviews: 132,
-  },
-  {
-    nom: 'Bijoux Yoruba',
-    slug: 'bijoux-yoruba',
-    lieu: 'Porto-Novo',
-    produits: 35,
-    logo: 'https://ui-avatars.com/api/?name=Bijoux+Yoruba&background=7C3AED&color=fff&size=200',
-    banner: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800',
-    badge: true,
-    description: 'Perles, colliers et parures inspirés de l\'héritage Yoruba. Chaque bijou raconte une histoire.',
-    avgRating: 4.8,
-    totalReviews: 64,
-  },
-]
-
+import { getShopBannerImage, getStorageUrl } from '@/lib/images'
 
 export default function BoutiquesPage() {
-  const [boutiques, setBoutiques] = useState(FALLBACK_BOUTIQUES)  // fallback immédiat
-  const [loading, setLoading] = useState(false)  // pas de spinner bloquant
+  const [boutiques, setBoutiques] = useState([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [tri, setTri] = useState('recent')
 
@@ -95,16 +19,17 @@ export default function BoutiquesPage() {
           slug: s.slug,
           lieu: s.location || 'Bénin',
           produits: s.products_count || 0,
-          logo: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
-          banner: s.banner || getShopBannerImage({ name: s.name, description: s.description }),
+          logo: getStorageUrl(s.logo) || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
+          banner: getStorageUrl(s.banner) || getShopBannerImage({ name: s.name, description: s.description }),
           badge: s.status === 'active',
           description: s.description || "Découvrez cette magnifique boutique et son artisanat d'exception.",
           avgRating: parseFloat(s.avg_rating) || 0,
           totalReviews: parseInt(s.total_reviews) || 0,
         }))
-        if (shops.length > 0) setBoutiques(shops)
+        setBoutiques(shops)
+        setLoading(false)
       })
-      .catch(() => {})  // fallback déjà en place
+      .catch(() => setLoading(false))
   }, [])
 
   const filtered = boutiques
@@ -210,7 +135,7 @@ export default function BoutiquesPage() {
           </p>
         )}
 
-        {loading ? (
+        {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-white rounded-[28px] overflow-hidden animate-pulse"
@@ -224,7 +149,9 @@ export default function BoutiquesPage() {
               </div>
             ))}
           </div>
-        ) : filtered.length === 0 ? (
+        )}
+
+        {!loading && filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-28 text-center">
             <div className="w-20 h-20 rounded-full flex items-center justify-center bg-white mb-6"
               style={{ border: '1px solid #EBEBEB' }}>

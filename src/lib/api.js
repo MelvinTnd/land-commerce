@@ -8,7 +8,7 @@ const API_TIMEOUT_MS = 8000
  * Si Render est endormi (cold start ~50s), l'appel est annulé proprement
  * et les composants basculent immédiatement sur defaultData sans blocage.
  */
-async function apiFetch(endpoint, options = {}, authToken = null) {
+export async function apiFetch(endpoint, options = {}, authToken = null) {
   const token = authToken
     || (typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
 
@@ -109,6 +109,10 @@ export async function createShop(name, location, description, token = null) {
 }
 
 export async function updateShop(shopId, data, token = null) {
+  if (data instanceof FormData) {
+    if (!data.has('_method')) data.append('_method', 'PUT')
+    return apiFetch(`/shops/${shopId}`, { method: 'POST', body: data }, token)
+  }
   return apiFetch(`/shops/${shopId}`, {
     method: 'PUT',
     body: JSON.stringify(data),

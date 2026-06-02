@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { updateShop } from '@/lib/api'
+import { getStorageUrl } from '@/lib/images'
 
 export default function SettingsTab({ shop, token, onUpdated }) {
   const [form, setForm] = useState({ name: '', location: '', description: '' })
@@ -9,6 +10,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
   const [logoPreview, setLogoPreview] = useState('')
+  const [logoFile, setLogoFile] = useState(null)
   const fileRef = useRef(null)
 
   const villes = [
@@ -23,13 +25,14 @@ export default function SettingsTab({ shop, token, onUpdated }) {
         location: shop.location || '',
         description: shop.description || ''
       })
-      setLogoPreview(shop.logo || '')
+      setLogoPreview(getStorageUrl(shop.logo) || '')
     }
   }, [shop])
 
   const handleLogoFile = (e) => {
     const file = e.target.files[0]
     if (!file) return
+    setLogoFile(file)
     const reader = new FileReader()
     reader.onload = (ev) => setLogoPreview(ev.target.result)
     reader.readAsDataURL(file)
@@ -42,12 +45,26 @@ export default function SettingsTab({ shop, token, onUpdated }) {
     setSuccess(false)
     setError('')
     try {
-      const payload = { ...form }
-      if (logoPreview && logoPreview !== shop.logo) {
-        payload.logo = logoPreview
+      const hasNewLogo = logoFile || (logoPreview && logoPreview !== shop.logo && !getStorageUrl(shop.logo)?.includes?.(logoPreview))
+
+      if (hasNewLogo && logoPreview?.startsWith('data:')) {
+        // Upload avec fichier via FormData
+        const fd = new FormData()
+        fd.append('name', form.name)
+        fd.append('location', form.location)
+        fd.append('description', form.description)
+        fd.append('logo', logoFile || new File([], 'logo.png'))
+        const updated = await updateShop(shop.id, fd, token)
+        if (onUpdated) onUpdated(updated.shop || updated)
+      } else {
+        // Pas de nouveau logo — envoi JSON classique
+        const payload = { ...form }
+        if (logoPreview && !logoPreview.startsWith('data:')) {
+          payload.logo = logoPreview
+        }
+        const updated = await updateShop(shop.id, payload, token)
+        if (onUpdated) onUpdated(updated.shop || updated)
       }
-      const updated = await updateShop(shop.id, payload, token)
-      if (onUpdated) onUpdated(updated.shop || updated)
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {

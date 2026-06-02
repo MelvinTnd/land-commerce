@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getStorageUrl } from '@/lib/images'
 
 const specs = [
   { icon: 'straighten', label: 'Dimensions', valeur: 'H 45cm x L 15cm x P 12cm' },
@@ -49,7 +50,7 @@ export default function DetailVendeur({ shop, rating, reviews }) {
         {/* Image vendeur + citation */}
         <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
           <img
-            src={shop.logo || "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80"}
+            src={getStorageUrl(shop.logo) || "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80"}
             alt={shop.name}
             className="w-full h-full object-cover"
           />
