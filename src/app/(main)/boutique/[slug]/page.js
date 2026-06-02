@@ -193,8 +193,8 @@ export default function BoutiquePage() {
           localisation:   data.location   || 'Bénin',
           categorie:      data.category   || 'Artisanat',
           description:    data.description || '',
-          banner:         (data.banner && data.banner.startsWith('/storage/')) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + data.banner) : (data.banner || FALLBACK_SHOPS[slug]?.banner || getShopBannerImage({ name: data.name })),
-          logo:           (data.logo && data.logo.startsWith('/storage/')) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + data.logo) : (data.logo || FALLBACK_SHOPS[slug]?.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B6B3A&color=fff&size=200`),
+          banner:         (data.banner && (data.banner.startsWith('/storage/') || data.banner.startsWith('storage/'))) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + (data.banner.startsWith('/') ? '' : '/') + data.banner) : (data.banner || FALLBACK_SHOPS[slug]?.banner || getShopBannerImage({ name: data.name })),
+          logo:           (data.logo && (data.logo.startsWith('/storage/') || data.logo.startsWith('storage/'))) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + (data.logo.startsWith('/') ? '' : '/') + data.logo) : (data.logo || FALLBACK_SHOPS[slug]?.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B6B3A&color=fff&size=200`),
           note:           parseFloat(data.avg_rating)  || 5.0,
           totalAvis:      parseInt(data.reviews_count) || 0,
           totalProduits:  data.products?.length        || 0,
@@ -354,8 +354,8 @@ export default function BoutiquePage() {
 
               {/* Logo */}
               <div className="shrink-0 -mt-16 sm:-mt-20 lg:-mt-24 relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[18px] sm:rounded-[22px] overflow-hidden bg-white shadow-xl ring-4 ring-white">
-                  <Image src={logoSrc} alt={boutique.nom} fill className="object-cover" sizes="144px" unoptimized />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[18px] sm:rounded-[22px] overflow-hidden bg-white shadow-xl ring-4 ring-white p-2">
+                  <Image src={logoSrc} alt={boutique.nom} fill className="object-contain" sizes="144px" unoptimized />
                 </div>
                 {boutique.certifie && (
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#1B6B3A] rounded-full flex items-center justify-center shadow-lg ring-2 ring-white">

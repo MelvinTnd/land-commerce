@@ -103,9 +103,9 @@ export default function VendeursSection() {
                 {/* Avatar overlapping */}
                 <div className="px-6 pb-6 flex flex-col flex-1 -mt-8">
                   <div className="flex items-end gap-4 mb-5">
-                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-white"
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-white p-1"
                       style={{ border: '2px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
-                      <Image src={v.avatar} alt={v.nom} fill className="object-cover" sizes="64px" />
+                      <Image src={v.avatar} alt={v.nom} fill className="object-contain" sizes="64px" />
                     </div>
                     <div className="pb-1">
                       <h4 className="text-[16px] font-black text-[#0D0D0D] leading-tight group-hover:text-[#1B6B3A] transition-colors">{v.nom}</h4>
