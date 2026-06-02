@@ -1,7 +1,7 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
 
 /** Timeout avant fallback sur données locales (Render peut dormir 50s au 1er démarrage) */
-const API_TIMEOUT_MS = 5000
+const API_TIMEOUT_MS = 8000
 
 /**
  * Fonction utilitaire pour les appels API avec timeout de 5 secondes.
@@ -13,10 +13,14 @@ async function apiFetch(endpoint, options = {}, authToken = null) {
     || (typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
 
   const headers = {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options.headers,
+  }
+
+  // Ne pas mettre de Content-Type si c'est du FormData (le navigateur s'en charge avec le boundary)
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json'
   }
 
   const controller = new AbortController()
@@ -268,4 +272,31 @@ export async function getEligibleShops(authToken = null) {
 
 export async function canReviewShop(shopId, authToken = null) {
   return apiFetch(`/shops/${shopId}/can-review`, {}, authToken)
+}
+
+// ========================
+// GESTION PRODUITS VENDEUR
+// ========================
+export async function createProduct(formData, authToken = null) {
+  return apiFetch('/products', {
+    method: 'POST',
+    body: formData, // FormData pour l'image
+  }, authToken)
+}
+
+export async function updateProduct(productId, formData, authToken = null) {
+  // Laravel nécessite _method=PUT dans un FormData pour le spoofing de méthode
+  if (formData instanceof FormData && !formData.has('_method')) {
+    formData.append('_method', 'PUT')
+  }
+  return apiFetch(`/products/${productId}`, {
+    method: 'POST', // POST + spoofing
+    body: formData,
+  }, authToken)
+}
+
+export async function deleteProduct(productId, authToken = null) {
+  return apiFetch(`/products/${productId}`, {
+    method: 'DELETE',
+  }, authToken)
 }

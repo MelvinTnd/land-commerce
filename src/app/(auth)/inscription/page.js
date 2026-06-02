@@ -95,10 +95,10 @@ export default function InscriptionPage() {
           {/* Logo */}
           <div className="flex items-center gap-3 mb-auto">
             <div className="w-12 h-12 relative rounded-xl bg-white/10 p-1 overflow-hidden">
-              <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="48px" />
+              <Image src="/logo.png" alt="Blackmaket" fill className="object-contain" sizes="48px" />
             </div>
             <span className="font-extrabold text-white text-2xl tracking-tighter">
-              BéninMarket
+              Blackmaket
             </span>
           </div>
 
@@ -252,7 +252,7 @@ export default function InscriptionPage() {
             <div className="flex items-start gap-3 mt-2">
               <input type="checkbox" id="terms" required className="mt-1 w-4 h-4 rounded border-gray-300 text-[#1B6B3A] focus:ring-[#1B6B3A]" />
               <label htmlFor="terms" className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                J'accepte les <Link href="/cgu" className="font-bold text-[#1B6B3A] hover:underline">Conditions Générales d'Utilisation</Link> et la <Link href="/confidentialite" className="font-bold text-[#1B6B3A] hover:underline">Politique de Confidentialité</Link> de BéninMarket.
+                J'accepte les <Link href="/cgu" className="font-bold text-[#1B6B3A] hover:underline">Conditions Générales d'Utilisation</Link> et la <Link href="/confidentialite" className="font-bold text-[#1B6B3A] hover:underline">Politique de Confidentialité</Link> de Blackmaket.
               </label>
             </div>
 

@@ -34,57 +34,39 @@ export default function InventoryTab({ token }) {
     getCategories().then(data => setCategories(data)).catch(() => {})
   }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleImageFile = async (e) => {
+  const [imageFile, setImageFile] = useState(null)
+
+  const handleImageFile = (e) => {
     const file = e.target.files[0]
     if (!file) return
-
-    // Aperçu local immédiat
+    setImageFile(file)
     const reader = new FileReader()
     reader.onload = (ev) => setImagePreview(ev.target.result)
     reader.readAsDataURL(file)
-
-    // Upload vers le backend pour obtenir une URL persistante
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
-      const formData = new FormData()
-      formData.append('image', file)
-      const res = await fetch(`${apiUrl}/vendor/upload-image`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        },
-        body: formData,
-      })
-      const data = await res.json()
-      if (res.ok && data.url) {
-        setForm(f => ({ ...f, image: data.url }))
-      }
-      // Si upload échoue (ex: serveur hors ligne), on garde base64 en fallback
-    } catch {
-      // Fallback: utilise le base64 déjà mis dans imagePreview
-      setForm(f => ({ ...f, image: f.image || '' }))
-    }
   }
 
   const handleCreate = async (e) => {
     e.preventDefault()
     setSaving(true)
     try {
-      // Construction du payload - on n'envoie image que si fournie
-      const payload = {
-        name: form.name,
-        price: parseFloat(form.price),
-        stock: parseInt(form.stock) || 0,
-        description: form.description || '',
+      const formData = new FormData()
+      formData.append('name', form.name)
+      formData.append('price', form.price)
+      formData.append('stock', form.stock || 0)
+      formData.append('description', form.description || '')
+      if (form.promo_price) formData.append('promo_price', form.promo_price)
+      if (form.category_id) formData.append('category_id', form.category_id)
+      
+      if (imageMode === 'upload' && imageFile) {
+        formData.append('image', imageFile)
+      } else if (imageMode === 'url' && form.image) {
+        formData.append('image_url', form.image)
       }
-      if (form.promo_price) payload.promo_price = parseFloat(form.promo_price)
-      if (form.category_id) payload.category_id = form.category_id
-      if (form.image) payload.image = form.image
 
-      await createProduct(payload, token)
+      await createProduct(formData, token)
       setShowModal(false)
       setForm({ name: '', price: '', promo_price: '', stock: '', description: '', category_id: '', image: '' })
+      setImageFile(null)
       setImagePreview('')
       charger()
     } catch (err) {

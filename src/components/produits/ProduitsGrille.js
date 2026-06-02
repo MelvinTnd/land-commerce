@@ -32,17 +32,18 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
-  const [loading, setLoading] = useState(false)  // false car fallback immédiat
-  const [allProduits, setAllProduits] = useState(FALLBACK_PRODUITS)  // fallback visible dès le montage
+  const [loading, setLoading] = useState(true)          // true au départ → skeleton
+  const [isLive, setIsLive]   = useState(false)          // true quand les vraies données sont chargées
+  const [allProduits, setAllProduits] = useState([])     // vide au départ
 
   useEffect(() => {
     setLoading(true)
+    setIsLive(false)
     const triMap = { 'Prix croissant': 'prix_asc', 'Prix décroissant': 'prix_desc', 'Meilleures ventes': 'note' }
     getProducts({
       search: recherche || undefined,
       category: categorieActive || undefined,
       tri: triMap[triActif] || 'recent',
-      // NE PAS envoyer prix_max à l'API — on filtre côté client pour fiabilité
     })
       .then(data => {
         const prods = (data.data || []).map(p => ({
@@ -57,12 +58,24 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
         }))
-        // Si l'API répond vide → garder le fallback déjà affiché
-        if (prods.length > 0) setAllProduits(prods)
+        if (prods.length > 0) {
+          setAllProduits(prods)   // vraies données de l'API
+          setIsLive(true)
+        } else {
+          // API vide → fallback local
+          setAllProduits(FALLBACK_PRODUITS)
+          setIsLive(false)
+        }
         setLoading(false)
       })
-      .catch(() => { setLoading(false) })  // fallback déjà dans l'état initial
+      .catch(() => {
+        // Timeout ou erreur → fallback immédiat
+        setAllProduits(FALLBACK_PRODUITS)
+        setIsLive(false)
+        setLoading(false)
+      })
   }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
+
 
   // Filtre côté client : prix + catégorie + recherche (double-couche de sécurité)
   const produits = allProduits.filter(p => {

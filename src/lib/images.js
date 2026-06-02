@@ -138,7 +138,7 @@ export function getProductImage(product) {
 // ─── Bannières de boutiques ──────────────────────────────────────────────────
 const SHOP_BANNERS = {
   fashion:  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=1200',
-  artisan:  'https://images.unsplash.com/photo-1559564484-ac4a9db6b7c0?auto=format&fit=crop&q=80&w=1200',
+  artisan:  'https://images.unsplash.com/photo-1578330740121-657805126f5f?auto=format&fit=crop&q=80&w=1200',
   food:     'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=1200',
   bijoux:   'https://images.unsplash.com/photo-1573408301185-9519f94945b8?auto=format&fit=crop&q=80&w=1200',
   poterie:  'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=1200',

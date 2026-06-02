@@ -88,9 +88,9 @@ function ConnexionForm() {
             {/* Logo */}
             <div className="relative z-10 flex items-center gap-3">
               <div className="w-10 h-10 relative rounded-xl bg-white/10 p-1 overflow-hidden">
-                <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="40px" />
+                <Image src="/logo.png" alt="Blackmaket" fill className="object-contain" sizes="40px" />
               </div>
-              <span className="text-2xl font-extrabold text-white tracking-tight">BéninMarket</span>
+              <span className="text-2xl font-extrabold text-white tracking-tight">Blackmaket</span>
             </div>
 
             {/* Main text */}

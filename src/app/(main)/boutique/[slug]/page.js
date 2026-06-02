@@ -10,6 +10,36 @@ import { getShopBannerImage } from '@/lib/images'
 
 /* ─── Fallback data ──────────────────────────────────────────────────────── */
 const FALLBACK_SHOPS = {
+  'dahomey-crafts': {
+    nom: 'Dahomey Crafts', slug: 'dahomey-crafts', proprietaire: 'Marc Dossou',
+    localisation: 'Abomey, Bénin', categorie: 'Artisanat & Sculpture',
+    description: 'Objets d\'art et sculptures authentiques du plateau d\'Abomey.',
+    banner: 'https://images.unsplash.com/photo-1578330740121-657805126f5f?auto=format&fit=crop&q=80',
+    logo: 'https://ui-avatars.com/api/?name=Dahomey+Crafts&background=1B6B3A&color=fff&size=200',
+    note: 5.0, totalAvis: 12, totalProduits: 1, totalVentes: 45,
+    membreDepuis: 'Juin 2026', certifie: true,
+    tags: ['Art', 'Abomey', 'Bois'], whatsapp: '', instagram: '',
+  },
+  'indigo-mode': {
+    nom: 'Indigo Mode', slug: 'indigo-mode', proprietaire: 'Sophie Alapini',
+    localisation: 'Cotonou, Bénin', categorie: 'Mode & Textile',
+    description: 'Prêt-à-porter en pagne Indigo et tissus traditionnels revisités.',
+    banner: 'https://images.unsplash.com/photo-1544441892-0b263bc33061?auto=format&fit=crop&q=80',
+    logo: 'https://ui-avatars.com/api/?name=Indigo+Mode&background=D4920A&color=fff&size=200',
+    note: 4.8, totalAvis: 24, totalProduits: 1, totalVentes: 89,
+    membreDepuis: 'Juin 2026', certifie: true,
+    tags: ['Mode', 'Indigo', 'Cotonou'], whatsapp: '', instagram: '',
+  },
+  'saveurs-du-plateau': {
+    nom: 'Saveurs du Plateau', slug: 'saveurs-du-plateau', proprietaire: 'Thomas Okou',
+    localisation: 'Pobè, Bénin', categorie: 'Alimentation & Épices',
+    description: 'Épices, huiles et produits naturels transformés localement.',
+    banner: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80',
+    logo: 'https://ui-avatars.com/api/?name=Saveurs+Plateau&background=7C3AED&color=fff&size=200',
+    note: 4.9, totalAvis: 31, totalProduits: 1, totalVentes: 124,
+    membreDepuis: 'Juin 2026', certifie: true,
+    tags: ['Bio', 'Plateau', 'Épices'], whatsapp: '', instagram: '',
+  },
   'atelier-kanvo': {
     nom: 'Atelier Kanvô', slug: 'atelier-kanvo', proprietaire: 'Koffi Zinsou',
     localisation: 'Abomey, Bénin', categorie: 'Artisanat & Sculpture',
@@ -22,6 +52,15 @@ const FALLBACK_SHOPS = {
   },
 }
 const FALLBACK_PRODUCTS = {
+  'dahomey-crafts': [
+    { id: 201, nom: "Masque de Danse Traditionnel", prix: 25000, image: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&q=80&w=600', stock: 10, note: 5.0, sold: 15 },
+  ],
+  'indigo-mode': [
+    { id: 202, nom: "Boubou Indigo Royal", prix: 15000, image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=600', stock: 5, note: 4.8, sold: 22 },
+  ],
+  'saveurs-du-plateau': [
+    { id: 203, nom: "Huile de Palme Bio", prix: 2500, image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=600', stock: 50, note: 4.9, sold: 34 },
+  ],
   'atelier-kanvo': [
     { id: 101, nom: "Statue Royale d'Abomey", prix: 45000, image: 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80&w=600', stock: 3, note: 4.8, sold: 142 },
     { id: 102, nom: 'Masque Gèlèdè', prix: 35000, image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=600', stock: 5, note: 4.9, sold: 88 },
