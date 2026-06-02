@@ -39,7 +39,7 @@ export default function Footer() {
               Recevez promotions, nouveautés artisanales et conseils chaque semaine.
             </p>
           </div>
-          <div className="flex gap-2 w-full md:w-auto min-w-[340px]">
+           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:min-w-[340px]">
             <input
               type="email"
               placeholder="votre@email.bj"

@@ -54,7 +54,7 @@ export default function PanierPage() {
                       {s.label}
                     </span>
                   </div>
-                  {i < 2 && <div className="w-16 h-[1px] mx-1" style={{ background: '#EBEBEB' }} />}
+                  {i < 2 && <div className="w-8 sm:w-16 h-[1px] mx-0.5 sm:mx-1" style={{ background: '#EBEBEB' }} />}
                 </div>
               ))}
             </div>

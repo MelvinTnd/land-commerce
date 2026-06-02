@@ -39,7 +39,7 @@ export default function ReassuranceSection() {
           margin: '0 auto',
           background: 'linear-gradient(135deg, #0D1F14 0%, #0e2318 50%, #111827 100%)',
           borderRadius: '28px',
-          padding: '52px 56px',
+          padding: '32px 24px',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -48,35 +48,30 @@ export default function ReassuranceSection() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: '1fr',
             gap: '0',
           }}
+          className="lg:grid-cols-3"
         >
           {pilliers.map((p, i) => {
             const isHovered = hovered === i
-            const activeColor = hovered !== null ? pilliers[hovered].color : null
 
             return (
               <div
                 key={i}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered(null)}
+                className="relative cursor-pointer border-b lg:border-b-0 lg:border-r last:border-0"
                 style={{
-                  padding: '0 40px 32px 0',
-                  cursor: 'default',
-                  position: 'relative',
-                  // Séparateur vertical entre les colonnes
-                  borderRight: i < pilliers.length - 1
-                    ? '1px solid rgba(255,255,255,0.07)'
-                    : 'none',
-                  paddingRight: i < pilliers.length - 1 ? '40px' : '0',
-                  paddingLeft: i > 0 ? '40px' : '0',
+                  padding: i === 0 ? '0 0 24px 0' : i === 1 ? '0 0 24px 0' : '0',
+                  marginBottom: i < 2 ? '24px' : '0',
+                  borderColor: 'rgba(255,255,255,0.07)',
                   transition: 'transform 0.3s ease',
                   transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
                 }}
               >
                 {/* Icône + stat */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+                <div className="flex items-center gap-4 mb-5">
                   {/* Icône avec glow au hover */}
                   <div
                     style={{

@@ -337,8 +337,8 @@ export default function BoutiquePage() {
             <div className="flex flex-col lg:flex-row gap-7 items-start">
 
               {/* Logo */}
-              <div className="shrink-0 -mt-20 lg:-mt-24 relative">
-                <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-[22px] overflow-hidden bg-white shadow-xl ring-4 ring-white">
+              <div className="shrink-0 -mt-16 sm:-mt-20 lg:-mt-24 relative">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[18px] sm:rounded-[22px] overflow-hidden bg-white shadow-xl ring-4 ring-white">
                   <Image src={logoSrc} alt={boutique.nom} fill className="object-cover" sizes="144px" unoptimized />
                 </div>
                 {boutique.certifie && (
@@ -503,25 +503,25 @@ export default function BoutiquePage() {
           ONGLETS
       ══════════════════════════════════════════════ */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="flex items-center gap-2 bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm w-fit">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm">
           {[
             { id: 'produits', label: 'Articles', icon: 'storefront', count: produits.length },
-            { id: 'avis', label: 'Avis clients', icon: 'star', count: boutique.totalAvis },
+            { id: 'avis', label: 'Avis', icon: 'star', count: boutique.totalAvis },
             { id: 'infos', label: 'À propos', icon: 'info', count: null },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setOnglet(tab.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-[13px] transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-[13px] transition-all ${
                 onglet === tab.id
                   ? 'bg-[#1B6B3A] text-white shadow-md shadow-green-900/20'
                   : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              <span className="material-symbols-outlined text-[17px]">{tab.icon}</span>
+              <span className="material-symbols-outlined text-[15px] sm:text-[17px]">{tab.icon}</span>
               {tab.label}
               {tab.count > 0 && (
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${onglet === tab.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                <span className={`text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2 py-0.5 rounded-full ${onglet === tab.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'}`}>
                   {tab.count}
                 </span>
               )}

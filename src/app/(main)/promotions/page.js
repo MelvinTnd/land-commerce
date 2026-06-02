@@ -136,7 +136,7 @@ export default function PromotionsPage() {
             <span className="material-symbols-outlined text-[40px] mb-4 block" style={{ color: '#D4920A' }}>notifications_active</span>
             <h3 className="text-3xl font-black text-white mb-3">Ne manquez aucune offre</h3>
             <p className="text-white/60 mb-8 max-w-md mx-auto">Recevez les alertes promotions directement dans votre boîte mail.</p>
-            <div className="flex max-w-md mx-auto gap-3">
+            <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
               <input type="email" placeholder="votre@email.bj"
                 className="flex-1 px-5 py-4 rounded-2xl text-sm font-medium outline-none"
                 style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} />

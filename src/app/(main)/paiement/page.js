@@ -165,7 +165,7 @@ export default function PaiementPage() {
                   </div>
                   <span className="text-[12px] font-bold hidden sm:block" style={{ color: i <= step ? '#0D0D0D' : '#9CA3AF' }}>{s}</span>
                 </div>
-                {i < 2 && <div className="w-16 h-[1px] mx-1" style={{ background: i < step ? '#1B6B3A' : '#EBEBEB' }} />}
+                {i < 2 && <div className="w-8 sm:w-16 h-[1px] mx-0.5 sm:mx-1" style={{ background: i < step ? '#1B6B3A' : '#EBEBEB' }} />}
               </div>
             ))}
           </div>
