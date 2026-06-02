@@ -192,7 +192,15 @@ export const getShopImage = getShopBannerImage
 export function getStorageUrl(path) {
   if (!path) return ''
   if (path.startsWith('http')) return path
-  
+
+  // Si le chemin est un hostname sans scheme (ex: domaine.com/storage/...)
+  // On détecte la présence d'un point avant le premier /
+  const firstSlash = path.indexOf('/')
+  const beforeSlash = firstSlash === -1 ? path : path.slice(0, firstSlash)
+  if (beforeSlash.includes('.')) {
+    return 'https://' + path
+  }
+
   // Si le chemin contient storage/ (avec ou sans slash initial)
   if (path.includes('storage/')) {
     const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
@@ -200,6 +208,6 @@ export function getStorageUrl(path) {
     const cleanPath = path.startsWith('/') ? path : '/' + path
     return apiBase + cleanPath
   }
-  
+
   return path
 }

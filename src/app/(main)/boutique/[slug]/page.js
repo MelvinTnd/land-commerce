@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 import { useParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { getShop, sendMessage, getShopReviews } from '@/lib/api'
-import { getShopBannerImage } from '@/lib/images'
+import { getShop, getProducts, sendMessage, getShopReviews } from '@/lib/api'
+import { getShopBannerImage, getProductImage, getStorageUrl } from '@/lib/images'
 
 /* ─── Fallback data ──────────────────────────────────────────────────────── */
 const FALLBACK_SHOPS = {
@@ -193,8 +193,8 @@ export default function BoutiquePage() {
           localisation:   data.location   || 'Bénin',
           categorie:      data.category   || 'Artisanat',
           description:    data.description || '',
-          banner:         (data.banner && (data.banner.startsWith('/storage/') || data.banner.startsWith('storage/'))) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + (data.banner.startsWith('/') ? '' : '/') + data.banner) : (data.banner || FALLBACK_SHOPS[slug]?.banner || getShopBannerImage({ name: data.name })),
-          logo:           (data.logo && (data.logo.startsWith('/storage/') || data.logo.startsWith('storage/'))) ? ((process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '') + (data.logo.startsWith('/') ? '' : '/') + data.logo) : (data.logo || FALLBACK_SHOPS[slug]?.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B6B3A&color=fff&size=200`),
+          banner:         getStorageUrl(data.banner) || FALLBACK_SHOPS[slug]?.banner || getShopBannerImage({ name: data.name }),
+          logo:           getStorageUrl(data.logo) || FALLBACK_SHOPS[slug]?.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=1B6B3A&color=fff&size=200`,
           note:           parseFloat(data.avg_rating)  || 5.0,
           totalAvis:      parseInt(data.reviews_count) || 0,
           totalProduits:  data.products?.length        || 0,
@@ -207,7 +207,7 @@ export default function BoutiquePage() {
           whatsapp:       data.whatsapp  || '',
           instagram:      data.instagram || '',
         })
-        if (data.products) {
+        if (data.products?.length) {
           setProduits(data.products.map(p => ({
             id:    p.id,
             nom:   p.name,
@@ -217,6 +217,22 @@ export default function BoutiquePage() {
             note:  parseFloat(p.avg_rating) || 5.0,
             sold:  p.sales_count || 0,
           })))
+        } else {
+          // Fallback : essayer de récupérer les produits via l'API publique
+          getProducts({ shop: slug, limit: 50 }).then(res => {
+            const items = res.data || []
+            if (items.length) {
+              setProduits(items.map(p => ({
+                id:    p.id,
+                nom:   p.name,
+                prix:  parseFloat(p.price),
+                image: getProductImage(p),
+                stock: p.stock,
+                note:  parseFloat(p.avg_rating) || 5.0,
+                sold:  p.sales_count || 0,
+              })))
+            }
+          }).catch(() => {})
         }
         setApiShopId(data.id)
       })
