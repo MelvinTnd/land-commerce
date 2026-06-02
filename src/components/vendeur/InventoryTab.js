@@ -318,7 +318,7 @@ export default function InventoryTab({ token }) {
                       <td className="py-4 pr-4">
                         <div className="flex items-center gap-3">
                           <div className="w-11 h-11 rounded-xl overflow-hidden relative shrink-0" style={{ background: '#F3F4F6' }}>
-                            <Image src={img} alt={p.name} fill className="object-cover" sizes="44px" />
+                            <Image src={img} alt={p.name} fill className="object-contain" sizes="44px" />
                           </div>
                           <div>
                             <span className="block font-bold text-sm" style={{ color: '#0D0D0D' }}>{p.name}</span>

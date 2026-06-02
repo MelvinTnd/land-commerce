@@ -157,6 +157,15 @@ const SHOP_BANNERS = {
  * Image de bannière pour une boutique selon son nom / catégorie
  */
 export function getShopBannerImage(shop) {
+  // 1. Priorité : Bannière réelle de l'API
+  const banner = shop?.banner || shop?.banniere
+  if (banner) {
+    if (banner.startsWith('http')) return banner
+    if (banner.includes('storage/')) {
+      return getStorageUrl(banner)
+    }
+  }
+
   const combined = ((shop?.name || '') + ' ' + (shop?.description || '')).toLowerCase()
 
   if (combined.includes('fashion') || combined.includes('mode') || combined.includes('textile') || combined.includes('wax') || combined.includes('tissu')) {

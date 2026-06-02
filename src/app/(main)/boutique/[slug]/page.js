@@ -310,17 +310,32 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           HERO BANNIÈRE
       ══════════════════════════════════════════════ */}
-      <div className="relative h-[320px] lg:h-[400px] w-full overflow-hidden" style={{ background: 'linear-gradient(135deg, #0D2B1A 0%, #1B6B3A 60%, #0D4A28 100%)' }}>
-        <Image
-          src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
-          alt={boutique.nom}
-          fill
-          className="object-cover opacity-60"
-          sizes="100vw"
-          priority
-          onError={e => { e.target.style.opacity = '0' }}
-          unoptimized
-        />
+      <div className="relative h-[400px] lg:h-[550px] w-full overflow-hidden bg-[#0D2B1A]">
+        {/* Background Overlay Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
+            alt=""
+            fill
+            className="object-cover opacity-30 blur-lg scale-105"
+            unoptimized
+            onError={e => { e.target.style.opacity = '0' }}
+          />
+        </div>
+
+        {/* Main Banner Image (Cover but taller area to show more) */}
+        <div className="absolute inset-0 z-10">
+          <Image
+            src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
+            alt={boutique.nom}
+            fill
+            className="object-cover object-center transition-transform duration-1000"
+            sizes="100vw"
+            priority
+            onError={e => { e.target.style.opacity = '0' }}
+            unoptimized
+          />
+        </div>
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
@@ -354,8 +369,18 @@ export default function BoutiquePage() {
 
               {/* Logo */}
               <div className="shrink-0 -mt-16 sm:-mt-20 lg:-mt-24 relative">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[18px] sm:rounded-[22px] overflow-hidden bg-white shadow-xl ring-4 ring-white p-2">
-                  <Image src={logoSrc} alt={boutique.nom} fill className="object-contain" sizes="144px" unoptimized />
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[22px] sm:rounded-[28px] overflow-hidden bg-white shadow-2xl ring-8 ring-white p-2">
+                  <Image 
+                    src={logoSrc} 
+                    alt={boutique.nom} 
+                    fill 
+                    className="object-contain" 
+                    sizes="144px" 
+                    unoptimized 
+                    onError={(e) => {
+                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=1B6B3A&color=fff&size=200`
+                    }}
+                  />
                 </div>
                 {boutique.certifie && (
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#1B6B3A] rounded-full flex items-center justify-center shadow-lg ring-2 ring-white">

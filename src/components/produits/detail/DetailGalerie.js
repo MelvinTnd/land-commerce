@@ -38,17 +38,31 @@ export default function DetailGalerie({ produit }) {
 
       {/* Image principale */}
       <div
-        className="relative rounded-3xl overflow-hidden"
-        style={{ height: '380px', background: '#F0EDE8' }}
+        className="relative rounded-3xl overflow-hidden bg-[#F0EDE8]"
+        style={{ height: '450px' }}
       >
-        <Image
-          src={images[imageActive]}
-          alt="Produit"
-          fill
-          className="object-cover transition-all duration-500"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          unoptimized
-        />
+        {/* Blur background fill */}
+        <div className="absolute inset-0 scale-110 blur-2xl opacity-30">
+          <Image
+            src={images[imageActive]}
+            alt=""
+            fill
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+        
+        {/* Main centered image (Full visibility) */}
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+          <Image
+            src={images[imageActive]}
+            alt="Produit"
+            fill
+            className="object-contain transition-all duration-500"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            unoptimized
+          />
+        </div>
       </div>
 
       {/* Thumbnails */}
