@@ -99,6 +99,7 @@ export default function AboutPage() {
               alt="Marché artisanal béninois"
               fill className="object-cover"
               sizes="(max-width:768px) 100vw, 50vw"
+              unoptimized
             />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.3) 100%)' }} />
             <div className="absolute bottom-5 left-5 bg-white rounded-2xl px-4 py-3 flex items-center gap-3"

@@ -167,6 +167,7 @@ export default function BoutiqueDetailPage() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    unoptimized
                   />
                   {p.is_featured && (
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] font-black text-white"

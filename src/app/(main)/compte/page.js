@@ -322,7 +322,7 @@ export default function ComptePage() {
                         {cmd.articles.map((a, i) => (
                           <div key={i} className="flex items-center gap-4">
                             <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative">
-                              <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="56px" />
+                              <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="56px" unoptimized />
                             </div>
                             <div className="flex-1">
                               <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>{a.nom}</p>

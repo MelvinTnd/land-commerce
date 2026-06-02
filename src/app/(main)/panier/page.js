@@ -96,7 +96,7 @@ export default function PanierPage() {
                   style={{ border: '1px solid #EBEBEB' }}>
                   {/* Image */}
                   <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-[18px] overflow-hidden bg-[#F7F5F0] shrink-0">
-                    <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="112px" />
+                    <Image src={a.image} alt={a.nom} fill className="object-cover" sizes="112px" unoptimized />
                   </div>
 
                   {/* Infos */}

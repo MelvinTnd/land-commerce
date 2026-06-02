@@ -120,7 +120,7 @@ export default function ProduitsSection() {
                     <Link href={`/produits/${p.slug || p.id}`}>
                       <Image src={p.image} alt={p.nom} fill
                         className="object-cover transition-transform duration-600 group-hover:scale-105"
-                        sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw" />
+                        sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw" unoptimized />
                     </Link>
 
                     {/* Badges */}

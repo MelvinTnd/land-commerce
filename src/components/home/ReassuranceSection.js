@@ -43,27 +43,24 @@ export default function ReassuranceSection() {
   }, [isPaused, next])
 
   return (
-    <section style={{ background: '#F7F5F0', padding: '40px 24px 56px' }}>
+    <section style={{ background: '#F7F5F0', padding: '40px 16px 56px' }}>
       <div
         style={{
           maxWidth: '1280px',
           margin: '0 auto',
           background: 'linear-gradient(135deg, #0D1F14 0%, #0e2318 50%, #111827 100%)',
-          borderRadius: '28px',
-          padding: '52px 56px',
+          borderRadius: '20px',
+          padding: '32px 20px',
           position: 'relative',
           overflow: 'hidden',
         }}
+        className="sm:rounded-[28px] sm:p-[52px_56px]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
         {/* Grille des 3 piliers */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '24px',
-          }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {pilliers.map((p, i) => {
             const isActive = active === i
@@ -73,7 +70,7 @@ export default function ReassuranceSection() {
                 key={i}
                 onClick={() => setActive(i)}
                 style={{
-                  padding: '28px 32px 32px',
+                  padding: '20px 24px 24px',
                   cursor: 'pointer',
                   position: 'relative',
                   borderRadius: '16px',
@@ -83,6 +80,7 @@ export default function ReassuranceSection() {
                   transform: isActive ? 'translateY(-6px)' : 'translateY(0)',
                   boxShadow: isActive ? `0 8px 32px ${p.color}30` : 'none',
                 }}
+                className="sm:p-[28px_32px_32px]"
               >
                 {/* Icône + stat */}
                 <div className="flex items-center gap-4 mb-5">
@@ -117,8 +115,8 @@ export default function ReassuranceSection() {
 
                   <div>
                     <div
-                      style={{
-                        fontSize: '32px',
+                      className="text-[26px] sm:text-[32px]"
+                    style={{
                         fontWeight: 900,
                         lineHeight: 1,
                         color: p.color,

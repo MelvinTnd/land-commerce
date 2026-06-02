@@ -302,7 +302,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
                 className="group flex gap-5 bg-white rounded-[24px] p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
                 style={{ border: '1px solid #EBEBEB' }}>
                 <div className="relative shrink-0 w-36 aspect-square rounded-[18px] overflow-hidden bg-[#F7F5F0]">
-                  <Image src={p.image} alt={p.nom} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="144px" />
+                  <img src={p.image} alt={p.nom} className="object-cover w-full h-full" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between py-1">
                   <div>

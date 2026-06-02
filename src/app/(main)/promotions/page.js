@@ -47,7 +47,7 @@ function PromoCard({ p }) {
             <span className="material-symbols-outlined text-[48px]" style={{ color: '#D1D5DB' }}>broken_image</span>
           </div>
         ) : (
-          <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" onError={() => setImgErr(true)} />
+          <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" unoptimized onError={() => setImgErr(true)} />
         )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)' }} />
         <div className="absolute top-4 left-4 flex gap-2">
