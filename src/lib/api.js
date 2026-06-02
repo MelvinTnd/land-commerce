@@ -323,7 +323,7 @@ export async function canReviewShop(shopId, authToken = null) {
 // GESTION PRODUITS VENDEUR
 // ========================
 export async function createProduct(formData, authToken = null) {
-  return apiFetch('/products', {
+  return apiFetch('/vendor/products', {
     method: 'POST',
     body: formData, // FormData pour l'image
   }, authToken)
@@ -334,14 +334,14 @@ export async function updateProduct(productId, formData, authToken = null) {
   if (formData instanceof FormData && !formData.has('_method')) {
     formData.append('_method', 'PUT')
   }
-  return apiFetch(`/products/${productId}`, {
+  return apiFetch(`/vendor/products/${productId}`, {
     method: 'POST', // POST + spoofing
     body: formData,
   }, authToken)
 }
 
 export async function deleteProduct(productId, authToken = null) {
-  return apiFetch(`/products/${productId}`, {
+  return apiFetch(`/vendor/products/${productId}`, {
     method: 'DELETE',
   }, authToken)
 }
