@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 function ConnexionForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const callbackUrl = searchParams.get('callbackUrl') || '/compte'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

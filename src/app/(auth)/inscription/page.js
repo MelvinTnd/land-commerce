@@ -63,7 +63,7 @@ export default function InscriptionPage() {
       if (form.type === 'artisan') {
         router.push('/inscription-vendeur')
       } else {
-        router.push('/')
+        router.push('/compte')
       }
     } catch (err) {
       setError(err.message)

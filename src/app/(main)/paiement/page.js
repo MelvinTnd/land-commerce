@@ -92,7 +92,7 @@ export default function PaiementPage() {
     }
     setLoading(true)
     try {
-      const orderData = {
+      const payload = {
         items: articles.map(a => ({ id: a.id, quantity: a.quantite, prix: a.prix })),
         total_amount: totalFinal,
         shipping_address: `${form.adresse}, ${form.quartier}, ${form.ville}`,
@@ -105,18 +105,13 @@ export default function PaiementPage() {
         address_id: selectedAddressId,
       }
       const token = session?.user?.apiToken || (typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
-      const res = await checkout(orderData, token)
-      const ref = res?.order?.reference || res?.reference || `BM-${Date.now()}`
-      setOrderRef(ref)
+      const res = await checkout(payload, token)
+      setOrderRef(res?.order?.reference || res?.reference)
       setOrderData(res?.order || null)
       viderPanier?.()
       setStep(2)
     } catch (err) {
-      const ref = `BM-${Date.now()}`
-      setOrderRef(ref)
-      setOrderData(null)
-      viderPanier?.()
-      setStep(2)
+      alert(err.message || 'Erreur lors de la création de la commande. Veuillez réessayer.')
     } finally {
       setLoading(false)
     }
