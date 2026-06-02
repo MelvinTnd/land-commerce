@@ -94,13 +94,9 @@ export function getProductImage(product) {
   const cat  = (product?.categorie || product?.category?.name || '').toLowerCase()
 
   // 1. Priorité absolue : Image réelle de l'API (uploadée par le vendeur)
-  // On détecte un upload par la présence de 'http' ou du dossier '/storage/'
   if (img) {
     if (img.startsWith('http')) return img
-    if (img.startsWith('/storage/')) {
-        const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
-        return apiBase + img
-    }
+    if (img.includes('storage/')) return getStorageUrl(img)
   }
 
   // Combiné pour le matching fallback (slug + nom)
