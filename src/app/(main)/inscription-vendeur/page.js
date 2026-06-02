@@ -55,7 +55,8 @@ export default function InscriptionVendeur() {
 
     if (!shopName.trim()) { setError('Le nom de la boutique est requis.'); return }
 
-    const token = session?.user?.apiToken || (typeof window !== 'undefined' && localStorage.getItem('auth_token'))
+    // Priorité à localStorage (token frais), fallback sur la session NextAuth
+    const token = (typeof window !== 'undefined' && localStorage.getItem('auth_token')) || session?.user?.apiToken
     if (!token) { router.push('/connexion'); return }
 
     setLoading(true)
@@ -84,7 +85,17 @@ export default function InscriptionVendeur() {
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Erreur lors de la création')
+
+      if (!res.ok) {
+        // Token invalide/expiré → rediriger vers la connexion
+        if (res.status === 401) {
+          localStorage.removeItem('auth_token')
+          router.push('/connexion')
+          return
+        }
+        throw new Error(data.message || 'Erreur lors de la création')
+      }
+
       setSuccess(true)
     } catch (err) {
       setError(err.message)

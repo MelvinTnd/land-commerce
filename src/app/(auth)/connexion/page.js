@@ -37,11 +37,21 @@ function ConnexionForm() {
         throw new Error(result.error)
       }
 
-      // Redirection selon le rôle (récupéré via la session)
-      // On fait une requête pour récupérer la session fraîche
+      // Récupérer la session fraîche
       const sessionRes = await fetch('/api/auth/session')
       const session = await sessionRes.json()
       const role = session?.user?.role
+
+      // Sauvegarder le token API dans localStorage pour les appels directs à l'API
+      if (session?.user?.apiToken) {
+        localStorage.setItem('auth_token', session.user.apiToken)
+        localStorage.setItem('user', JSON.stringify({
+          id: session.user.id,
+          name: session.user.name,
+          email: session.user.email,
+          role: session.user.role,
+        }))
+      }
 
       if (role === 'vendeur') {
         router.push('/vendeur')

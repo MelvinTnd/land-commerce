@@ -58,6 +58,19 @@ export default function InscriptionPage() {
         return
       }
 
+      // Sauvegarder le token API dans localStorage
+      const sessionRes = await fetch('/api/auth/session')
+      const freshSession = await sessionRes.json()
+      if (freshSession?.user?.apiToken) {
+        localStorage.setItem('auth_token', freshSession.user.apiToken)
+        localStorage.setItem('user', JSON.stringify({
+          id: freshSession.user.id,
+          name: freshSession.user.name,
+          email: freshSession.user.email,
+          role: freshSession.user.role,
+        }))
+      }
+
       // Redirection en fonction du type de compte choisi
       router.refresh()
       if (form.type === 'artisan') {
