@@ -77,7 +77,7 @@ export default function BoutiquesPage() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-4 shrink-0">
+            <div className="flex gap-4 shrink-0 flex-wrap">
               {[
                 { v: `${boutiques.length || '—'}`, l: 'Boutiques actives', icon: 'storefront' },
                 { v: '500+', l: 'Artisans vérifiés', icon: 'verified' },
