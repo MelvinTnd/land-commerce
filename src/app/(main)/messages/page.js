@@ -16,7 +16,15 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [convMeta, setConvMeta] = useState(null)
+  const [error, setError] = useState('')
   const messagesEndRef = useRef(null)
+
+  // Sauvegarder le token apiToken dans localStorage pour les appels API hors session
+  useEffect(() => {
+    if (session?.user?.apiToken && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', session.user.apiToken)
+    }
+  }, [session?.user?.apiToken])
 
   const token = session?.user?.apiToken
   const userId = session?.user?.id
@@ -29,13 +37,18 @@ export default function MessagesPage() {
 
   // Charger les conversations
   useEffect(() => {
-    if (!token) return
+    if (!token) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
     getConversations(token)
       .then(data => {
         setConversations(data.conversations || [])
       })
-      .catch(() => {})
+      .catch((err) => {
+        setError(err.message || "Erreur de chargement")
+      })
       .finally(() => setLoading(false))
   }, [token])
 
@@ -46,11 +59,14 @@ export default function MessagesPage() {
       const data = await getConversation(conv.id, token)
       setMessages(data.messages || [])
       setConvMeta(data.conversation || null)
+      setError('')
       // Mettre à jour le compteur unread localement
       setConversations(prev => prev.map(c =>
         c.id === conv.id ? { ...c, unread: 0 } : c
       ))
-    } catch {}
+    } catch (err) {
+      setError(err.message || "Erreur lors du chargement")
+    }
   }
 
   // Scroll en bas quand les messages changent
@@ -67,11 +83,14 @@ export default function MessagesPage() {
       const data = await replyToConversation(activeConv, newMessage.trim(), token)
       setMessages(prev => [...prev, data])
       setNewMessage('')
+      setError('')
       // Mettre à jour le dernier message dans la liste
       setConversations(prev => prev.map(c =>
         c.id === activeConv ? { ...c, lastMessage: data, last_message_at: new Date().toISOString() } : c
       ))
-    } catch {}
+    } catch (err) {
+      setError(err.message || "Erreur lors de l'envoi")
+    }
     setSending(false)
   }
 
@@ -124,6 +143,14 @@ export default function MessagesPage() {
             </div>
           </div>
         </div>
+
+        {/* Message d'erreur */}
+        {error && (
+          <div className="flex items-center gap-2 bg-red-50 text-red-500 text-sm font-bold p-4 rounded-[12px] border border-red-100 mb-4">
+            <span className="material-symbols-outlined text-[20px]">error</span>
+            {error}
+          </div>
+        )}
 
         {/* Layout conversations + messages */}
         <div className="bg-white rounded-[28px] overflow-hidden flex" style={{ border: '1px solid #EBEBEB', height: 'calc(100vh - 180px)', minHeight: '500px' }}>

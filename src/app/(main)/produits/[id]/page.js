@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import DetailGalerie from '@/components/produits/detail/DetailGalerie'
@@ -13,6 +13,7 @@ import { getProduct } from '@/lib/api'
 export default function DetailProduitPage() {
   const params = useParams()
   const { id } = params
+  const router = useRouter()
   const { data: session } = useSession()
   const [produit, setProduit] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -20,6 +21,13 @@ export default function DetailProduitPage() {
   const [showContact, setShowContact] = useState(false)
   const [contactMsg, setContactMsg] = useState('')
   const [contactSent, setContactSent] = useState(false)
+
+  // Sauvegarder le token API dans localStorage pour les appels hors session
+  useEffect(() => {
+    if (session?.user?.apiToken && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', session.user.apiToken)
+    }
+  }, [session?.user?.apiToken])
 
   useEffect(() => {
     getProduct(id)
@@ -150,8 +158,10 @@ export default function DetailProduitPage() {
                   onChange={e => setContactMsg(e.target.value)}
                   onKeyDown={e => {
                     if (e.key === 'Enter' && contactMsg.trim()) {
+                      const token = session?.user?.apiToken || localStorage.getItem('auth_token');
+                      if (!token) { router.push('/connexion'); return }
                       import('@/lib/api').then(({ sendMessage }) => {
-                        sendMessage(p.shop.id, contactMsg.trim(), session?.user?.apiToken);
+                        sendMessage(p.shop.id, contactMsg.trim(), token);
                         setContactSent(true);
                         setContactMsg('');
                       }).catch(err => alert(err.message));
@@ -166,8 +176,10 @@ export default function DetailProduitPage() {
                 <button
                   disabled={!contactMsg.trim()}
                   onClick={() => {
+                    const token = session?.user?.apiToken || localStorage.getItem('auth_token');
+                    if (!token) { router.push('/connexion'); return }
                     import('@/lib/api').then(({ sendMessage }) => {
-                      sendMessage(p.shop.id, contactMsg.trim(), session?.user?.apiToken);
+                      sendMessage(p.shop.id, contactMsg.trim(), token);
                       setContactSent(true);
                       setContactMsg('');
                     }).catch(err => alert(err.message));

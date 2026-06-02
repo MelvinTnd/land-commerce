@@ -101,23 +101,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // Connexion via Google OAuth
-      if (account?.provider === 'google') {
+      if (account?.provider === 'google' || (token.provider === 'google' && !token.apiToken)) {
         token.provider = 'google'
-        // Optionnel : envoyer le token Google à Laravel pour créer/lier le compte
         try {
+          const body = {
+            google_id: token.sub,
+            email: token.email,
+            name: token.name,
+            avatar: token.picture,
+          }
+          if (account?.access_token) {
+            body.access_token = account.access_token
+          }
           const res = await fetch(`${API_BASE}/auth/google/callback`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: JSON.stringify({
-              google_id: token.sub,
-              email: token.email,
-              name: token.name,
-              avatar: token.picture,
-              access_token: account.access_token,
-            }),
+            body: JSON.stringify(body),
           })
 
           if (res.ok) {
@@ -125,11 +127,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.apiToken = data.access_token
             token.role = data.user?.role || 'acheteur'
             token.id = String(data.user?.id)
-          } else {
-            token.role = 'acheteur'
           }
         } catch {
-          token.role = 'acheteur'
+          // échec silencieux — apiToken restera undefined, la connexion se fera via localStorage si disponible
         }
       }
 

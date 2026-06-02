@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const pilliers = [
   {
@@ -29,7 +29,18 @@ const pilliers = [
 ]
 
 export default function ReassuranceSection() {
-  const [hovered, setHovered] = useState(null)
+  const [active, setActive] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  const next = useCallback(() => {
+    setActive(prev => (prev + 1) % pilliers.length)
+  }, [])
+
+  useEffect(() => {
+    if (isPaused) return
+    const timer = setInterval(next, 4000)
+    return () => clearInterval(timer)
+  }, [isPaused, next])
 
   return (
     <section style={{ background: '#F7F5F0', padding: '40px 24px 56px' }}>
@@ -39,53 +50,55 @@ export default function ReassuranceSection() {
           margin: '0 auto',
           background: 'linear-gradient(135deg, #0D1F14 0%, #0e2318 50%, #111827 100%)',
           borderRadius: '28px',
-          padding: '32px 24px',
+          padding: '52px 56px',
           position: 'relative',
           overflow: 'hidden',
         }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
         {/* Grille des 3 piliers */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr',
-            gap: '0',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '24px',
           }}
-          className="lg:grid-cols-3"
         >
           {pilliers.map((p, i) => {
-            const isHovered = hovered === i
+            const isActive = active === i
 
             return (
               <div
                 key={i}
-                onMouseEnter={() => setHovered(i)}
-                onMouseLeave={() => setHovered(null)}
-                className="relative cursor-pointer border-b lg:border-b-0 lg:border-r last:border-0"
+                onClick={() => setActive(i)}
                 style={{
-                  padding: i === 0 ? '0 0 24px 0' : i === 1 ? '0 0 24px 0' : '0',
-                  marginBottom: i < 2 ? '24px' : '0',
-                  borderColor: 'rgba(255,255,255,0.07)',
-                  transition: 'transform 0.3s ease',
-                  transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                  padding: '28px 32px 32px',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  borderRadius: '16px',
+                  background: isActive ? `${p.color}12` : 'transparent',
+                  border: `1px solid ${isActive ? p.color + '50' : 'rgba(255,255,255,0.06)'}`,
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transform: isActive ? 'translateY(-6px)' : 'translateY(0)',
+                  boxShadow: isActive ? `0 8px 32px ${p.color}30` : 'none',
                 }}
               >
                 {/* Icône + stat */}
                 <div className="flex items-center gap-4 mb-5">
-                  {/* Icône avec glow au hover */}
                   <div
                     style={{
                       width: '52px',
                       height: '52px',
                       borderRadius: '14px',
-                      background: isHovered ? `${p.color}25` : `${p.color}15`,
-                      border: `1px solid ${isHovered ? p.color + '60' : p.color + '25'}`,
+                      background: isActive ? `${p.color}25` : `${p.color}15`,
+                      border: `1px solid ${isActive ? p.color + '60' : p.color + '25'}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
-                      transition: 'all 0.3s ease',
-                      boxShadow: isHovered ? `0 0 20px ${p.color}40` : 'none',
+                      transition: 'all 0.5s ease',
+                      boxShadow: isActive ? `0 0 24px ${p.color}50` : 'none',
                     }}
                   >
                     <span
@@ -94,15 +107,14 @@ export default function ReassuranceSection() {
                         fontSize: '24px',
                         color: p.color,
                         fontVariationSettings: "'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24",
-                        transition: 'transform 0.3s ease',
-                        transform: isHovered ? 'scale(1.15)' : 'scale(1)',
+                        transition: 'transform 0.5s ease',
+                        transform: isActive ? 'scale(1.2) rotate(-8deg)' : 'scale(1) rotate(0deg)',
                       }}
                     >
                       {p.icon}
                     </span>
                   </div>
 
-                  {/* Stat + label */}
                   <div>
                     <div
                       style={{
@@ -111,8 +123,8 @@ export default function ReassuranceSection() {
                         lineHeight: 1,
                         color: p.color,
                         fontFamily: "'Plus Jakarta Sans', sans-serif",
-                        transition: 'filter 0.3s ease',
-                        filter: isHovered ? `drop-shadow(0 0 8px ${p.color}80)` : 'none',
+                        transition: 'filter 0.5s ease',
+                        filter: isActive ? `drop-shadow(0 0 12px ${p.color}80)` : 'none',
                       }}
                     >
                       {p.stat}
@@ -132,28 +144,26 @@ export default function ReassuranceSection() {
                   </div>
                 </div>
 
-                {/* Titre */}
                 <h3
                   style={{
                     fontSize: '17px',
                     fontWeight: 900,
-                    color: isHovered ? 'white' : 'rgba(255,255,255,0.9)',
+                    color: isActive ? 'white' : 'rgba(255,255,255,0.85)',
                     marginBottom: '10px',
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    transition: 'color 0.3s ease',
+                    transition: 'color 0.5s ease',
                   }}
                 >
                   {p.title}
                 </h3>
 
-                {/* Description */}
                 <p
                   style={{
                     fontSize: '13px',
                     lineHeight: 1.65,
-                    color: isHovered ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.4)',
+                    color: isActive ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.4)',
                     fontWeight: 500,
-                    transition: 'color 0.3s ease',
+                    transition: 'color 0.5s ease',
                   }}
                 >
                   {p.desc}
@@ -163,7 +173,28 @@ export default function ReassuranceSection() {
           })}
         </div>
 
-        {/* Barre coulissante animée en bas — glisse sous la colonne active */}
+        {/* Points indicateurs */}
+        <div className="flex items-center justify-center gap-3 mt-8">
+          {pilliers.map((p, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              style={{
+                width: active === i ? '28px' : '8px',
+                height: '8px',
+                borderRadius: '999px',
+                background: active === i ? p.color : 'rgba(255,255,255,0.2)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                padding: 0,
+              }}
+              aria-label={`Voir ${p.title}`}
+            />
+          ))}
+        </div>
+
+        {/* Barre de progression */}
         <div
           style={{
             position: 'absolute',
@@ -180,14 +211,11 @@ export default function ReassuranceSection() {
               top: 0,
               height: '100%',
               width: `${100 / pilliers.length}%`,
-              background: hovered !== null
-                ? `linear-gradient(90deg, ${pilliers[hovered].color}, ${pilliers[hovered].color}80)`
-                : 'transparent',
-              left: hovered !== null ? `${(hovered / pilliers.length) * 100}%` : '0%',
-              transition: 'left 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, opacity 0.3s ease',
-              opacity: hovered !== null ? 1 : 0,
+              background: `linear-gradient(90deg, ${pilliers[active].color}, ${pilliers[active].color}80)`,
+              left: `${(active / pilliers.length) * 100}%`,
+              transition: 'left 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease',
               borderRadius: '0 2px 2px 0',
-              boxShadow: hovered !== null ? `0 0 12px ${pilliers[hovered]?.color}80` : 'none',
+              boxShadow: `0 0 12px ${pilliers[active].color}80`,
             }}
           />
         </div>

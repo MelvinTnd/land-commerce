@@ -175,6 +175,13 @@ export default function BoutiquePage() {
   const [loading, setLoading]         = useState(false)
   const [shareCopied, setShareCopied] = useState(false)
 
+  // Sauvegarder le token API dans localStorage pour les appels hors session
+  useEffect(() => {
+    if (session?.user?.apiToken && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', session.user.apiToken)
+    }
+  }, [session?.user?.apiToken])
+
   /* ── Charger boutique depuis l'API (en arrière-plan) ── */
   useEffect(() => {
     getShop(slug)
@@ -241,13 +248,22 @@ export default function BoutiquePage() {
   /* ── Envoyer message ── */
   const handleSendMessage = async () => {
     if (!apiShopId || !contactMsg.trim()) return
+    const token = session?.user?.apiToken || (typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null)
+    if (!token) {
+      router.push('/connexion')
+      return
+    }
     setContactSending(true)
     try {
-      await sendMessage(apiShopId, contactMsg.trim(), session?.user?.apiToken)
+      await sendMessage(apiShopId, contactMsg.trim(), token)
       setContactSent(true)
       setContactMsg('')
     } catch (err) {
-      alert(err.message || 'Erreur lors de l\'envoi')
+      if (err.message?.includes('401') || err.message?.includes('Non authentifié')) {
+        router.push('/connexion')
+      } else {
+        alert(err.message || 'Erreur lors de l\'envoi')
+      }
     } finally {
       setContactSending(false)
     }

@@ -21,9 +21,9 @@ export default function ProduitsSection() {
   const [favoris, setFavoris] = useState([])
 
   useEffect(() => {
-    getProducts({ featured: true })
+    getProducts()
       .then(data => {
-        const apiProducts = (data.data || []).slice(0, 4).map(p => ({
+        const apiProducts = (data.data || []).slice(0, 8).map(p => ({
           id: p.id, slug: p.slug, nom: p.name,
           lieu: p.shop?.location || 'Bénin',
           prix: parseFloat(p.price),
@@ -32,6 +32,8 @@ export default function ProduitsSection() {
           note: parseFloat(p.avg_rating) || 4.9,
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
+          categorie: p.category?.slug || 'recent',
+          createdAt: p.created_at,
         }))
         if (apiProducts.length > 0) setProduits(apiProducts)
         setLoading(false)
@@ -72,7 +74,7 @@ export default function ProduitsSection() {
           </div>
         </div>
 
-        {/* Grid — 4 col, cartes compactes */}
+        {/* Filtrer les produits selon le filtre actif */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[1, 2, 3, 4].map(i => (
@@ -84,14 +86,27 @@ export default function ProduitsSection() {
               </div>
             ))}
           </div>
-        ) : produits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center bg-[#F7F5F0] rounded-[28px]">
-            <span className="material-symbols-outlined text-[48px] mb-3" style={{ color: '#D1D5DB' }}>inventory_2</span>
-            <p className="text-sm text-gray-400 font-medium">Aucun produit disponible pour le moment.</p>
-          </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {produits.slice(0, 4).map(p => {
+          (() => {
+            const filtered = produits.filter(p => {
+              if (filtre === 'recent') return true
+              if (filtre === 'tendance') return p.note >= 4.7 || p.badge === 'Très Demandé'
+              if (filtre === 'bio') return p.categorie === 'bio' || p.categorie?.toLowerCase().includes('aliment')
+              return true
+            }).slice(0, 4)
+
+            if (filtered.length === 0) {
+              return (
+                <div className="flex flex-col items-center justify-center py-20 text-center bg-[#F7F5F0] rounded-[28px]">
+                  <span className="material-symbols-outlined text-[48px] mb-3" style={{ color: '#D1D5DB' }}>inventory_2</span>
+                  <p className="text-sm text-gray-400 font-medium">Aucun produit ne correspond à ce filtre.</p>
+                </div>
+              )
+            }
+
+            return (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+                {filtered.map(p => {
               const inCart = estDansPanier(p.id)
               const isFav = favoris.includes(p.id)
               const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null
@@ -161,6 +176,8 @@ export default function ProduitsSection() {
               )
             })}
           </div>
+            )
+          })()
         )}
 
         {/* Voir tout */}
