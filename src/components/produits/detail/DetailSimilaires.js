@@ -55,6 +55,7 @@ export default function DetailSimilaires({ categoryId }) {
               nom: p.name,
               categorie: p.category?.name || 'Artisanat',
               prix: parseFloat(p.price),
+              promoP: p.promo_price ? parseFloat(p.promo_price) : null,
               slug: p.slug || p.id,
               image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
             })))
@@ -148,10 +149,20 @@ export default function DetailSimilaires({ categoryId }) {
               >
                 {produit.nom}
               </h5>
-              <p className="font-extrabold text-sm md:text-base" style={{ color: '#1A1A1A' }}>
-                {produit.prix.toLocaleString('fr-FR')}
-                <span className="text-xs font-normal ml-1" style={{ color: '#9CA3AF' }}>FCFA</span>
-              </p>
+              {produit.promoP ? (
+                <div>
+                  <p className="font-extrabold text-sm md:text-base leading-none" style={{ color: '#EF4444' }}>
+                    {produit.promoP.toLocaleString('fr-FR')}
+                    <span className="text-xs font-normal ml-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+                  </p>
+                  <p className="text-[10px] line-through" style={{ color: '#9CA3AF' }}>{produit.prix.toLocaleString('fr-FR')} CFA</p>
+                </div>
+              ) : (
+                <p className="font-extrabold text-sm md:text-base" style={{ color: '#1A1A1A' }}>
+                  {produit.prix.toLocaleString('fr-FR')}
+                  <span className="text-xs font-normal ml-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+                </p>
+              )}
             </Link>
           ))}
         </div>

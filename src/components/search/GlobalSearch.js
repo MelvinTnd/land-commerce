@@ -127,7 +127,7 @@ export default function GlobalSearch({ onClose }) {
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-bold truncate" style={{ color: '#0D0D0D' }}>{p.name}</p>
                         <p className="text-[11px] font-medium" style={{ color: '#9CA3AF' }}>
-                          {parseFloat(p.price).toLocaleString('fr-FR')} CFA
+                          {parseFloat(p.promo_price || p.price).toLocaleString('fr-FR')} CFA
                         </p>
                       </div>
                       <span className="material-symbols-outlined text-[16px] shrink-0" style={{ color: '#E5E7EB' }}>arrow_forward_ios</span>

@@ -58,6 +58,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           categorieSlug: p.category?.slug || '',
           image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
           stock: p.stock,
+          shop: p.shop,
         }))
         if (prods.length > 0) {
           setAllProduits(prods)   // vraies données de l'API
@@ -231,7 +232,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
                   {/* Quick add — visible on hover */}
                   <div className="absolute bottom-3 left-3 right-3 transition-all duration-300 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
                     <button
-                      onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier(p) }}
+                      onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
                       className="w-full py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all"
                       style={{
                         background: inCart ? '#1B6B3A' : 'rgba(255,255,255,0.95)',
@@ -279,7 +280,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
                       )}
                     </div>
                     <button
-                      onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier(p) }}
+                      onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
                       className="w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-300 hover:scale-105"
                       style={{ background: inCart ? '#1B6B3A' : '#E6F8EA', color: inCart ? 'white' : '#1B6B3A' }}>
                       <span className="material-symbols-outlined text-[20px]">{inCart ? 'check' : 'add_shopping_cart'}</span>
@@ -318,16 +319,27 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
                     </p>
                   </div>
                   <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid #F3F4F6' }}>
-                    <p className="font-black text-[20px] text-[#0D0D0D]">
-                      {p.prix.toLocaleString('fr-FR')} <span className="text-[12px] font-bold text-gray-400">CFA</span>
-                    </p>
+                    <div>
+                      {p.promoP ? (
+                        <>
+                          <p className="font-black text-[20px] leading-none" style={{ color: '#EF4444' }}>
+                            {p.promoP.toLocaleString('fr-FR')} <span className="text-[12px] font-bold text-gray-400">CFA</span>
+                          </p>
+                          <p className="text-[12px] line-through" style={{ color: '#9CA3AF' }}>{p.prix.toLocaleString('fr-FR')} CFA</p>
+                        </>
+                      ) : (
+                        <p className="font-black text-[20px] text-[#0D0D0D]">
+                          {p.prix.toLocaleString('fr-FR')} <span className="text-[12px] font-bold text-gray-400">CFA</span>
+                        </p>
+                      )}
+                    </div>
                     <div className="flex gap-2">
                       <button onClick={e => toggleFav(e, p.id)}
                         className="w-11 h-11 rounded-2xl flex items-center justify-center transition-all z-10"
                         style={{ background: '#F3F4F6', color: isFav ? '#EF4444' : '#9CA3AF' }}>
                         <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                       </button>
-                      <button onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier(p) }}
+                      <button onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
                         className="h-11 px-5 flex items-center gap-2 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all z-10"
                         style={{ background: inCart ? '#1B6B3A' : '#E6F8EA', color: inCart ? 'white' : '#1B6B3A' }}>
                         <span className="material-symbols-outlined text-[18px]">{inCart ? 'check' : 'add_shopping_cart'}</span>

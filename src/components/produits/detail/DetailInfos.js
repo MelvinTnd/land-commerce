@@ -9,12 +9,15 @@ export default function DetailInfos({ produit }) {
 
   if (!produit) return null
 
+  const prixFinal = parseFloat(produit.promo_price || produit.price)
+  const prixOriginal = parseFloat(produit.price)
+
   const handleAjout = () => {
     for (let i = 0; i < quantite; i++) {
       ajouterAuPanier({
         id: produit.id,
         nom: produit.name,
-        prix: parseFloat(produit.price),
+        prix: prixFinal,
         image: produit.image || 'https://images.unsplash.com/photo-1618022325802-7e5e732d97a1?auto=format&fit=crop&q=80',
         shop: produit.shop,
       })
@@ -76,10 +79,24 @@ export default function DetailInfos({ produit }) {
           Prix Direct Atelier
         </p>
         <div className="flex items-end gap-2 mb-1">
-          <span className="text-4xl font-extrabold" style={{ color: '#1A1A1A' }}>
-            {parseFloat(produit.price).toLocaleString('fr-FR')}
-          </span>
-          <span className="text-lg font-bold mb-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+          {produit.promo_price ? (
+            <>
+              <span className="text-4xl font-extrabold" style={{ color: '#EF4444' }}>
+                {parseFloat(produit.promo_price).toLocaleString('fr-FR')}
+              </span>
+              <span className="text-lg font-bold mb-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+              <span className="text-base line-through ml-1 mb-1" style={{ color: '#9CA3AF' }}>
+                {parseFloat(produit.price).toLocaleString('fr-FR')}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-4xl font-extrabold" style={{ color: '#1A1A1A' }}>
+                {parseFloat(produit.price).toLocaleString('fr-FR')}
+              </span>
+              <span className="text-lg font-bold mb-1" style={{ color: '#9CA3AF' }}>FCFA</span>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ background: '#1B6B3A' }}/>
