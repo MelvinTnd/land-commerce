@@ -49,6 +49,25 @@ export default function InventoryTab({ token }) {
     e.preventDefault()
     setSaving(true)
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
+      let imageUrl = ''
+
+      // Upload du fichier image d'abord si mode upload
+      if (imageMode === 'upload' && imageFile) {
+        const imgForm = new FormData()
+        imgForm.append('image', imageFile)
+        const imgRes = await fetch(`${apiUrl}/vendor/upload-image`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: imgForm,
+        })
+        const imgData = await imgRes.json()
+        if (!imgRes.ok) throw new Error(imgData.message || "Erreur lors de l'upload de l'image")
+        imageUrl = imgData.url
+      } else if (imageMode === 'url' && form.image) {
+        imageUrl = form.image
+      }
+
       const formData = new FormData()
       formData.append('name', form.name)
       formData.append('price', form.price)
@@ -56,12 +75,7 @@ export default function InventoryTab({ token }) {
       formData.append('description', form.description || '')
       if (form.promo_price) formData.append('promo_price', form.promo_price)
       if (form.category_id) formData.append('category_id', form.category_id)
-      
-      if (imageMode === 'upload' && imageFile) {
-        formData.append('image', imageFile)
-      } else if (imageMode === 'url' && form.image) {
-        formData.append('image_url', form.image)
-      }
+      if (imageUrl) formData.append('image', imageUrl)
 
       await createProduct(formData, token)
       setShowModal(false)
