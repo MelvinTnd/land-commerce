@@ -155,34 +155,6 @@ function ConnexionForm() {
                 </Link>
               </p>
 
-              {/* Bouton Google */}
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={loadingGoogle}
-                className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors disabled:opacity-70 shadow-sm mb-6"
-              >
-                <div className="w-5 h-5 relative shrink-0">
-                  <Image
-                    src="https://www.svgrepo.com/show/475656/google-color.svg"
-                    alt="Google"
-                    fill
-                    className="object-contain"
-                    sizes="20px"
-                  />
-                </div>
-                <span className="text-[13px] font-bold text-gray-800">
-                  {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
-                </span>
-              </button>
-
-              {/* Séparateur */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
-                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>ou</span>
-                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
-              </div>
-
               {/* Message d'erreur */}
               {error && (
                 <div className="flex items-center gap-2 bg-red-50 text-red-500 text-sm font-bold p-4 rounded-[12px] border border-red-100 mb-6">
@@ -240,6 +212,34 @@ function ConnexionForm() {
                   {!loading && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
                 </button>
               </form>
+
+              {/* Séparateur */}
+              <div className="flex items-center gap-4 mb-6 mt-6">
+                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
+                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>ou</span>
+                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
+              </div>
+
+              {/* Bouton Google */}
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loadingGoogle}
+                className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors disabled:opacity-70 shadow-sm"
+              >
+                <div className="w-5 h-5 relative shrink-0">
+                  <Image
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    alt="Google"
+                    fill
+                    className="object-contain"
+                    sizes="20px"
+                  />
+                </div>
+                <span className="text-[13px] font-bold text-gray-800">
+                  {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
+                </span>
+              </button>
 
               {/* Sécurité */}
               <div className="flex items-center justify-center gap-2 mt-8">

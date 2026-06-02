@@ -60,37 +60,37 @@ export default function BoutiqueDetailPage() {
     <div style={{ background: '#F3F4F6', minHeight: '80vh' }}>
 
       {/* ── Bannière boutique ── */}
-      <div className="relative" style={{ height: 280 }}>
-        <Image src={bannerSrc} alt={`Bannière ${shop.name}`} fill className="object-cover" priority sizes="100vw" />
+      <div className="relative h-[220px] sm:h-[260px] md:h-[300px]">
+        <Image src={bannerSrc} alt={`Bannière ${shop.name}`} fill className="object-cover" priority sizes="100vw" unoptimized />
         {/* Overlay */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)' }} />
         {/* Bouton retour */}
         <Link href="/boutiques"
-          className="absolute top-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] text-white transition-all hover:bg-black/20"
+          className="absolute top-3 left-3 md:top-4 md:left-4 flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full font-bold text-[11px] md:text-[12px] text-white transition-all hover:bg-black/20"
           style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(8px)' }}>
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-          Retour aux boutiques
+          <span className="material-symbols-outlined text-[14px] md:text-[16px]">arrow_back</span>
+          Retour
         </Link>
         {/* Infos bas de bannière */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-0">
-          <div className="max-w-5xl mx-auto flex items-end gap-5 translate-y-12">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden relative shrink-0"
-              style={{ border: '4px solid white', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+        <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 pb-0">
+          <div className="max-w-5xl mx-auto flex items-end gap-3 md:gap-5 translate-y-10 md:translate-y-12">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl md:rounded-2xl overflow-hidden relative shrink-0"
+              style={{ border: '3px solid white', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
               <Image src={logoSrc} alt={shop.name} fill className="object-cover" unoptimized />
             </div>
-            <div className="pb-2 flex-1">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-black text-white">{shop.name}</h1>
+            <div className="pb-1 md:pb-2 flex-1 min-w-0">
+              <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+                <h1 className="text-lg md:text-2xl font-black text-white truncate max-w-full">{shop.name}</h1>
                 {shop.status === 'active' && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-black"
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-black shrink-0"
                     style={{ background: '#1B6B3A', color: '#fff' }}>
-                    <span className="material-symbols-outlined text-[12px]">verified</span>
-                    VENDEUR VÉRIFIÉ
+                    <span className="material-symbols-outlined text-[10px] md:text-[12px]">verified</span>
+                    VÉRIFIÉ
                   </span>
                 )}
               </div>
-              <p className="text-sm flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                <span className="material-symbols-outlined text-[14px]">location_on</span>
+              <p className="text-xs md:text-sm flex items-center gap-1 md:gap-2 truncate" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                <span className="material-symbols-outlined text-[12px] md:text-[14px]">location_on</span>
                 {shop.location || 'Bénin'}
               </p>
             </div>
@@ -99,7 +99,7 @@ export default function BoutiqueDetailPage() {
       </div>
 
       {/* ─── Contenu ─── */}
-      <div className="max-w-5xl mx-auto px-4 md:px-6 pt-20 pb-16">
+      <div className="max-w-5xl mx-auto px-4 md:px-6 pt-16 md:pt-20 pb-16">
 
         {/* Cards info boutique */}
         <div className="flex flex-wrap gap-4 mb-8">
