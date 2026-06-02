@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCart } from '@/lib/CartContext'
 import { getProducts } from '@/lib/api'
 import { getProductImage } from '@/lib/images'

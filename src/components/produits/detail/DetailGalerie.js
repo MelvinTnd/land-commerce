@@ -8,17 +8,14 @@ export default function DetailGalerie({ produit }) {
 
   if (!produit) return null
 
-  // Images de galerie avec fallbacks Unsplash fiables
+  // Image principale avec préfixe API
   const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
   let mainImage = getProductImage(produit)
   if (mainImage && mainImage.startsWith('/storage/')) mainImage = apiBase + mainImage
 
-  const images = [
-    mainImage,
-    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&q=80&w=800',
-    'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=800',
-  ]
+  // On n'affiche que l'image principale si c'est la seule réelle
+  // Les autres images étaient des fallbacks Unsplash génériques qui peuvent prêter à confusion
+  const images = [mainImage]
 
   return (
     <div className="flex flex-col gap-4">
