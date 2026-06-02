@@ -73,9 +73,14 @@ export default function InscriptionPage() {
   }
 
   // Connexion Google via NextAuth
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setLoadingGoogle(true)
-    signIn('google', { callbackUrl: '/compte' })
+    try {
+      await signIn('google', { callbackUrl: '/compte' })
+    } catch (err) {
+      setError("Erreur de connexion Google : " + err.message)
+      setLoadingGoogle(false)
+    }
   }
 
   return (

@@ -60,7 +60,12 @@ function ConnexionForm() {
 
   const handleGoogleSignIn = async () => {
     setLoadingGoogle(true)
-    await signIn('google', { callbackUrl: '/compte' })
+    try {
+      await signIn('google', { callbackUrl: '/compte' })
+    } catch (err) {
+      setError("Erreur de connexion Google : " + err.message)
+      setLoadingGoogle(false)
+    }
   }
 
   return (
