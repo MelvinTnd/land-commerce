@@ -171,7 +171,7 @@ export default function InscriptionPage() {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, type: 'artisan' })}
-                className={`relative flex flex-col items-center justify-center py-6 px-4 rounded-[16px] transition-all duration-200 border-2 ${form.type === 'artisan' ? 'bg-white border-[#1B6B3A] shadow-sm' : 'bg-gray-100 border-transparent'}`}
+                className={`relative flex flex-col items-center justify-center py-6 px-4 rounded-[16px] transition-all duration-200 border-2 ${form.type === 'artisan' ? 'bg-white border-[#1B6B3A] shadow-sm' : 'bg-gray-100 border-transparent text-gray-400'}`}
               >
                 {form.type === 'artisan' && (
                   <div className="absolute top-2 right-2 w-5 h-5 bg-[#1B6B3A] rounded-full flex items-center justify-center text-white shadow-sm">
@@ -274,8 +274,8 @@ export default function InscriptionPage() {
 
           {/* Social Buttons */}
           <div className="grid grid-cols-1 gap-3 mt-6">
-            {/* Google */}
-            <button
+            {/* Google — désactivé (non configuré) */}
+            {/* <button
               type="button"
               onClick={handleGoogleSignIn}
               disabled={loadingGoogle}
@@ -293,7 +293,7 @@ export default function InscriptionPage() {
               <span className="text-[13px] font-bold text-gray-800">
                 {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
               </span>
-            </button>
+            </button> */}
           </div>
 
           {/* Paiements sécurisés */}
