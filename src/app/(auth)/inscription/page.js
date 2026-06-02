@@ -272,28 +272,8 @@ export default function InscriptionPage() {
 
           </form>
 
-          {/* Divider */}
-          <div className="relative my-10 flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative bg-white border border-gray-100 shadow-sm rounded-full px-4 py-2 flex items-center gap-3 ml-auto z-10">
-              <div className="flex -space-x-1">
-                <div className="w-6 h-6 rounded-full bg-[#FFCC00] flex items-center justify-center font-extrabold text-[6px] text-[#003366]">MTN</div>
-                <div className="w-6 h-6 rounded-full bg-[#0066CC] flex items-center justify-center font-extrabold text-[6px] text-white">Moov</div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[8px] font-extrabold text-gray-800 uppercase leading-none">Paiements sécurisés</span>
-                <span className="text-[7px] text-gray-500 uppercase">Via Mobile Money</span>
-              </div>
-            </div>
-            <span className="absolute left-1/2 -translate-x-1/2 bg-[#F9FAFA] px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">
-              Ou s'inscrire avec
-            </span>
-          </div>
-
           {/* Social Buttons */}
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3 mt-6">
             {/* Google */}
             <button
               type="button"
@@ -316,8 +296,19 @@ export default function InscriptionPage() {
             </button>
           </div>
 
+          {/* Paiements sécurisés */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+            <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
+              <div className="flex -space-x-0.5">
+                <div className="w-5 h-5 rounded-full bg-[#FFCC00] flex items-center justify-center font-black text-[5px] text-[#003366]">MTN</div>
+                <div className="w-5 h-5 rounded-full bg-[#0066CC] flex items-center justify-center font-black text-[5px] text-white">Moov</div>
+              </div>
+              <span className="text-[9px] font-bold text-gray-500">Paiements sécurisés</span>
+            </div>
+          </div>
+
           {/* Login Link */}
-          <p className="text-center text-sm font-medium text-gray-500 mt-10">
+          <p className="text-center text-sm font-medium text-gray-500 mt-6">
             Déjà membre ? <Link href="/connexion" className="font-bold text-[#1B6B3A] hover:underline">Connectez-vous ici</Link>
           </p>
 

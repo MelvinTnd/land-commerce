@@ -244,6 +244,56 @@ export async function updateOrderStatus(orderId, status, authToken = null) {
 }
 
 // ========================
+// PROFIL UTILISATEUR
+// ========================
+export async function updateProfile(profileData, authToken = null) {
+  return apiFetch('/user', {
+    method: 'PUT',
+    body: JSON.stringify(profileData),
+  }, authToken)
+}
+
+export async function changePassword(passwordData, authToken = null) {
+  return apiFetch('/user/change-password', {
+    method: 'POST',
+    body: JSON.stringify(passwordData),
+  }, authToken)
+}
+
+export async function deleteAccount(authToken = null) {
+  return apiFetch('/user', {
+    method: 'DELETE',
+  }, authToken)
+}
+
+// ========================
+// ADRESSES UTILISATEUR
+// ========================
+export async function getAddresses(authToken = null) {
+  return apiFetch('/addresses', {}, authToken)
+}
+
+export async function createAddress(addressData, authToken = null) {
+  return apiFetch('/addresses', {
+    method: 'POST',
+    body: JSON.stringify(addressData),
+  }, authToken)
+}
+
+export async function updateAddress(addressId, addressData, authToken = null) {
+  return apiFetch(`/addresses/${addressId}`, {
+    method: 'PUT',
+    body: JSON.stringify(addressData),
+  }, authToken)
+}
+
+export async function deleteAddress(addressId, authToken = null) {
+  return apiFetch(`/addresses/${addressId}`, {
+    method: 'DELETE',
+  }, authToken)
+}
+
+// ========================
 // AVIS & NOTATIONS
 // ========================
 export async function getShopReviews(slug) {
