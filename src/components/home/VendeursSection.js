@@ -10,19 +10,26 @@ export default function VendeursSection() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getShops()
+    getShops({ limit: 3 })
       .then(data => {
-        if (!data || data.length === 0) { setLoading(false); return }
+        if (!data || !Array.isArray(data) || data.length === 0) { setLoading(false); return }
         const apiShops = data
           .filter(s => s.status === 'active')
-          .map(s => ({
-            id: s.slug,
-            nom: s.name,
-            subtitle: s.location || 'Bénin',
-            avatar: s.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`,
-            quote: s.description ? s.description.substring(0, 110) + (s.description.length > 110 ? '...' : '') : 'Produits exceptionnels et savoir-faire unique du Bénin.',
-            extra: s.products_count || 0,
-          }))
+          .map(s => {
+            const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
+            let avatar = s.logo 
+            if (avatar && avatar.startsWith('/storage/')) avatar = apiBase + avatar
+            if (!avatar) avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=1B6B3A&color=fff&size=200`
+            
+            return {
+              id: s.slug || s.id,
+              nom: s.name,
+              subtitle: s.location || 'Bénin',
+              avatar: avatar,
+              quote: s.description ? s.description.substring(0, 110) + (s.description.length > 110 ? '...' : '') : 'Produits exceptionnels et savoir-faire unique du Bénin.',
+              extra: s.products_count || 0,
+            }
+          })
         if (apiShops.length > 0) setVendeurs(apiShops)
         setLoading(false)
       })
@@ -82,7 +89,7 @@ export default function VendeursSection() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {vendeurs.map(v => (
-              <Link key={v.id} href={`/boutiques/${v.id}`}
+              <Link key={v.id} href={`/boutique/${v.id}`}
                 className="group bg-white overflow-hidden flex flex-col transition-all duration-400 hover:-translate-y-2 hover:shadow-xl"
                 style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
 

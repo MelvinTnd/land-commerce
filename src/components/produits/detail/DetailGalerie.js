@@ -9,7 +9,10 @@ export default function DetailGalerie({ produit }) {
   if (!produit) return null
 
   // Images de galerie avec fallbacks Unsplash fiables
-  const mainImage = getProductImage(produit)
+  const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
+  let mainImage = getProductImage(produit)
+  if (mainImage && mainImage.startsWith('/storage/')) mainImage = apiBase + mainImage
+
   const images = [
     mainImage,
     'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800',

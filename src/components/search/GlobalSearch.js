@@ -26,8 +26,20 @@ export default function GlobalSearch({ onClose }) {
           getProducts({ search: query, limit: 5 }),
           getShops({ search: query, limit: 4 }),
         ])
-        setProduits((p.data || []).slice(0, 5))
-        setBoutiques((Array.isArray(s) ? s : []).slice(0, 4))
+        
+        const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
+        
+        setProduits((p.data || []).map(item => {
+          let img = item.image
+          if (img && img.startsWith('/storage/')) img = apiBase + img
+          return { ...item, image: img }
+        }))
+        
+        setBoutiques((Array.isArray(s) ? s : []).map(item => {
+          let logo = item.logo
+          if (logo && logo.startsWith('/storage/')) logo = apiBase + logo
+          return { ...item, logo: logo }
+        }))
       } catch { /* silent */ }
       setLoading(false)
     }, 300)

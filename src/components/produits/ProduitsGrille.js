@@ -62,8 +62,13 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
           setAllProduits(prods)   // vraies données de l'API
           setIsLive(true)
         } else {
-          // API vide → fallback local
-          setAllProduits(FALLBACK_PRODUITS)
+          // Si on est en train de rechercher, et que l'API ne renvoie rien, on ne veut pas afficher les fallbacks
+          // On n'affiche les fallbacks que si c'est le catalogue général (pas de filtres)
+          if (recherche || (categorieActive && categorieActive !== 'Tous')) {
+            setAllProduits([])
+          } else {
+            setAllProduits(FALLBACK_PRODUITS)
+          }
           setIsLive(false)
         }
         setLoading(false)

@@ -47,20 +47,27 @@ export default function DetailSimilaires({ categoryId }) {
   useEffect(() => {
     getProducts(categoryId ? { category: categoryId } : { featured: true })
       .then(data => {
-        const prods = data.data || []
-        if (prods.length > 0) {
-          setSimilaires(prods.slice(0, 4).map(p => ({
-            id: p.id,
-            nom: p.name,
-            categorie: p.category?.name || 'Artisanat',
-            prix: parseFloat(p.price),
-            slug: p.slug || p.id,
-            image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
-          })))
+        if (data.data) {
+          const prods = data.data
+          if (prods.length > 0) {
+            setSimilaires(prods.slice(0, 4).map(p => ({
+              id: p.id,
+              nom: p.name,
+              categorie: p.category?.name || 'Artisanat',
+              prix: parseFloat(p.price),
+              slug: p.slug || p.id,
+              image: getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name }),
+            })))
+          } else {
+            // Aucun produit similaire trouvé -> on vide pour éviter les faux-semblants
+            setSimilaires([])
+          }
         }
       })
       .catch(() => {})
   }, [categoryId])
+
+  if (similaires.length === 0) return null
 
   return (
     <section className="py-12 md:py-16" style={{ background: '#F7F5F0' }}>
