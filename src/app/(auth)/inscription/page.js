@@ -274,8 +274,7 @@ export default function InscriptionPage() {
 
           {/* Social Buttons */}
           <div className="grid grid-cols-1 gap-3 mt-6">
-            {/* Google — désactivé (non configuré) */}
-            {/* <button
+            <button
               type="button"
               onClick={handleGoogleSignIn}
               disabled={loadingGoogle}
@@ -293,7 +292,7 @@ export default function InscriptionPage() {
               <span className="text-[13px] font-bold text-gray-800">
                 {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
               </span>
-            </button> */}
+            </button>
           </div>
 
           {/* Paiements sécurisés */}

@@ -150,10 +150,33 @@ function ConnexionForm() {
                 </Link>
               </p>
 
-              {/* Bouton Google — désactivé (non configuré) */}
-              {/* <button ... Continuer avec Google ... /> */}
+              {/* Bouton Google */}
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={loadingGoogle}
+                className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors disabled:opacity-70 shadow-sm mb-6"
+              >
+                <div className="w-5 h-5 relative shrink-0">
+                  <Image
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    alt="Google"
+                    fill
+                    className="object-contain"
+                    sizes="20px"
+                  />
+                </div>
+                <span className="text-[13px] font-bold text-gray-800">
+                  {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
+                </span>
+              </button>
 
-              {/* Séparateur supprimé car Google est désactivé */}
+              {/* Séparateur */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
+                <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>ou</span>
+                <div className="flex-1 h-px" style={{ background: '#E5E7EB' }} />
+              </div>
 
               {/* Message d'erreur */}
               {error && (
