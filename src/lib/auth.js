@@ -126,7 +126,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.role = data.user?.role || 'acheteur'
             token.id = String(data.user?.id)
           } else {
-            // Si le backend ne supporte pas encore Google, on utilise un rôle par défaut
             token.role = 'acheteur'
           }
         } catch {

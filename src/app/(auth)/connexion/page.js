@@ -60,7 +60,7 @@ function ConnexionForm() {
 
   const handleGoogleSignIn = async () => {
     setLoadingGoogle(true)
-    await signIn('google', { callbackUrl: '/' })
+    await signIn('google', { callbackUrl: '/compte' })
   }
 
   return (
