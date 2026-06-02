@@ -91,7 +91,7 @@ export default function InscriptionPage() {
         {/* Background Image with Green Overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-50"
-          style={{ backgroundImage: `url("https://images.unsplash.com/photo-1544208365-d69806b9bba0?auto=format&fit=crop&w=1000&q=80")` }}
+          style={{ backgroundImage: `url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1000&q=80")` }}
         ></div>
         {/* Additional gradient for smoothing */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#1B6B3A] via-transparent to-[#1B6B3A]/80"></div>

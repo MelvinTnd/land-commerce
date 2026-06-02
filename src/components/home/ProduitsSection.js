@@ -116,10 +116,10 @@ export default function ProduitsSection() {
                   style={{ border: '1px solid #EBEBEB' }}>
 
                   {/* Image carré */}
-                  <div className="relative overflow-hidden bg-[#F7F5F0] p-2" style={{ aspectRatio: '1/1' }}>
+                  <div className="relative overflow-hidden bg-[#F7F5F0]" style={{ aspectRatio: '1/1' }}>
                     <Link href={`/produits/${p.slug || p.id}`}>
                       <Image src={p.image} alt={p.nom} fill
-                        className="object-contain transition-transform duration-600 group-hover:scale-110"
+                        className="object-cover transition-transform duration-600 group-hover:scale-105"
                         sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,25vw" unoptimized />
                     </Link>
 

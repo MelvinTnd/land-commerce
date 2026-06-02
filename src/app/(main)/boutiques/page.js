@@ -181,9 +181,9 @@ export default function BoutiquesPage() {
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.9) 100%)' }} />
 
                   {/* Logo avatar */}
-                  <div className="absolute bottom-0 left-6 translate-y-1/2 w-16 h-16 rounded-2xl overflow-hidden relative z-10 bg-white p-1"
+                  <div className="absolute bottom-0 left-6 translate-y-1/2 w-16 h-16 rounded-2xl overflow-hidden relative z-10 bg-white"
                     style={{ border: '2px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}>
-                    <Image src={b.logo} alt={b.nom} fill className="object-contain" sizes="64px" unoptimized />
+                    <Image src={b.logo} alt={b.nom} fill className="object-cover" sizes="64px" unoptimized />
                   </div>
 
                   {/* Badge vérifié */}

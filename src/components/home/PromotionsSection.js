@@ -13,7 +13,7 @@ const promosDefaut = [
     reduction: 30,
     description: "Sculptures, masques et mobilier d'exception à prix réduit pendant 48h.",
     date_fin: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
-    image: 'https://images.unsplash.com/photo-1493106641515-5a31f1543e56?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&q=80&w=1200',
     categorie: 'FLASH',
     color: '#EF4444',
   },

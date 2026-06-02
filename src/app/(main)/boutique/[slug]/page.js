@@ -311,25 +311,13 @@ export default function BoutiquePage() {
           HERO BANNIÈRE
       ══════════════════════════════════════════════ */}
       <div className="relative h-[400px] lg:h-[550px] w-full overflow-hidden bg-[#0D2B1A]">
-        {/* Background Overlay Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
-            alt=""
-            fill
-            className="object-cover opacity-30 blur-lg scale-105"
-            unoptimized
-            onError={e => { e.target.style.opacity = '0' }}
-          />
-        </div>
-
-        {/* Main Banner Image (Cover but taller area to show more) */}
+        {/* Main Banner Image (Cover to fill background) */}
         <div className="absolute inset-0 z-10">
           <Image
             src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
             alt={boutique.nom}
             fill
-            className="object-cover object-center transition-transform duration-1000"
+            className="object-cover opacity-70"
             sizes="100vw"
             priority
             onError={e => { e.target.style.opacity = '0' }}
@@ -369,12 +357,12 @@ export default function BoutiquePage() {
 
               {/* Logo */}
               <div className="shrink-0 -mt-16 sm:-mt-20 lg:-mt-24 relative">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[22px] sm:rounded-[28px] overflow-hidden bg-white shadow-2xl ring-8 ring-white p-2">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[22px] sm:rounded-[28px] overflow-hidden bg-white shadow-2xl ring-8 ring-white">
                   <Image 
                     src={logoSrc} 
                     alt={boutique.nom} 
                     fill 
-                    className="object-contain" 
+                    className="object-cover" 
                     sizes="144px" 
                     unoptimized 
                     onError={(e) => {
