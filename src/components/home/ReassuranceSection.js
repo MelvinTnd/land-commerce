@@ -70,20 +70,20 @@ export default function ReassuranceSection() {
                 key={i}
                 onClick={() => setActive(i)}
                 style={{
-                  padding: '20px 24px 24px',
+                  padding: '24px',
                   cursor: 'pointer',
                   position: 'relative',
                   borderRadius: '16px',
                   background: isActive ? `${p.color}12` : 'transparent',
                   border: `1px solid ${isActive ? p.color + '50' : 'rgba(255,255,255,0.06)'}`,
                   transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  transform: isActive ? 'translateY(-6px)' : 'translateY(0)',
+                  transform: isActive ? 'translateY(-4px)' : 'translateY(0)',
                   boxShadow: isActive ? `0 8px 32px ${p.color}30` : 'none',
                 }}
                 className="sm:p-[28px_32px_32px]"
               >
                 {/* Icône + stat */}
-                <div className="flex items-center gap-4 mb-5">
+                <div className="flex items-center gap-4 mb-4 sm:mb-5">
                   <div
                     style={{
                       width: '52px',
