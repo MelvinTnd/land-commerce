@@ -189,6 +189,7 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
                     <ProductImage
                       nom={p.nom}
                       categorie={p.categorie}
+                      apiImage={p.image}
                       fill
                       className="object-cover transition-transform duration-600 group-hover:scale-105"
                     />

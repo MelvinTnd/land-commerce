@@ -123,18 +123,9 @@ export async function getVendorProducts(authToken = null) {
   return apiFetch('/vendor/products', {}, authToken)
 }
 
-export async function createProduct(productData, authToken = null) {
-  return apiFetch('/vendor/products', {
-    method: 'POST',
-    body: JSON.stringify(productData),
-  }, authToken)
-}
+// Suppression du doublon déprécié (voir gestion via FormData plus bas)
 
-export async function deleteProduct(productId, authToken = null) {
-  return apiFetch(`/vendor/products/${productId}`, {
-    method: 'DELETE',
-  }, authToken)
-}
+// Suppression du doublon déprécié
 
 // ========================
 // PUBLIC - Produits

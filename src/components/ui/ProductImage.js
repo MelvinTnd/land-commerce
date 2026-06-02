@@ -71,8 +71,11 @@ export function getImageByName(nom = '') {
  * - Fallback gracieux si l'image ne charge pas
  */
 export default function ProductImage({ nom, categorie, apiImage, className, style, fill, sizes }) {
-  // On détermine l'URL correcte par nom EN PREMIER
-  const correctUrl = getImageByName(nom || '')
+  // 1. Détection d'une image réelle de l'API (uploadée par le vendeur)
+  const isRealImage = apiImage && (apiImage.startsWith('http') || apiImage.includes('/storage/'))
+  
+  // 2. Si pas d'image réelle, on utilise le fallback par nom
+  const correctUrl = isRealImage ? apiImage : getImageByName(nom || '')
 
   const [src, setSrc] = useState(correctUrl)
   const [failed, setFailed] = useState(false)

@@ -148,7 +148,15 @@ export default function DetailProduitPage() {
                   type="text"
                   value={contactMsg}
                   onChange={e => setContactMsg(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && contactMsg.trim() && (setContactSent(true))}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && contactMsg.trim()) {
+                      import('@/lib/api').then(({ sendMessage }) => {
+                        sendMessage(p.shop.id, contactMsg.trim(), session?.user?.apiToken);
+                        setContactSent(true);
+                        setContactMsg('');
+                      }).catch(err => alert(err.message));
+                    }
+                  }}
                   placeholder={`Bonjour ${p.shop?.name || ''}, je m'intéresse à votre produit "${p.name}"...`}
                   className="flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium outline-none transition-colors"
                   style={{ background: '#F7F5F0', border: '1.5px solid #E5E7EB' }}
@@ -157,7 +165,13 @@ export default function DetailProduitPage() {
                 />
                 <button
                   disabled={!contactMsg.trim()}
-                  onClick={() => { if (contactMsg.trim()) setContactSent(true) }}
+                  onClick={() => {
+                    import('@/lib/api').then(({ sendMessage }) => {
+                      sendMessage(p.shop.id, contactMsg.trim(), session?.user?.apiToken);
+                      setContactSent(true);
+                      setContactMsg('');
+                    }).catch(err => alert(err.message));
+                  }}
                   className="bg-[#1B6B3A] hover:bg-[#134e29] text-white font-bold text-sm px-6 py-3.5 rounded-2xl whitespace-nowrap disabled:opacity-50 transition-all flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[17px]">send</span>

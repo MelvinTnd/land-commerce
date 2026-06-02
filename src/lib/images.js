@@ -84,26 +84,33 @@ const SLUG_IMAGES = {
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&q=80&w=800'
 
 /**
- * Retourne l'image d'un produit avec fallback par nom, slug et catégorie.
- * Les images de l'API Render étant incorrectes, on priorise nos Unsplash.
+ * Retourne l'image d'un produit. 
+ * PRIORITÉ : Image réelle de l'API (upload utilisateur) > Fallback Unsplash intelligent.
  */
 export function getProductImage(product) {
+  const img  = product?.image || ''
   const slug = (product?.slug || '').toLowerCase()
   const nom  = (product?.name || product?.nom || '').toLowerCase()
   const cat  = (product?.categorie || product?.category?.name || '').toLowerCase()
 
-  // Combiné pour le matching (slug + nom)
+  // 1. Priorité absolue : Image réelle de l'API (uploadée par le vendeur)
+  // On détecte un upload par la présence de 'http' ou du dossier '/storage/'
+  if (img && (img.startsWith('http') || img.includes('/storage/'))) {
+    return img
+  }
+
+  // Combiné pour le matching fallback (slug + nom)
   const combined = slug + ' ' + nom
 
-  // 1. Slug exact
+  // 2. Slug exact
   if (slug && SLUG_IMAGES[slug]) return SLUG_IMAGES[slug]
 
-  // 2. Slug partiel
+  // 3. Slug partiel
   for (const [key] of Object.entries(SLUG_IMAGES)) {
     if (slug.length > 3 && (slug.includes(key) || key.includes(slug))) return SLUG_IMAGES[key]
   }
 
-  // 3. Matching par mots-clés dans nom/slug (pour les slugs API inconnus)
+  // 4. Matching par mots-clés dans nom/slug
   const KEYWORDS = [
     { words: ['tissu', 'wax', 'batik', 'kita', 'pagne'],       url: SLUG_IMAGES['tissu-kita-multicolor'] },
     { words: ['sculpture', 'bronze', 'statue', 'roi', 'abomey', 'ghezo'], url: SLUG_IMAGES['sculpture-bronze-roi'] },
@@ -123,13 +130,10 @@ export function getProductImage(product) {
     if (words.some(w => combined.includes(w))) return url
   }
 
-  // 4. Catégorie
+  // 5. Catégorie
   for (const [key, url] of Object.entries(CATEGORY_IMAGES)) {
     if (cat.length > 2 && (cat.includes(key) || key.includes(cat))) return url
   }
-
-  // 5. Image API (ignorée car incorrecte sur Render — mais gardée en dernier recours)
-  // if (product?.image && !product.image.startsWith('/images/')) return product.image
 
   return DEFAULT_IMAGE
 }
