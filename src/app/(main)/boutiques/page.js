@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getShops } from '@/lib/api'
 import { getShopBannerImage, getStorageUrl } from '@/lib/images'
+import SafeImage from '@/components/ui/SafeImage'
 
 export default function BoutiquesPage() {
   const [boutiques, setBoutiques] = useState([])
@@ -167,66 +168,74 @@ export default function BoutiquesPage() {
                 className="group bg-white overflow-hidden transition-all duration-400 hover:-translate-y-2 hover:shadow-xl flex flex-col"
                 style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.05)' }}>
 
-                {/* Banner avec fallback image locale */}
+                {/* Banner */}
                 <div className="relative h-48 overflow-hidden" style={{ borderRadius: '28px 28px 0 0', background: 'linear-gradient(135deg, #0D2B1A, #1B6B3A)' }}>
-                  <Image
+                  <SafeImage
                     src={b.banner || getShopBannerImage({ name: b.nom, description: b.description })}
                     alt={b.nom}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="400px"
-                    unoptimized
-                    onError={e => { e.target.style.opacity = '0' }}
                   />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.9) 100%)' }} />
-
-                  {/* Logo avatar */}
-                  <div className="absolute bottom-0 left-6 translate-y-1/2 w-16 h-16 rounded-2xl overflow-hidden relative z-10 bg-white"
-                    style={{ border: '2px solid white', boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}>
-                    <Image src={b.logo} alt={b.nom} fill className="object-cover" sizes="64px" unoptimized />
-                  </div>
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55) 100%)' }} />
 
                   {/* Badge vérifié */}
                   {b.badge && (
                     <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider"
-                      style={{ background: 'rgba(27,107,58,0.1)', color: '#1B6B3A', border: '1px solid rgba(27,107,58,0.2)', backdropFilter: 'blur(4px)' }}>
+                      style={{ background: 'rgba(27,107,58,0.85)', color: 'white', backdropFilter: 'blur(4px)' }}>
                       <span className="material-symbols-outlined text-[11px]">verified</span>
                       Vérifié
                     </div>
                   )}
                 </div>
 
-                {/* Content */}
-                <div className="pt-12 px-6 pb-6 flex flex-col flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1 min-w-0 pr-3">
-                      <h2 className="text-[18px] font-black text-[#0D0D0D] mb-1 leading-snug group-hover:text-[#1B6B3A] transition-colors truncate">
-                        {b.nom}
-                      </h2>
-                      <div className="flex items-center gap-1 text-[11px] font-bold" style={{ color: '#9CA3AF' }}>
-                        <span className="material-symbols-outlined text-[13px]">location_on</span>
-                        {b.lieu}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-1 shrink-0">
-                      <span className="text-[10px] font-black px-3 py-1.5 rounded-full" style={{ background: '#F3F4F6', color: '#6B7280' }}>
-                        {b.produits} prod.
-                      </span>
-                      {b.avgRating > 0 && (
-                        <div className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[12px]" style={{ color: '#F59E0B', fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-[11px] font-black" style={{ color: '#0D0D0D' }}>{b.avgRating.toFixed(1)}</span>
-                          <span className="text-[10px]" style={{ color: '#9CA3AF' }}>({b.totalReviews})</span>
-                        </div>
-                      )}
+                {/* Logo — DANS le bloc content, pas en translate-y */}
+                <div className="px-6 pt-4 pb-0 flex items-center gap-3">
+                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0"
+                    style={{ border: '2.5px solid #E6F8EA', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', background: '#fff' }}>
+                    <SafeImage
+                      src={b.logo}
+                      name={b.nom}
+                      alt={b.nom}
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-[16px] font-black truncate group-hover:text-[#1B6B3A] transition-colors" style={{ color: '#0D0D0D' }}>
+                      {b.nom}
+                    </h2>
+                    <div className="flex items-center gap-1 text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
+                      <span className="material-symbols-outlined text-[12px]">location_on</span>
+                      {b.lieu}
                     </div>
                   </div>
+                  {b.avgRating > 0 && (
+                    <div className="ml-auto flex items-center gap-1 shrink-0">
+                      <span className="material-symbols-outlined text-[12px]" style={{ color: '#F59E0B', fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-[12px] font-black" style={{ color: '#0D0D0D' }}>{b.avgRating.toFixed(1)}</span>
+                    </div>
+                  )}
+                </div>
 
-                  <p className="text-[13px] leading-relaxed line-clamp-2 mb-6 flex-1" style={{ color: '#9CA3AF' }}>
+                {/* Content */}
+                <div className="px-6 pt-4 pb-6 flex flex-col flex-1">
+                  <p className="text-[12px] leading-relaxed line-clamp-2 mb-4" style={{ color: '#9CA3AF' }}>
                     {b.description}
                   </p>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-black px-3 py-1.5 rounded-full" style={{ background: '#F3F4F6', color: '#6B7280' }}>
+                      {b.produits} produit{b.produits > 1 ? 's' : ''}
+                    </span>
+                    {b.totalReviews > 0 && (
+                      <span className="text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
+                        {b.totalReviews} avis
+                      </span>
+                    )}
+                  </div>
 
-                  <Link href={`/boutique/${b.slug}`}
+                  <Link href={`/boutiques/${b.slug}`}
                     className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-wider transition-all group-hover:bg-[#1B6B3A] group-hover:text-white"
                     style={{ background: '#F0FDF4', color: '#1B6B3A', border: '1.5px solid rgba(27,107,58,0.2)' }}>
                     Visiter la boutique

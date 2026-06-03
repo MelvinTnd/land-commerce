@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react'
 import { getShopBySlug, getShopReviews } from '@/lib/api'
 import { useCart } from '@/lib/CartContext'
 import { getProductImage, getShopBannerImage, getStorageUrl } from '@/lib/images'
+import SafeImage from '@/components/ui/SafeImage'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function StarRating({ rating = 0, max = 5, size = 14 }) {
@@ -259,7 +260,7 @@ export default function BoutiqueDetailPage() {
                   background: '#fff',
                   overflow: 'hidden',
                 }}>
-                <Image src={logoSrc} alt={shop.name} fill className="object-cover" unoptimized />
+                <SafeImage src={logoSrc} name={shop.name} alt={shop.name} fill className="object-cover" />
               </div>
 
               {/* Infos */}

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getShops } from '@/lib/api'
 import { defaultShops } from '@/lib/defaultData'
+import SafeImage from '@/components/ui/SafeImage'
 
 export default function VendeursSection() {
   const [vendeurs, setVendeurs] = useState(defaultShops)
@@ -89,7 +90,7 @@ export default function VendeursSection() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {vendeurs.map(v => (
-              <Link key={v.id} href={`/boutique/${v.id}`}
+              <Link key={v.id} href={`/boutiques/${v.id}`}
                 className="group bg-white overflow-hidden flex flex-col transition-all duration-400 hover:-translate-y-2 hover:shadow-xl"
                 style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
 
@@ -104,16 +105,13 @@ export default function VendeursSection() {
                 <div className="px-6 pb-6 flex flex-col flex-1 -mt-8">
                   <div className="flex items-end gap-4 mb-5">
                     <div className="relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-gray-100">
-                      <Image 
+                      <SafeImage 
                         src={v.avatar} 
+                        name={v.nom}
                         alt={v.nom} 
                         fill 
                         className="object-cover" 
                         sizes="64px" 
-                        unoptimized 
-                        onError={(e) => {
-                          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(v.nom)}&background=1B6B3A&color=fff&size=200`
-                        }}
                       />
                     </div>
                     <div className="pb-1">

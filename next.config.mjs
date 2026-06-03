@@ -14,8 +14,11 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.svgrepo.com' },
       { protocol: 'https', hostname: 'flagcdn.com' },
       { protocol: 'https', hostname: 'land-commerce-api.onrender.com' },
+      { protocol: 'https', hostname: '**.onrender.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: '**.cloudinary.com' },
       { protocol: 'https', hostname: 'storage.googleapis.com' },
+      { protocol: 'https', hostname: '**.googleapis.com' },
       { protocol: 'https', hostname: 'picsum.photos' },
       { protocol: 'https', hostname: '**.amazonaws.com' },
       { protocol: 'https', hostname: 's3.amazonaws.com' },
@@ -24,8 +27,17 @@ const nextConfig = {
       { protocol: 'https', hostname: 'loremflickr.com' },
       { protocol: 'https', hostname: 'via.placeholder.com' },
       { protocol: 'https', hostname: 'placehold.co' },
+      // Domaines Railway, Fly.io, Heroku etc.
+      { protocol: 'https', hostname: '**.railway.app' },
+      { protocol: 'https', hostname: '**.fly.dev' },
+      { protocol: 'https', hostname: '**.herokuapp.com' },
+      // Tout domaine vercel
+      { protocol: 'https', hostname: '**.vercel.app' },
       { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'localhost' },
     ],
+    // Fallback : accepter toute URL distante non répertoriée via unoptimized
+    dangerouslyAllowSVG: true,
   },
   turbopack: {
     resolveAlias: {

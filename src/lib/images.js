@@ -186,28 +186,53 @@ export function getShopBannerImage(shop) {
 export const getShopImage = getShopBannerImage
 
 /**
- * Convertit un chemin /storage/... en URL complète avec le domaine API.
- * Utilisée partout où l'API renvoie un chemin relatif.
+ * Convertit un chemin retourné par l'API en URL d'image complète et valide.
+ * Gère tous les formats possibles :
+ *   - URL absolue (http/https)          → retournée telle quelle
+ *   - URL Cloudinary                    → retournée telle quelle
+ *   - /storage/products/xxx.jpg         → https://api/storage/products/xxx.jpg
+ *   - storage/products/xxx.jpg          → https://api/storage/products/xxx.jpg
+ *   - products/xxx.jpg                  → https://api/storage/products/xxx.jpg
+ *   - domaine.com/storage/xxx           → https://domaine.com/storage/xxx
+ *   - chaîne vide / null / undefined    → ''
  */
 export function getStorageUrl(path) {
-  if (!path) return ''
-  if (path.startsWith('http')) return path
+  if (!path || typeof path !== 'string') return ''
 
-  // Si le chemin est un hostname sans scheme (ex: domaine.com/storage/...)
-  // On détecte la présence d'un point avant le premier /
-  const firstSlash = path.indexOf('/')
-  const beforeSlash = firstSlash === -1 ? path : path.slice(0, firstSlash)
-  if (beforeSlash.includes('.')) {
-    return 'https://' + path
+  const trimmed = path.trim()
+  if (!trimmed) return ''
+
+  // 1. URL absolue (Cloudinary, S3, http, https)
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
+
+  const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace(/\/api$/, '')
+
+  // 2. Hostname sans schéma (ex: "res.cloudinary.com/...") — présence d'un point avant le premier /
+  const firstSlash = trimmed.indexOf('/')
+  const beforeFirstSlash = firstSlash === -1 ? trimmed : trimmed.slice(0, firstSlash)
+  if (beforeFirstSlash.includes('.')) {
+    return 'https://' + trimmed
   }
 
-  // Si le chemin contient storage/ (avec ou sans slash initial)
-  if (path.includes('storage/')) {
-    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
-    // On s'assure que le chemin commence par un seul /
-    const cleanPath = path.startsWith('/') ? path : '/' + path
-    return apiBase + cleanPath
+  // 3. Contient déjà "storage/" → on préfixe directement
+  if (trimmed.includes('storage/')) {
+    const clean = trimmed.startsWith('/') ? trimmed : '/' + trimmed
+    return apiBase + clean
   }
 
-  return path
+  // 4. Chemin relatif sans "storage/" (ex: "products/abc.jpg", "logos/shop.png")
+  //    → on suppose qu'il est dans /storage/
+  const clean = trimmed.startsWith('/') ? trimmed : '/' + trimmed
+  return apiBase + '/storage' + clean
+}
+
+/**
+ * Retourne une URL d'image sûre pour un logo/avatar de boutique.
+ * Tente l'URL API, puis fallback ui-avatars.
+ */
+export function getShopLogoUrl(shop) {
+  if (!shop) return ''
+  const url = getStorageUrl(shop.logo)
+  if (url) return url
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(shop.name || 'Shop')}&background=1B6B3A&color=fff&size=200`
 }
