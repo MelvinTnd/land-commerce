@@ -29,7 +29,7 @@ const FALLBACK_PRODUITS = FALLBACK_PRODUITS_RAW.map(p => ({
   image: getProductImage({ slug: p.slug, categorie: p.categorie }),
 }))
 
-export default function ProduitsGrille({ categorieActive, prixMax, triActif, setTriActif, recherche, onCountChange }) {
+export default function ProduitsGrille({ categorieActive, triActif, setTriActif, recherche, onCountChange }) {
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
@@ -84,11 +84,9 @@ export default function ProduitsGrille({ categorieActive, prixMax, triActif, set
   }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
-  // Filtre côté client : prix + catégorie + recherche (double-couche de sécurité)
+  // Filtre côté client : catégorie + recherche
   const produits = allProduits.filter(p => {
-    if (p.prix > prixMax) return false
     if (categorieActive && categorieActive !== null) {
-      // filtre par slug ou par nom de catégorie
       const matchSlug = p.categorieSlug?.toLowerCase() === categorieActive?.toLowerCase()
       const matchNom  = p.categorie?.toLowerCase().includes(categorieActive?.toLowerCase())
       if (!matchSlug && !matchNom) return false

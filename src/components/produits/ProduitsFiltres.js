@@ -7,9 +7,8 @@ const defaultCategories = [
   { label: 'Tous', icon: 'grid_view', slug: null },
 ]
 
-export default function ProduitsFiltres({ categorieActive, setCategorieActive, prixMax, setPrixMax, recherche, setRecherche }) {
+export default function ProduitsFiltres({ categorieActive, setCategorieActive, recherche, setRecherche }) {
   const [categories, setCategories] = useState(defaultCategories)
-  const [localPrix, setLocalPrix] = useState(prixMax)
   const [localRecherche, setLocalRecherche] = useState(recherche || '')
 
   useEffect(() => {
@@ -41,23 +40,13 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, p
     return () => clearTimeout(timer)
   }, [localRecherche, setRecherche])
 
-  // Slider prix : filtre client-side → temps réel
-  const handlePrixChange = (e) => {
-    const val = Number(e.target.value)
-    setLocalPrix(val)
-    setPrixMax(val) // instantané → ProduitsGrille filtre côté client
-  }
-  const handlePrixCommit = () => {} // conservé pour compatibilité
-
   const resetFiltres = () => {
     setCategorieActive(null)
-    setLocalPrix(1500000)
-    setPrixMax(1500000)
     setLocalRecherche('')
     if (setRecherche) setRecherche('')
   }
 
-  const filtresActifs = categorieActive || localPrix < 1500000 || localRecherche
+  const filtresActifs = categorieActive || localRecherche
 
   return (
     <aside className="hidden lg:flex flex-col gap-5 w-64 shrink-0">
@@ -123,45 +112,6 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, p
               {cat.label}
             </button>
           ))}
-        </div>
-      </div>
-
-      {/* ─── Filtre Prix ────────────────────────────────────────── */}
-      <div className="bg-white rounded-[20px] p-4" style={{ border: '1px solid #E5E7EB' }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-4" style={{ color: '#6B7280' }}>
-          Budget (FCFA)
-        </p>
-        <div className="px-1">
-          <input
-            type="range"
-            min="0"
-            max="1500000"
-            step="5000"
-            value={localPrix}
-            onChange={handlePrixChange}
-            onMouseUp={handlePrixCommit}
-            onTouchEnd={handlePrixCommit}
-            className="w-full h-1.5 rounded-lg appearance-none cursor-pointer"
-            style={{ accentColor: '#1B6B3A' }}
-          />
-          <div className="flex justify-between mt-2 text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
-            <span>0 CFA</span>
-            <span>1 500 000</span>
-          </div>
-          <div className="mt-3 rounded-xl py-2.5 px-3 text-center"
-            style={{ background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
-            <p className="text-[13px] font-black" style={{ color: '#1B6B3A' }}>
-              Jusqu&apos;à {localPrix.toLocaleString('fr-FR')} CFA
-            </p>
-          </div>
-          {localPrix < 1500000 && (
-            <button
-              onClick={() => { setLocalPrix(1500000); setPrixMax(1500000) }}
-              className="mt-2 w-full text-[10px] font-bold py-1.5 rounded-lg"
-              style={{ color: '#DC2626', background: '#FEF2F2' }}>
-              Retirer le filtre prix
-            </button>
-          )}
         </div>
       </div>
 

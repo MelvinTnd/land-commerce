@@ -12,7 +12,6 @@ const PER_PAGE = 12
 function ProduitsContent() {
   const searchParams = useSearchParams()
   const [categorieActive, setCategorieActive] = useState(null)
-  const [prixMax, setPrixMax] = useState(1500000)
   const [triActif, setTriActif] = useState('Pertinence')
   const [recherche, setRecherche] = useState('')
   const [totalProduits, setTotalProduits] = useState(0)
@@ -26,7 +25,7 @@ function ProduitsContent() {
   }, [searchParams])
 
   const totalPages = Math.max(1, Math.ceil(totalProduits / PER_PAGE))
-  const filtresActifs = categorieActive || prixMax < 1500000 || recherche
+  const filtresActifs = categorieActive || recherche
 
   return (
     <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
@@ -37,15 +36,12 @@ function ProduitsContent() {
         <ProduitsFiltres
           categorieActive={categorieActive}
           setCategorieActive={setCategorieActive}
-          prixMax={prixMax}
-          setPrixMax={setPrixMax}
           recherche={recherche}
           setRecherche={setRecherche}
         />
         <div className="flex-1 min-w-0">
           <ProduitsGrille
             categorieActive={categorieActive}
-            prixMax={prixMax}
             triActif={triActif}
             setTriActif={setTriActif}
             recherche={recherche}
@@ -97,8 +93,6 @@ function ProduitsContent() {
               <ProduitsFiltres
                 categorieActive={categorieActive}
                 setCategorieActive={(v) => { setCategorieActive(v); setShowFiltresMobile(false) }}
-                prixMax={prixMax}
-                setPrixMax={setPrixMax}
                 recherche={recherche}
                 setRecherche={setRecherche}
                 mobile
