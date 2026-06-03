@@ -95,8 +95,7 @@ export function getProductImage(product) {
 
   // 1. Priorité absolue : Image réelle de l'API (uploadée par le vendeur)
   if (img) {
-    if (img.startsWith('http')) return img
-    if (img.includes('storage/')) return getStorageUrl(img)
+    return getStorageUrl(img)
   }
 
   // Combiné pour le matching fallback (slug + nom)
@@ -202,10 +201,20 @@ export function getStorageUrl(path) {
   const trimmed = path.trim()
   if (!trimmed) return ''
 
-  // 1. URL absolue (Cloudinary, S3, http, https)
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed
-
   const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace(/\/api$/, '')
+
+  // 1. URL absolue (Cloudinary, S3, http, https)
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    try {
+      const url = new URL(trimmed)
+      if ((url.hostname === 'localhost' || url.hostname === '127.0.0.1') && url.pathname.startsWith('/storage/')) {
+        return apiBase + url.pathname
+      }
+    } catch {
+      return trimmed
+    }
+    return trimmed
+  }
 
   // 2. Hostname sans schéma (ex: "res.cloudinary.com/...") — présence d'un point avant le premier /
   const firstSlash = trimmed.indexOf('/')

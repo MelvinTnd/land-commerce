@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { getProducts, getShops } from '@/lib/api'
+import { getProductImage, getStorageUrl } from '@/lib/images'
 
 export default function GlobalSearch({ onClose }) {
   const [query, setQuery]         = useState('')
@@ -27,18 +28,12 @@ export default function GlobalSearch({ onClose }) {
           getShops({ search: query, limit: 4 }),
         ])
         
-        const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace('/api', '')
-        
         setProduits((p.data || []).map(item => {
-          let img = item.image
-          if (img && img.startsWith('/storage/')) img = apiBase + img
-          return { ...item, image: img }
+          return { ...item, image: getProductImage(item) }
         }))
         
         setBoutiques((Array.isArray(s) ? s : []).map(item => {
-          let logo = item.logo
-          if (logo && logo.startsWith('/storage/')) logo = apiBase + logo
-          return { ...item, logo: logo }
+          return { ...item, logo: getStorageUrl(item.logo) }
         }))
       } catch { /* silent */ }
       setLoading(false)

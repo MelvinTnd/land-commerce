@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getStorageUrl } from '@/lib/images'
 
 /**
  * Mapping mot-clé → image produit (chemins locaux générés par IA ou Unsplash).
@@ -72,13 +73,18 @@ export function getImageByName(nom = '') {
  */
 export default function ProductImage({ nom, categorie, apiImage, className, style, fill, sizes }) {
   // 1. Détection d'une image réelle de l'API (uploadée par le vendeur)
-  const isRealImage = apiImage && (apiImage.startsWith('http') || apiImage.includes('/storage/'))
+  const realImageUrl = apiImage ? getStorageUrl(apiImage) : ''
   
   // 2. Si pas d'image réelle, on utilise le fallback par nom
-  const correctUrl = isRealImage ? apiImage : getImageByName(nom || '')
+  const correctUrl = realImageUrl || getImageByName(nom || '')
 
   const [src, setSrc] = useState(correctUrl)
   const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    setSrc(correctUrl)
+    setFailed(false)
+  }, [correctUrl])
 
   const handleError = () => {
     if (src !== DEFAULT_URL) {
