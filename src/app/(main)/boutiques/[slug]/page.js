@@ -156,10 +156,17 @@ export default function BoutiqueDetailPage() {
     setLoading(true)
     Promise.all([
       getShopBySlug(slug),
-      getShopReviews(slug).catch(() => [])
+      getShopReviews(slug).catch(() => null)
     ]).then(([shopData, reviewsData]) => {
       setShop(shopData)
-      setReviews(Array.isArray(reviewsData) ? reviewsData : [])
+      // L'API retourne { reviews: [], avg_rating, total_reviews } ou null
+      if (reviewsData && reviewsData.reviews) {
+        setReviews(reviewsData.reviews)
+      } else if (Array.isArray(reviewsData)) {
+        setReviews(reviewsData)
+      } else {
+        setReviews([])
+      }
       setLoading(false)
     }).catch(() => { setError(true); setLoading(false) })
   }, [slug])

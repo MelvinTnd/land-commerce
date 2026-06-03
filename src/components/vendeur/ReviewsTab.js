@@ -37,10 +37,17 @@ export default function ReviewsTab({ token }) {
         if (slug) {
           return getShopReviews(slug)
         }
-        return []
+        return null
       })
       .then(data => {
-        setReviews(Array.isArray(data) ? data : [])
+        // L'API retourne { reviews: [], avg_rating, total_reviews } ou null
+        if (data && data.reviews) {
+          setReviews(data.reviews)
+        } else if (Array.isArray(data)) {
+          setReviews(data)
+        } else {
+          setReviews([])
+        }
         setLoading(false)
       })
       .catch(() => setLoading(false))
