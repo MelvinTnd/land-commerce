@@ -34,6 +34,21 @@ export async function apiFetch(endpoint, options = {}, authToken = null) {
     })
 
     clearTimeout(timeoutId)
+
+    // Vérifier que la réponse est du JSON avant de parser
+    const contentType = response.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      const text = await response.text()
+      console.error(`API [${endpoint}] réponse non-JSON (${response.status}):`, text.slice(0, 300))
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('Session expirée. Veuillez vous reconnecter.')
+      }
+      if (response.status === 404) {
+        throw new Error(`Route introuvable: ${endpoint}`)
+      }
+      throw new Error(`Erreur serveur (${response.status}). Veuillez réessayer.`)
+    }
+
     const data = await response.json()
 
     if (!response.ok) {

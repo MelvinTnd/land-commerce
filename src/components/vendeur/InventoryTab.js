@@ -47,9 +47,13 @@ export default function InventoryTab({ token }) {
 
   const handleCreate = async (e) => {
     e.preventDefault()
+    if (!token) {
+      alert('Erreur: Vous devez être connecté pour créer un produit. Veuillez vous reconnecter.')
+      return
+    }
     setSaving(true)
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api'
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://land-commerce-api.onrender.com/api').replace(/\/api$/, '') + '/api'
       let imageUrl = ''
 
       // Upload du fichier image d'abord si mode upload
@@ -61,6 +65,16 @@ export default function InventoryTab({ token }) {
           headers: { 'Authorization': `Bearer ${token}` },
           body: imgForm,
         })
+        // Vérifier que la réponse est bien du JSON avant de la parser
+        const contentType = imgRes.headers.get('content-type') || ''
+        if (!contentType.includes('application/json')) {
+          const text = await imgRes.text()
+          console.error('Réponse non-JSON upload image:', imgRes.status, text.slice(0, 200))
+          if (imgRes.status === 401 || imgRes.status === 403) {
+            throw new Error('Session expirée. Veuillez vous reconnecter.')
+          }
+          throw new Error(`Erreur serveur (${imgRes.status}) lors de l'upload. Essayez avec un lien URL à la place.`)
+        }
         const imgData = await imgRes.json()
         if (!imgRes.ok) throw new Error(imgData.message || "Erreur lors de l'upload de l'image")
         imageUrl = imgData.url
@@ -84,7 +98,13 @@ export default function InventoryTab({ token }) {
       setImagePreview('')
       charger()
     } catch (err) {
-      alert('Erreur: ' + err.message)
+      console.error('Erreur création produit:', err)
+      const msg = err.message || 'Erreur inconnue'
+      if (msg.includes('DOCTYPE') || msg.includes('JSON')) {
+        alert('Erreur de connexion à l\'API. Votre session a peut-être expiré. Veuillez vous reconnecter et réessayer.')
+      } else {
+        alert('Erreur: ' + msg)
+      }
     } finally {
       setSaving(false)
     }
