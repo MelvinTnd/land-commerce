@@ -10,6 +10,7 @@ import SettingsTab from '@/components/vendeur/SettingsTab'
 import OrdersTab from '@/components/vendeur/OrdersTab'
 import { getVendorDashboard } from '@/lib/api'
 import { getShopBannerImage, getStorageUrl } from '@/lib/images'
+import SafeImage from '@/components/ui/SafeImage'
 
 // ─── Sidebar Navigation ───────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -169,7 +170,7 @@ export default function EspaceVendeur() {
           <div className="px-5 py-4 mx-4 mb-4 rounded-2xl" style={{ background: '#F7F5F0' }}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl overflow-hidden relative shrink-0">
-                <Image src={avatarSrc} alt="Avatar" fill className="object-cover" sizes="40px" unoptimized />
+                <SafeImage src={avatarSrc} name={shopData?.name || userName} alt="Avatar" fill className="object-cover" sizes="40px" />
               </div>
               <div className="min-w-0">
                 <p className="font-black text-[13px] truncate" style={{ color: '#0D0D0D' }}>{shopData?.name || userName}</p>
@@ -200,7 +201,7 @@ export default function EspaceVendeur() {
             })}
 
             <p className="text-[9px] font-black uppercase tracking-[0.2em] px-4 mt-4 mb-2" style={{ color: '#C4C4C4' }}>Compte</p>
-            <Link href={shopData?.slug ? `/boutique/${shopData.slug}` : '#'}
+            <Link href={shopData?.slug ? `/boutiques/${shopData.slug}` : '#'}
               className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition-all ${!shopData?.slug ? 'opacity-40 pointer-events-none' : ''}`}>
               <span className="material-symbols-outlined text-[20px] text-gray-400">open_in_new</span>
               <span className="font-bold text-[13px]">Voir ma boutique</span>
@@ -241,7 +242,7 @@ export default function EspaceVendeur() {
                     <div className="flex items-center gap-5">
                       <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden shrink-0"
                         style={{ border: '3px solid rgba(255,255,255,0.3)', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
-                        <Image src={avatarSrc} alt="Boutique" fill className="object-cover" sizes="80px" unoptimized />
+                        <SafeImage src={avatarSrc} name={shopData?.name || userName} alt="Boutique" fill className="object-cover" sizes="80px" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2.5 flex-wrap mb-1">
@@ -373,33 +374,45 @@ export default function EspaceVendeur() {
                     </div>
                   </div>
 
-                  {/* Comptes paiement */}
+                  {/* Accès boutique & messagerie */}
                   <div className="bg-white rounded-[24px] p-6" style={{ border: '1px solid #EBEBEB' }}>
-                    <div className="flex items-center justify-between mb-5">
-                      <h3 className="font-black text-[15px]" style={{ color: '#0D0D0D' }}>Comptes de paiement</h3>
-                      <button className="p-2 rounded-xl hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>settings</span>
-                      </button>
-                    </div>
-                    <div className="flex flex-col gap-4">
-                      {[
-                        { abbr: 'MTN', name: 'MTN MoMo', sub: 'Non configuré', bg: '#FFCC00', text: '#003366' },
-                        { abbr: 'CEL', name: 'Celtiis Pay', sub: 'Non configuré', bg: '#E30A17', text: 'white' },
-                      ].map(c => (
-                        <div key={c.abbr} className="flex items-center gap-4 p-3.5 rounded-2xl" style={{ background: '#F9FAFB' }}>
-                          <div className="w-11 h-11 rounded-full flex items-center justify-center font-black text-[11px] shrink-0"
-                            style={{ background: c.bg, color: c.text }}>{c.abbr}</div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>{c.name}</p>
-                            <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{c.sub}</p>
-                          </div>
-                          <button className="text-[11px] font-black px-3 py-1.5 rounded-xl transition-all hover:bg-green-100"
-                            style={{ color: '#1B6B3A', background: '#F0FDF4' }}>Configurer</button>
+                    <h3 className="font-black text-[15px] mb-4" style={{ color: '#0D0D0D' }}>Accès rapide</h3>
+                    <div className="flex flex-col gap-3">
+                      <Link href={shopData?.slug ? `/boutiques/${shopData.slug}` : '#'}
+                        className="flex items-center gap-4 p-4 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-md"
+                        style={{ background: '#F0FDF4', border: '1px solid rgba(27,107,58,0.15)' }}>
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#1B6B3A' }}>
+                          <span className="material-symbols-outlined text-[20px] text-white">storefront</span>
                         </div>
-                      ))}
-                      <button className="w-full py-3 rounded-2xl font-black text-[12px] flex items-center justify-center gap-2 transition-all hover:bg-gray-50"
-                        style={{ color: '#1B6B3A', border: '1.5px dashed rgba(27,107,58,0.3)' }}>
-                        <span className="material-symbols-outlined text-[16px]">add</span> Ajouter un compte
+                        <div>
+                          <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>Voir ma boutique</p>
+                          <p className="text-[11px]" style={{ color: '#9CA3AF' }}>Page publique de la boutique</p>
+                        </div>
+                        <span className="material-symbols-outlined text-[16px] ml-auto" style={{ color: '#1B6B3A' }}>arrow_forward</span>
+                      </Link>
+                      <button onClick={() => router.push('/messages')}
+                        className="flex items-center gap-4 p-4 rounded-2xl w-full text-left transition-all hover:-translate-y-0.5 hover:shadow-md"
+                        style={{ background: '#FDF2F8', border: '1px solid rgba(219,39,119,0.15)' }}>
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#DB2777' }}>
+                          <span className="material-symbols-outlined text-[20px] text-white">chat_bubble</span>
+                        </div>
+                        <div>
+                          <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>Messagerie clients</p>
+                          <p className="text-[11px]" style={{ color: '#9CA3AF' }}>Répondre aux questions</p>
+                        </div>
+                        <span className="material-symbols-outlined text-[16px] ml-auto" style={{ color: '#DB2777' }}>arrow_forward</span>
+                      </button>
+                      <button onClick={() => setActiveTab('Paramètres boutique')}
+                        className="flex items-center gap-4 p-4 rounded-2xl w-full text-left transition-all hover:-translate-y-0.5 hover:shadow-md"
+                        style={{ background: '#F5F3FF', border: '1px solid rgba(124,58,237,0.15)' }}>
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#7C3AED' }}>
+                          <span className="material-symbols-outlined text-[20px] text-white">settings</span>
+                        </div>
+                        <div>
+                          <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>Paramètres</p>
+                          <p className="text-[11px]" style={{ color: '#9CA3AF' }}>Modifier les infos boutique</p>
+                        </div>
+                        <span className="material-symbols-outlined text-[16px] ml-auto" style={{ color: '#7C3AED' }}>arrow_forward</span>
                       </button>
                     </div>
                   </div>
@@ -411,7 +424,7 @@ export default function EspaceVendeur() {
             {/* ── ONGLETS ── */}
             {activeTab === 'Inventaire & Stock' && <InventoryTab token={session?.user?.apiToken} />}
             {activeTab === 'Commandes' && <OrdersTab token={session?.user?.apiToken} />}
-            {activeTab === 'Avis clients' && <ReviewsTab />}
+            {activeTab === 'Avis clients' && <ReviewsTab token={session?.user?.apiToken} />}
             {activeTab === 'Paramètres boutique' && (
               <SettingsTab shop={shopData} token={session?.user?.apiToken} onUpdated={s => setShopData(s)} />
             )}

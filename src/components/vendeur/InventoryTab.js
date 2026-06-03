@@ -65,15 +65,14 @@ export default function InventoryTab({ token }) {
           headers: { 'Authorization': `Bearer ${token}` },
           body: imgForm,
         })
-        // Vérifier que la réponse est bien du JSON avant de la parser
         const contentType = imgRes.headers.get('content-type') || ''
         if (!contentType.includes('application/json')) {
           const text = await imgRes.text()
-          console.error('Réponse non-JSON upload image:', imgRes.status, text.slice(0, 200))
-          if (imgRes.status === 401 || imgRes.status === 403) {
-            throw new Error('Session expirée. Veuillez vous reconnecter.')
-          }
-          throw new Error(`Erreur serveur (${imgRes.status}) lors de l'upload. Essayez avec un lien URL à la place.`)
+          console.error('Réponse non-JSON upload:', imgRes.status, text.slice(0, 300))
+          if (imgRes.status === 401 || imgRes.status === 403) throw new Error('Session expirée. Veuillez vous reconnecter.')
+          if (imgRes.status === 413) throw new Error('Image trop grande (max 5 MB). Compressez-la avant l\'envoi.')
+          if (imgRes.status === 500) throw new Error('Erreur serveur lors de l\'upload. Vérifiez que le serveur peut écrire dans storage/. Réessayez ou utilisez un lien URL.')
+          throw new Error(`Erreur ${imgRes.status} lors de l'upload.`)
         }
         const imgData = await imgRes.json()
         if (!imgRes.ok) throw new Error(imgData.message || "Erreur lors de l'upload de l'image")
