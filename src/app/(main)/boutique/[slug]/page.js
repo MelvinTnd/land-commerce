@@ -251,7 +251,7 @@ export default function BoutiquePage() {
       })
       .catch(() => {})
       .finally(() => setReviewsLoading(false))
-  }, [onglet, slug])
+  }, [onglet, slug, reviews.length])
 
   /* ── Partager ── */
   const handleShare = () => {

@@ -81,7 +81,7 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
         setIsLive(false)
         setLoading(false)
       })
-  }, [recherche, categorieActive, triActif]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [recherche, categorieActive, triActif])
 
 
   // Filtre côté client : catégorie + recherche

@@ -1,10 +1,23 @@
 'use client'
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 
 const CartContext = createContext()
 
 export function CartProvider({ children }) {
   const [articles, setArticles] = useState([])
+
+  useEffect(() => {
+    try {
+      const savedArticles = localStorage.getItem('cart_articles')
+      if (savedArticles) setArticles(JSON.parse(savedArticles))
+    } catch {
+      localStorage.removeItem('cart_articles')
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('cart_articles', JSON.stringify(articles))
+  }, [articles])
 
   const ajouterAuPanier = useCallback((produit) => {
     setArticles((prev) => {

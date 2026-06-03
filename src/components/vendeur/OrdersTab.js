@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getVendorOrders, updateOrderStatus } from '@/lib/api'
 
 const STATUT_CONFIG = {
@@ -28,7 +28,7 @@ export default function OrdersTab({ token }) {
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [updating, setUpdating]     = useState(null) // orderId en cours de MAJ
 
-  const loadOrders = () => {
+  const loadOrders = useCallback(() => {
     setLoading(true)
     getVendorOrders(token)
       .then(data => {
@@ -37,9 +37,9 @@ export default function OrdersTab({ token }) {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }
+  }, [token])
 
-  useEffect(() => { if (token) loadOrders() }, [token])
+  useEffect(() => { if (token) loadOrders() }, [token, loadOrders])
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     setUpdating(orderId)

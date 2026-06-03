@@ -57,6 +57,10 @@ const providers = [
   }),
 ]
 
+if (process.env.NODE_ENV === 'production' && !process.env.AUTH_SECRET) {
+  throw new Error('AUTH_SECRET must be configured in production')
+}
+
 // ─── 2. Google OAuth — uniquement si credentials configurées ──────────────
 if (hasGoogle) {
   providers.push(
@@ -75,7 +79,7 @@ if (hasGoogle) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET || 'beninmarket-fallback-secret-change-in-production',
+  secret: process.env.AUTH_SECRET || 'dev-only-auth-secret',
 
   providers,
 

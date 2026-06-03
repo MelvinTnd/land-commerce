@@ -37,7 +37,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'localhost' },
     ],
     // Fallback : accepter toute URL distante non répertoriée via unoptimized
-    dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: false,
   },
   turbopack: {
     resolveAlias: {

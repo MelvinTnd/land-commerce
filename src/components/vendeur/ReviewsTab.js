@@ -51,7 +51,7 @@ export default function ReviewsTab({ token }) {
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [tok]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [tok])
 
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s, r) => s + (parseFloat(r.rating) || 0), 0) / reviews.length).toFixed(1)
