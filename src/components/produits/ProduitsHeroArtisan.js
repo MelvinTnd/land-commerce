@@ -51,7 +51,7 @@ export default function ProduitsHeroArtisan({ total = 0 }) {
 
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.22em] mb-5"
             style={{ background: 'rgba(255,255,255,0.12)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
-            🛍️ Marketplace BéninMarket
+            🛍️ Marketplace CauriMarket
           </span>
 
           <h1 className="text-4xl md:text-[58px] font-black leading-none tracking-tight mb-5 text-white">

@@ -158,7 +158,7 @@ export default function InventoryTab({ token }) {
                   placeholder="Ex: Masque Gèlèdè en bois"
                   className="w-full px-4 py-3.5 rounded-2xl text-sm font-medium outline-none transition-all"
                   style={{ background: '#F9F9F9', border: '2px solid #E5E7EB' }}
-                  onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                  onFocus={e => e.target.style.borderColor = '#008060'}
                   onBlur={e => e.target.style.borderColor = '#E5E7EB'}
                 />
               </div>
@@ -171,7 +171,7 @@ export default function InventoryTab({ token }) {
                     onChange={e => setForm({ ...form, price: e.target.value })}
                     className="w-full px-4 py-3.5 rounded-2xl text-sm font-medium outline-none"
                     style={{ background: '#F9F9F9', border: '2px solid #E5E7EB' }}
-                    onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                    onFocus={e => e.target.style.borderColor = '#008060'}
                     onBlur={e => e.target.style.borderColor = '#E5E7EB'}
                   />
                 </div>
@@ -195,7 +195,7 @@ export default function InventoryTab({ token }) {
                     onChange={e => setForm({ ...form, stock: e.target.value })}
                     className="w-full px-4 py-3.5 rounded-2xl text-sm font-medium outline-none"
                     style={{ background: '#F9F9F9', border: '2px solid #E5E7EB' }}
-                    onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                    onFocus={e => e.target.style.borderColor = '#008060'}
                     onBlur={e => e.target.style.borderColor = '#E5E7EB'}
                   />
                 </div>
@@ -220,7 +220,7 @@ export default function InventoryTab({ token }) {
                       onClick={() => { setImageMode(mode); setForm(f => ({ ...f, image: '' })); setImagePreview('') }}
                       className="flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all"
                       style={imageMode === mode
-                        ? { background: '#1B6B3A', color: 'white' }
+                        ? { background: '#008060', color: 'white' }
                         : { background: '#F3F4F6', color: '#6B7280' }}>
                       {mode === 'url' ? '🔗 URL' : '📁 Fichier'}
                     </button>
@@ -259,7 +259,7 @@ export default function InventoryTab({ token }) {
                   placeholder="Décrivez votre produit : matériaux, origine, utilisation…"
                   className="w-full px-4 py-3.5 rounded-2xl text-sm font-medium outline-none resize-none"
                   style={{ background: '#F9F9F9', border: '2px solid #E5E7EB' }}
-                  onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                  onFocus={e => e.target.style.borderColor = '#008060'}
                   onBlur={e => e.target.style.borderColor = '#E5E7EB'}
                 />
               </div>
@@ -273,7 +273,7 @@ export default function InventoryTab({ token }) {
                 </button>
                 <button type="submit" disabled={saving}
                   className="flex-1 py-3.5 rounded-2xl text-xs font-black text-white uppercase tracking-widest transition-all hover:opacity-90 disabled:opacity-50"
-                  style={{ background: 'linear-gradient(135deg, #1B6B3A, #0D4A28)' }}>
+                  style={{ background: 'linear-gradient(135deg, #008060, #0D4A28)' }}>
                   {saving ? '⏳ Création...' : '✅ Créer le produit'}
                 </button>
               </div>
@@ -291,7 +291,7 @@ export default function InventoryTab({ token }) {
           </div>
           <button onClick={() => setShowModal(true)}
             className="px-5 py-2.5 rounded-2xl font-black text-[12px] text-white uppercase tracking-wider flex items-center gap-2 transition-all hover:opacity-90"
-            style={{ background: '#1B6B3A' }}>
+            style={{ background: '#008060' }}>
             <span className="material-symbols-outlined text-[16px]">add</span>
             Ajouter un produit
           </button>
@@ -304,7 +304,7 @@ export default function InventoryTab({ token }) {
             placeholder="Rechercher un produit..."
             className="w-full pl-11 pr-5 py-3.5 rounded-2xl text-sm font-medium outline-none"
             style={{ background: '#F9F9F9', border: '2px solid #E5E7EB' }}
-            onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+            onFocus={e => e.target.style.borderColor = '#008060'}
             onBlur={e => e.target.style.borderColor = '#E5E7EB'}
           />
         </div>
@@ -312,7 +312,7 @@ export default function InventoryTab({ token }) {
         {/* Contenu */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#1B6B3A', borderTopColor: 'transparent' }} />
+            <div className="w-10 h-10 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#008060', borderTopColor: 'transparent' }} />
           </div>
         ) : filteredProduits.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -326,7 +326,7 @@ export default function InventoryTab({ token }) {
             {!search && (
               <button onClick={() => setShowModal(true)}
                 className="px-6 py-3 rounded-2xl font-black text-sm text-white uppercase tracking-wider"
-                style={{ background: '#1B6B3A' }}>
+                style={{ background: '#008060' }}>
                 + Créer mon premier produit
               </button>
             )}
@@ -365,7 +365,7 @@ export default function InventoryTab({ token }) {
                         {p.category?.name || '—'}
                       </td>
                       <td className="py-4 pr-4">
-                        <span className="font-black text-sm" style={{ color: '#1B6B3A' }}>
+                        <span className="font-black text-sm" style={{ color: '#008060' }}>
                           {parseFloat(p.price).toLocaleString('fr-FR')} FCFA
                         </span>
                         {p.promo_price && (

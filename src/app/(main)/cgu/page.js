@@ -5,7 +5,7 @@ export default function CguPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-4 py-16 md:py-24">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#1B6B3A] hover:underline mb-8">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-[#008060] hover:underline mb-8">
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
           Retour à l&apos;accueil
         </Link>
@@ -16,13 +16,13 @@ export default function CguPage() {
         <div className="prose prose-sm max-w-none text-gray-700 space-y-6">
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Objet</h2>
-            <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme Blackmaket, marketplace en ligne dédiée à la promotion et à la vente de produits artisanaux et culturels du Bénin.</p>
+            <p>Les présentes Conditions Générales d&apos;Utilisation (CGU) régissent l&apos;accès et l&apos;utilisation de la plateforme CauriMarket, marketplace en ligne dédiée à la promotion et à la vente de produits artisanaux et culturels du Bénin.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">2. Définitions</h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Plateforme :</strong> désigne le site web Blackmaket accessible depuis le domaine blackmaket.bj.</li>
+              <li><strong>Plateforme :</strong> désigne le site web CauriMarket accessible depuis le domaine caurimarket.com.</li>
               <li><strong>Vendeur / Artisan :</strong> tout utilisateur inscrit en tant que vendeur et disposant d&apos;une boutique.</li>
               <li><strong>Acheteur :</strong> tout utilisateur inscrit effectuant des achats sur la Plateforme.</li>
               <li><strong>Produit :</strong> bien proposé à la vente par un Vendeur sur la Plateforme.</li>
@@ -37,7 +37,7 @@ export default function CguPage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">4. Rôle de la plateforme</h2>
-            <p>Blackmaket agit comme intermédiaire technique entre les Vendeurs et les Acheteurs. La Plateforme n&apos;est ni propriétaire des Produits, ni responsable de leur qualité, conformité ou livraison. Les contrats de vente sont conclus directement entre le Vendeur et l&apos;Acheteur.</p>
+            <p>CauriMarket agit comme intermédiaire technique entre les Vendeurs et les Acheteurs. La Plateforme n&apos;est ni propriétaire des Produits, ni responsable de leur qualité, conformité ou livraison. Les contrats de vente sont conclus directement entre le Vendeur et l&apos;Acheteur.</p>
           </section>
 
           <section>
@@ -60,7 +60,7 @@ export default function CguPage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">7. Paiement et commissions</h2>
-            <p>Les paiements sont traités via les moyens de paiement proposés sur la Plateforme. Blackmaket prélève une commission sur chaque vente réalisée, dont le taux est communiqué au Vendeur lors de son inscription.</p>
+            <p>Les paiements sont traités via les moyens de paiement proposés sur la Plateforme. CauriMarket prélève une commission sur chaque vente réalisée, dont le taux est communiqué au Vendeur lors de son inscription.</p>
           </section>
 
           <section>
@@ -70,17 +70,17 @@ export default function CguPage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">9. Responsabilité</h2>
-            <p>Blackmaket met tout en œuvre pour assurer le bon fonctionnement de la Plateforme mais ne saurait être tenu responsable des dommages indirects résultant de son utilisation. En cas de litige entre un Vendeur et un Acheteur, la Plateforme s&apos;engage à faciliter la résolution à l&apos;amiable.</p>
+            <p>CauriMarket met tout en œuvre pour assurer le bon fonctionnement de la Plateforme mais ne saurait être tenu responsable des dommages indirects résultant de son utilisation. En cas de litige entre un Vendeur et un Acheteur, la Plateforme s&apos;engage à faciliter la résolution à l&apos;amiable.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">10. Données personnelles</h2>
-            <p>Les données personnelles collectées sont traitées conformément à notre <Link href="/confidentialite" className="text-[#1B6B3A] font-bold hover:underline">Politique de Confidentialité</Link>. L&apos;utilisateur dispose d&apos;un droit d&apos;accès, de rectification et de suppression de ses données.</p>
+            <p>Les données personnelles collectées sont traitées conformément à notre <Link href="/confidentialite" className="text-[#008060] font-bold hover:underline">Politique de Confidentialité</Link>. L&apos;utilisateur dispose d&apos;un droit d&apos;accès, de rectification et de suppression de ses données.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">11. Modification des CGU</h2>
-            <p>Blackmaket se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications substantielles par email ou via la Plateforme.</p>
+            <p>CauriMarket se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications substantielles par email ou via la Plateforme.</p>
           </section>
 
           <section>
@@ -90,7 +90,7 @@ export default function CguPage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">13. Contact</h2>
-            <p>Pour toute question relative aux CGU, contactez-nous à : <a href="mailto:contact@blackmaket.bj" className="text-[#1B6B3A] font-bold hover:underline">contact@blackmaket.bj</a>.</p>
+            <p>Pour toute question relative aux CGU, contactez-nous à : <a href="mailto:contact@caurimarket.com" className="text-[#008060] font-bold hover:underline">contact@caurimarket.com</a>.</p>
           </section>
         </div>
       </div>

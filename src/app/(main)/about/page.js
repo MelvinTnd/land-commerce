@@ -12,7 +12,7 @@ const valeurs = [
   { icon: 'handshake', titre: 'Commerce Équitable', description: "Nous garantissons une rémunération juste aux artisans et producteurs locaux, sans intermédiaires superflus.", color: '#1B6B3A', bg: '#E6F8EA' },
   { icon: 'eco', titre: 'Durabilité', description: "Nos partenaires utilisent des matières naturelles et des techniques ancestrales respectueuses de l'environnement.", color: '#7C3AED', bg: '#EDE9FE' },
   { icon: 'verified', titre: 'Authenticité', description: "Chaque produit est certifié authentique. Nous vérifions personnellement chaque artisan sur le terrain.", color: '#D4920A', bg: '#FEF3C7' },
-  { icon: 'groups', titre: 'Communauté', description: "BéninMarket est bien plus qu'un marché : c'est une communauté de passionnés qui célèbrent l'héritage béninois.", color: '#DB2777', bg: '#FCE7F3' },
+  { icon: 'groups', titre: 'Communauté', description: "CauriMarket est bien plus qu'un marché : c'est une communauté de passionnés qui célèbrent l'héritage béninois.", color: '#DB2777', bg: '#FCE7F3' },
 ]
 
 const equipe = [
@@ -45,7 +45,7 @@ export default function AboutPage() {
               <span style={{ color: '#1B6B3A' }}>au Monde.</span>
             </h1>
             <p className="text-[17px] font-medium leading-relaxed max-w-xl mb-8" style={{ color: '#6B7280' }}>
-              BéninMarket est la première marketplace dédiée à la promotion et la vente des produits artisanaux et locaux du Bénin à travers le monde entier.
+              CauriMarket est la première marketplace dédiée à la promotion et la vente des produits artisanaux et locaux du Bénin à travers le monde entier.
             </p>
             <div className="flex gap-3 flex-wrap">
               <Link href="/produits"
@@ -87,7 +87,7 @@ export default function AboutPage() {
               Né de la passion pour le patrimoine béninois
             </h2>
             <p className="text-[15px] leading-relaxed mb-4" style={{ color: '#6B7280' }}>
-              Fondé en 2026 à Cotonou, BéninMarket est né d&apos;un constat simple : les artisans béninois créent des merveilles, mais peinent à atteindre un marché plus large. Notre plateforme brise cette barrière en offrant une vitrine digitale premium à chaque créateur.
+              Fondé en 2026 à Cotonou, CauriMarket est né d&apos;un constat simple : les artisans béninois créent des merveilles, mais peinent à atteindre un marché plus large. Notre plateforme brise cette barrière en offrant une vitrine digitale premium à chaque créateur.
             </p>
             <p className="text-[15px] leading-relaxed" style={{ color: '#6B7280' }}>
               De Porto-Novo à Natitingou, de Ouidah à Parakou, nous parcourons le pays pour dénicher les meilleurs artisans et leurs créations uniques. Chaque produit raconte une histoire que nous voulons partager avec le monde.
@@ -143,7 +143,7 @@ export default function AboutPage() {
       <section className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-24">
         <div className="text-center mb-14">
           <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-4" style={{ color: '#1B6B3A' }}>Notre Équipe</p>
-          <h2 className="text-4xl font-black tracking-tight" style={{ color: '#0D0D0D' }}>Les visages derrière BéninMarket</h2>
+          <h2 className="text-4xl font-black tracking-tight" style={{ color: '#0D0D0D' }}>Les visages derrière CauriMarket</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {equipe.map(e => (
@@ -170,7 +170,7 @@ export default function AboutPage() {
             <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full" style={{ background: 'rgba(212,146,10,0.06)' }} />
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: '#0D0D0D' }}>
-                Rejoignez l&apos;aventure BéninMarket
+                Rejoignez l&apos;aventure CauriMarket
               </h2>
               <p className="text-[15px] font-medium mx-auto mb-10 max-w-md" style={{ color: '#6B7280' }}>
                 Que vous soyez artisan, producteur ou passionné de culture béninoise, votre place est ici.

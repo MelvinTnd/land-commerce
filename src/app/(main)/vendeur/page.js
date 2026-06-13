@@ -25,26 +25,27 @@ const NAV_ITEMS = [
 // ─── Stat Card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, iconColor, iconBg, label, value, suffix, badge, trend }) {
   return (
-    <div className="bg-white rounded-[20px] p-5 flex flex-col gap-3 transition-all hover:-translate-y-0.5 hover:shadow-lg"
-      style={{ border: '1px solid #EBEBEB', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+    <div className="bg-white rounded-xl p-4 flex flex-col gap-3 shadow-sm border border-gray-200">
       <div className="flex items-start justify-between">
-        <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: iconBg }}>
-          <span className="material-symbols-outlined text-[22px]" style={{ color: iconColor }}>{icon}</span>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gray-100">
+            <span className="material-symbols-outlined text-[18px] text-gray-700">{icon}</span>
+          </div>
+          <p className="text-[12px] font-bold text-gray-600">{label}</p>
         </div>
         {badge && (
-          <span className="text-[10px] font-black px-2.5 py-1 rounded-full" style={{ background: iconBg, color: iconColor }}>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-800">
             {badge}
           </span>
         )}
       </div>
-      <div>
-        <p className="text-[10px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: '#9CA3AF' }}>{label}</p>
-        <p className="text-[26px] font-black leading-none" style={{ color: '#0D0D0D' }}>
-          {value}<span className="text-[13px] font-medium ml-1" style={{ color: '#9CA3AF' }}>{suffix}</span>
+      <div className="mt-1">
+        <p className="text-[24px] font-bold text-gray-900 leading-none">
+          {value}<span className="text-[12px] font-medium ml-1 text-gray-500">{suffix}</span>
         </p>
       </div>
       {trend && (
-        <div className="flex items-center gap-1.5 text-[11px] font-bold" style={{ color: trend > 0 ? '#1B6B3A' : '#EF4444' }}>
+        <div className={`flex items-center gap-1 text-[11px] font-semibold mt-1 ${trend > 0 ? 'text-[#008060]' : 'text-red-500'}`}>
           <span className="material-symbols-outlined text-[14px]">{trend > 0 ? 'trending_up' : 'trending_down'}</span>
           {trend > 0 ? '+' : ''}{trend}% ce mois
         </div>
@@ -57,15 +58,13 @@ function StatCard({ icon, iconColor, iconBg, label, value, suffix, badge, trend 
 function QuickAction({ icon, label, desc, color, bg, onClick }) {
   return (
     <button onClick={onClick}
-      className="flex items-center gap-4 p-4 rounded-2xl w-full text-left transition-all hover:-translate-y-0.5 hover:shadow-md group"
-      style={{ background: bg, border: `1px solid ${color}22` }}>
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all group-hover:scale-110"
-        style={{ background: `${color}20` }}>
-        <span className="material-symbols-outlined text-[20px]" style={{ color }}>{icon}</span>
+      className="flex items-center gap-4 p-3 rounded-lg w-full text-left transition-colors hover:bg-gray-50 border border-transparent hover:border-gray-200 group">
+      <div className="w-8 h-8 rounded-md flex items-center justify-center bg-gray-100 shrink-0">
+        <span className="material-symbols-outlined text-[18px] text-gray-700">{icon}</span>
       </div>
       <div>
-        <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>{label}</p>
-        <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{desc}</p>
+        <p className="font-semibold text-[13px] text-gray-900">{label}</p>
+        <p className="text-[11px] text-gray-500">{desc}</p>
       </div>
     </button>
   )
@@ -109,7 +108,7 @@ export default function EspaceVendeur() {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: '#F7F5F0' }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-14 h-14 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
+          <div className="w-14 h-14 border-4 border-[#008060] border-t-transparent rounded-full animate-spin" />
           <p className="text-[13px] font-bold" style={{ color: '#9CA3AF' }}>Chargement de votre espace…</p>
         </div>
       </div>
@@ -122,15 +121,15 @@ export default function EspaceVendeur() {
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#F7F5F0' }}>
         <div className="bg-white rounded-[32px] p-10 max-w-md w-full text-center" style={{ border: '1px solid #EBEBEB', boxShadow: '0 20px 60px rgba(0,0,0,0.08)' }}>
           <div className="w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center" style={{ background: '#E6F8EA' }}>
-            <span className="material-symbols-outlined text-[40px]" style={{ color: '#1B6B3A' }}>storefront</span>
+            <span className="material-symbols-outlined text-[40px]" style={{ color: '#008060' }}>storefront</span>
           </div>
           <h2 className="font-black text-[24px] mb-3" style={{ color: '#0D0D0D' }}>Créez votre boutique</h2>
           <p className="text-[14px] leading-relaxed mb-8" style={{ color: '#6B7280' }}>
-            Vous n&apos;avez pas encore de boutique. Créez-en une pour commencer à vendre sur BéninMarket.
+            Vous n&apos;avez pas encore de boutique. Créez-en une pour commencer à vendre sur CauriMarket.
           </p>
           <Link href="/inscription-vendeur"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-black text-[14px] text-white transition-all hover:-translate-y-1 hover:shadow-xl"
-            style={{ background: '#1B6B3A' }}>
+            style={{ background: '#008060' }}>
             <span className="material-symbols-outlined text-[20px]">add_business</span>
             Créer ma boutique
           </Link>
@@ -141,7 +140,7 @@ export default function EspaceVendeur() {
 
   const metrics = [
     { icon: 'analytics',   label: 'Revenus totaux',  value: stats.revenue ? `${(stats.revenue / 1000).toFixed(0)}K` : '0',
-      suffix: ' FCFA', badge: '+12.4%',  iconColor: '#1B6B3A', iconBg: '#E6F8EA', trend: 12 },
+      suffix: ' FCFA', badge: '+12.4%',  iconColor: '#008060', iconBg: '#E6F8EA', trend: 12 },
     { icon: 'star',        label: 'Note moyenne',    value: '4.9',
       suffix: '/ 5.0',   badge: 'Top 1%', iconColor: '#D4920A', iconBg: '#FEF3C7', trend: null },
     { icon: 'inventory_2', label: 'Produits actifs', value: String(stats.products || 0),
@@ -187,15 +186,12 @@ export default function EspaceVendeur() {
               return (
                 <button key={item.id}
                   onClick={() => { setActiveTab(item.key); setSidebarOpen(false) }}
-                  className={`flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all text-left w-full group
-                    ${isActive ? 'text-white shadow-md' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
-                  style={isActive ? { background: '#1B6B3A' } : {}}>
-                  <span className={`material-symbols-outlined text-[20px] transition-colors
-                    ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-700'}`}>
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-left w-full transition-colors
+                    ${isActive ? 'bg-[#ebebeb] text-[#1a1a1a] font-semibold' : 'text-gray-600 hover:bg-gray-100'}`}>
+                  <span className={`material-symbols-outlined text-[18px] ${isActive ? 'text-[#1a1a1a]' : 'text-gray-500'}`}>
                     {item.icon}
                   </span>
-                  <span className="font-bold text-[13px]">{item.label}</span>
-                  {isActive && <div className="w-1.5 h-1.5 bg-white rounded-full ml-auto" />}
+                  <span className="text-[13px]">{item.label}</span>
                 </button>
               )
             })}
@@ -233,47 +229,34 @@ export default function EspaceVendeur() {
               <div className="flex flex-col gap-6">
 
                 {/* Hero bannière vendeur */}
-                <div className="relative rounded-[28px] overflow-hidden" style={{ minHeight: 200 }}>
-                  <Image src={bannerSrc} alt="Bannière boutique" fill className="object-cover" priority sizes="100vw" />
-                  <div className="absolute inset-0" style={{
-                    background: 'linear-gradient(135deg, rgba(13,13,13,0.78) 0%, rgba(27,107,58,0.55) 100%)'
-                  }} />
-                  <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 p-7">
-                    <div className="flex items-center gap-5">
-                      <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden shrink-0"
-                        style={{ border: '3px solid rgba(255,255,255,0.3)', boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }}>
-                        <SafeImage src={avatarSrc} name={shopData?.name || userName} alt="Boutique" fill className="object-cover" sizes="80px" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2.5 flex-wrap mb-1">
-                          <h1 className="text-[22px] md:text-[26px] font-black text-white">{shopData?.name || 'Ma Boutique'}</h1>
-                          {shopData?.status === 'active' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase"
-                              style={{ background: 'rgba(212,146,10,0.3)', color: '#FDE68A', border: '1px solid rgba(212,146,10,0.4)' }}>
-                              <span className="material-symbols-outlined text-[11px]">verified</span> Vérifié
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[13px] font-medium flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                          <span className="material-symbols-outlined text-[14px]">location_on</span>
-                          {shopData?.location || 'Bénin'} · {userName}
-                        </p>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0 border border-gray-200 relative">
+                      <SafeImage src={avatarSrc} name={shopData?.name || userName} alt="Boutique" fill className="object-cover" sizes="64px" />
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-gray-900 mb-1">
+                        Bonjour, {userName}
+                      </h1>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <span>{shopData?.name || 'Ma Boutique'}</span>
+                        {shopData?.status === 'active' && (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E6F8EA] text-[#008060]">
+                            Vérifié
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="flex gap-3 flex-wrap">
-                      <button onClick={() => setActiveTab('Paramètres boutique')}
-                        className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider transition-all hover:bg-white/10"
-                        style={{ background: 'rgba(255,255,255,0.12)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
-                        <span className="material-symbols-outlined text-[14px] mr-1.5 align-middle">edit</span>
-                        Modifier
-                      </button>
-                      <button onClick={() => setActiveTab('Inventaire & Stock')}
-                        className="px-5 py-2.5 rounded-2xl font-black text-[12px] uppercase tracking-wider text-white flex items-center gap-2 transition-all hover:opacity-90"
-                        style={{ background: '#D4920A' }}>
-                        <span className="material-symbols-outlined text-[16px]">add</span>
-                        Nouveau produit
-                      </button>
-                    </div>
+                  </div>
+                  <div className="flex gap-3 w-full md:w-auto">
+                    <button onClick={() => setActiveTab('Paramètres boutique')}
+                      className="flex-1 md:flex-none px-4 py-2 rounded-lg text-[13px] font-semibold bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors border border-gray-200">
+                      Paramètres
+                    </button>
+                    <button onClick={() => setActiveTab('Inventaire & Stock')}
+                      className="flex-1 md:flex-none px-4 py-2 rounded-lg text-[13px] font-semibold bg-black text-white hover:bg-gray-800 transition-colors shadow-sm">
+                      Ajouter un produit
+                    </button>
                   </div>
                 </div>
 
@@ -295,7 +278,7 @@ export default function EspaceVendeur() {
                       <div className="flex rounded-full p-1 gap-0.5" style={{ background: '#F3F4F6' }}>
                         {['7J', '30J', '1A'].map((p, i) => (
                           <button key={p} className="px-3.5 py-1.5 text-[10px] font-black rounded-full transition-all"
-                            style={i === 0 ? { background: '#1B6B3A', color: 'white' } : { color: '#9CA3AF' }}>{p}</button>
+                            style={i === 0 ? { background: '#008060', color: 'white' } : { color: '#9CA3AF' }}>{p}</button>
                         ))}
                       </div>
                     </div>
@@ -303,14 +286,14 @@ export default function EspaceVendeur() {
                       <svg width="100%" height="100%" viewBox="0 0 500 140" preserveAspectRatio="none">
                         <defs>
                           <linearGradient id="cGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#1B6B3A" stopOpacity="0.18" />
-                            <stop offset="100%" stopColor="#1B6B3A" stopOpacity="0" />
+                            <stop offset="0%" stopColor="#008060" stopOpacity="0.18" />
+                            <stop offset="100%" stopColor="#008060" stopOpacity="0" />
                           </linearGradient>
                         </defs>
                         <path d="M0,100 C60,85 120,120 200,65 C270,20 360,80 430,35 L500,30 L500,140 L0,140 Z" fill="url(#cGrad)" />
-                        <path d="M0,100 C60,85 120,120 200,65 C270,20 360,80 430,35 L500,30" fill="none" stroke="#1B6B3A" strokeWidth="2.5" strokeLinecap="round" />
+                        <path d="M0,100 C60,85 120,120 200,65 C270,20 360,80 430,35 L500,30" fill="none" stroke="#008060" strokeWidth="2.5" strokeLinecap="round" />
                         {[[200, 65], [430, 35], [500, 30]].map(([cx, cy], i) => (
-                          <circle key={i} cx={cx} cy={cy} r="5" fill="#1B6B3A" stroke="white" strokeWidth="2" />
+                          <circle key={i} cx={cx} cy={cy} r="5" fill="#008060" stroke="white" strokeWidth="2" />
                         ))}
                       </svg>
                     </div>
@@ -324,7 +307,7 @@ export default function EspaceVendeur() {
                     <h3 className="font-black text-[15px] mb-1" style={{ color: '#0D0D0D' }}>Actions rapides</h3>
                     <QuickAction
                       icon="add_circle" label="Ajouter un produit" desc="Publier un nouvel article"
-                      color="#1B6B3A" bg="#F0FDF4" onClick={() => setActiveTab('Inventaire & Stock')} />
+                      color="#008060" bg="#F0FDF4" onClick={() => setActiveTab('Inventaire & Stock')} />
                     <QuickAction
                       icon="package_2" label="Voir les commandes" desc={`${stats.pendingOrders || 0} en attente`}
                       color="#D4920A" bg="#FFFBEB" onClick={() => setActiveTab('Commandes')} />
@@ -340,35 +323,22 @@ export default function EspaceVendeur() {
                 {/* Solde + Paiements */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Solde */}
-                  <div className="rounded-[24px] p-6 relative overflow-hidden text-white"
-                    style={{ background: 'linear-gradient(135deg, #1B6B3A 0%, #0D4A28 100%)' }}>
-                    <span className="material-symbols-outlined absolute -right-8 -bottom-8 text-[140px] opacity-[0.07] pointer-events-none select-none">
-                      account_balance
-                    </span>
-                    <div className="relative z-10">
-                      <div className="flex items-start justify-between mb-5">
-                        <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>Solde boutique</p>
-                          <h3 className="text-[34px] font-black leading-none">
-                            {stats.revenue ? `${(stats.revenue / 1000).toFixed(0)}K` : '0'}
-                            <span className="text-[14px] font-medium ml-2" style={{ color: 'rgba(255,255,255,0.6)' }}>FCFA</span>
-                          </h3>
-                        </div>
-                        <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.15)' }}>
-                          <span className="material-symbols-outlined text-[22px]">account_balance_wallet</span>
-                        </div>
+                  <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-start justify-between mb-2">
+                        <p className="text-[12px] font-bold text-gray-600">Solde boutique</p>
+                        <span className="material-symbols-outlined text-[18px] text-gray-400">account_balance_wallet</span>
                       </div>
-                      <div className="mb-5">
-                        <div className="flex justify-between text-[10px] font-bold mb-2 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                          <span>Disponible</span><span className="text-white">0 FCFA</span>
-                        </div>
-                        <div className="w-full rounded-full h-1.5 overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                          <div className="bg-[#EAB308] h-full rounded-full w-[10%]" />
-                        </div>
+                      <h3 className="text-[32px] font-bold text-gray-900 leading-none mb-1">
+                        {stats.revenue ? `${(stats.revenue / 1000).toFixed(0)}K` : '0'}
+                        <span className="text-[14px] font-medium ml-1 text-gray-500">FCFA</span>
+                      </h3>
+                    </div>
+                    <div className="mt-4">
+                      <div className="flex justify-between text-[11px] font-bold mb-2 uppercase tracking-tight text-gray-500">
+                        <span>Disponible</span><span className="text-gray-900">0 FCFA</span>
                       </div>
-                      <button className="w-full py-3 rounded-2xl font-black text-[12px] uppercase tracking-wider text-white flex items-center justify-center gap-2 transition-all hover:opacity-90"
-                        style={{ background: '#EAB308' }}>
-                        <span className="material-symbols-outlined text-[18px]">payments</span>
+                      <button className="w-full py-2.5 rounded-lg text-[13px] font-semibold text-gray-900 bg-gray-100 hover:bg-gray-200 transition-colors border border-gray-200">
                         Retirer les fonds
                       </button>
                     </div>
@@ -381,14 +351,14 @@ export default function EspaceVendeur() {
                       <Link href={shopData?.slug ? `/boutiques/${shopData.slug}` : '#'}
                         className="flex items-center gap-4 p-4 rounded-2xl transition-all hover:-translate-y-0.5 hover:shadow-md"
                         style={{ background: '#F0FDF4', border: '1px solid rgba(27,107,58,0.15)' }}>
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#1B6B3A' }}>
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#008060' }}>
                           <span className="material-symbols-outlined text-[20px] text-white">storefront</span>
                         </div>
                         <div>
                           <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>Voir ma boutique</p>
                           <p className="text-[11px]" style={{ color: '#9CA3AF' }}>Page publique de la boutique</p>
                         </div>
-                        <span className="material-symbols-outlined text-[16px] ml-auto" style={{ color: '#1B6B3A' }}>arrow_forward</span>
+                        <span className="material-symbols-outlined text-[16px] ml-auto" style={{ color: '#008060' }}>arrow_forward</span>
                       </Link>
                       <button onClick={() => router.push('/messages')}
                         className="flex items-center gap-4 p-4 rounded-2xl w-full text-left transition-all hover:-translate-y-0.5 hover:shadow-md"
@@ -431,7 +401,7 @@ export default function EspaceVendeur() {
             {activeTab === 'Messages' && (
               <div className="bg-white rounded-[28px] p-10 flex flex-col items-center text-center" style={{ border: '1px solid #EBEBEB' }}>
                 <div className="w-20 h-20 rounded-3xl flex items-center justify-center mb-5" style={{ background: '#E6F8EA' }}>
-                  <span className="material-symbols-outlined text-[40px]" style={{ color: '#1B6B3A' }}>chat</span>
+                  <span className="material-symbols-outlined text-[40px]" style={{ color: '#008060' }}>chat</span>
                 </div>
                 <h3 className="font-black text-[20px] mb-3" style={{ color: '#0D0D0D' }}>Centre de messages</h3>
                 <p className="text-[14px] max-w-sm mb-7 leading-relaxed" style={{ color: '#9CA3AF' }}>
@@ -439,7 +409,7 @@ export default function EspaceVendeur() {
                 </p>
                 <button onClick={() => router.push('/messages')}
                   className="px-8 py-3.5 rounded-2xl text-[13px] font-black text-white transition-all hover:shadow-lg hover:-translate-y-0.5"
-                  style={{ background: '#1B6B3A' }}>
+                  style={{ background: '#008060' }}>
                   Ouvrir la messagerie →
                 </button>
               </div>

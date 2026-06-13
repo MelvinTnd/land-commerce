@@ -4,7 +4,7 @@ import { AuthProvider } from '@/lib/AuthProvider'
 import Script from 'next/script'
 
 export const metadata = {
-  title: 'BéninMarket – La marketplace locale du Bénin',
+  title: 'CauriMarket – La marketplace locale du Bénin',
   description: 'Achetez et vendez des produits locaux béninois en ligne',
 }
 

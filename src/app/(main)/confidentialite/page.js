@@ -16,7 +16,7 @@ export default function ConfidentialitePage() {
         <div className="prose prose-sm max-w-none text-gray-700 space-y-6">
           <section>
             <h2 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Introduction</h2>
-            <p>Blackmaket s&apos;engage à protéger la vie privée de ses utilisateurs. La présente Politique de Confidentialité explique comment nous collectons, utilisons et protégeons vos données personnelles conformément à la loi béninoise et au Règlement Général sur la Protection des Données (RGPD).</p>
+            <p>CauriMarket s&apos;engage à protéger la vie privée de ses utilisateurs. La présente Politique de Confidentialité explique comment nous collectons, utilisons et protégeons vos données personnelles conformément à la loi béninoise et au Règlement Général sur la Protection des Données (RGPD).</p>
           </section>
 
           <section>

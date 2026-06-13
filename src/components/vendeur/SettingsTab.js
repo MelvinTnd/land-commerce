@@ -113,7 +113,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
                     <Image src={logoPreview} alt="Logo" fill className="object-cover" sizes="96px" unoptimized />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center"
-                      style={{ background: 'linear-gradient(135deg, #1B6B3A, #D4920A)' }}>
+                      style={{ background: 'linear-gradient(135deg, #008060, #D4920A)' }}>
                       <span className="text-white font-black text-2xl">
                         {shop?.name?.charAt(0)?.toUpperCase() || 'B'}
                       </span>
@@ -157,7 +157,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
                   value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
                   style={inputStyle}
-                  onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                  onFocus={e => e.target.style.borderColor = '#008060'}
                   onBlur={e => e.target.style.borderColor = '#E5E7EB'}
                 />
               </div>
@@ -184,7 +184,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
                 onChange={e => setForm({ ...form, description: e.target.value })}
                 placeholder="Parlez de vous, de votre passion, de vos savoir-faire ancestraux…"
                 style={{ ...inputStyle, resize: 'none' }}
-                onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+                onFocus={e => e.target.style.borderColor = '#008060'}
                 onBlur={e => e.target.style.borderColor = '#E5E7EB'}
               />
             </div>
@@ -204,7 +204,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
                 { label: 'Paiement à la livraison', icon: '🏠' },
               ].map((m, i) => (
                 <label key={i} className="flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-colors hover:bg-gray-50">
-                  <input type="checkbox" defaultChecked className="w-4 h-4" style={{ accentColor: '#1B6B3A' }} />
+                  <input type="checkbox" defaultChecked className="w-4 h-4" style={{ accentColor: '#008060' }} />
                   <span className="text-sm font-semibold" style={{ color: '#374151' }}>{m.icon}  {m.label}</span>
                 </label>
               ))}
@@ -231,7 +231,7 @@ export default function SettingsTab({ shop, token, onUpdated }) {
           <div className="flex justify-end">
             <button type="submit" disabled={loading || !shop}
               className="px-8 py-4 rounded-2xl font-black text-sm text-white uppercase tracking-widest transition-all hover:opacity-90 disabled:opacity-40 flex items-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #1B6B3A, #0D4A28)' }}>
+              style={{ background: 'linear-gradient(135deg, #008060, #0D4A28)' }}>
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

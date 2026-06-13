@@ -59,12 +59,12 @@ function ProduitsContent() {
       <button
         onClick={() => setShowFiltresMobile(true)}
         className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3.5 rounded-full shadow-xl text-white text-[13px] font-black transition-all hover:scale-105"
-        style={{ background: '#1B6B3A', boxShadow: '0 8px 32px rgba(27,107,58,0.4)' }}
+        style={{ background: '#008060', boxShadow: '0 8px 32px rgba(27,107,58,0.4)' }}
       >
         <span className="material-symbols-outlined text-[18px]">tune</span>
         Filtres
         {filtresActifs && (
-          <span className="w-5 h-5 rounded-full bg-white text-[#1B6B3A] text-[10px] font-black flex items-center justify-center">
+          <span className="w-5 h-5 rounded-full bg-white text-[#008060] text-[10px] font-black flex items-center justify-center">
             !
           </span>
         )}
@@ -107,7 +107,7 @@ function ProduitsContent() {
 
 export default function ProduitsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#008060] border-t-transparent rounded-full animate-spin"></div></div>}>
       <ProduitsContent />
     </Suspense>
   )

@@ -89,13 +89,10 @@ export default function Navbar() {
       <div className="max-w-[1400px] mx-auto flex items-center h-[68px] gap-4">
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-9 h-9 relative rounded-xl overflow-hidden">
-            <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="36px" />
+        <Link href="/" className="flex items-center shrink-0 -ml-1">
+          <div className="w-16 h-16 relative overflow-hidden">
+            <Image src="/logo.png" alt="CauriMarket" fill className="object-contain" priority sizes="64px" />
           </div>
-          <span className="hidden sm:block font-black text-[18px] tracking-tight" style={{ color: '#0D0D0D' }}>
-            Bénin<span style={{ color: '#1B6B3A' }}>Market</span>
-          </span>
         </Link>
 
         {/* Search bar — bouton qui ouvre le modal */}

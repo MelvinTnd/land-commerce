@@ -43,7 +43,7 @@ export default function DetailProduitPage() {
   const handleShare = () => {
     const url = typeof window !== 'undefined' ? window.location.href : ''
     if (navigator.share) {
-      navigator.share({ title: produit?.name || 'Produit Blackmaket', url }).catch(() => {})
+      navigator.share({ title: produit?.name || 'Produit CauriMarket', url }).catch(() => {})
     } else {
       navigator.clipboard.writeText(url).then(() => {
         setShareCopied(true)

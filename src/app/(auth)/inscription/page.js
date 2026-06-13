@@ -31,7 +31,7 @@ export default function InscriptionPage() {
           phone: form.tel || null,
           password: form.password,
           password_confirmation: form.password,
-          role: form.type === 'artisan' ? 'vendeur' : 'acheteur'
+          role: form.type === 'vendeur' ? 'vendeur' : 'acheteur'
         })
       })
 
@@ -45,7 +45,6 @@ export default function InscriptionPage() {
         throw new Error(data.message || "Une erreur est survenue lors de l'inscription")
       }
 
-      // Inscription réussie → créer la session NextAuth automatiquement
       const result = await signIn('credentials', {
         email: form.email,
         password: form.password,
@@ -53,12 +52,10 @@ export default function InscriptionPage() {
       })
 
       if (result?.error) {
-        // Connexion auto échouée mais inscription ok — on redirige quand même
         router.push('/connexion')
         return
       }
 
-      // Sauvegarder le token API dans localStorage
       const sessionRes = await fetch('/api/auth/session')
       const freshSession = await sessionRes.json()
       if (freshSession?.user?.apiToken) {
@@ -71,9 +68,8 @@ export default function InscriptionPage() {
         }))
       }
 
-      // Redirection en fonction du type de compte choisi
       router.refresh()
-      if (form.type === 'artisan') {
+      if (form.type === 'vendeur') {
         router.push('/inscription-vendeur')
       } else {
         router.push('/compte')
@@ -85,7 +81,6 @@ export default function InscriptionPage() {
     }
   }
 
-  // Connexion Google via NextAuth
   const handleGoogleSignIn = async () => {
     setLoadingGoogle(true)
     try {
@@ -97,238 +92,222 @@ export default function InscriptionPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row font-sans">
-
-      {/* Left Panel - Hero */}
-      <div className="hidden md:flex flex-col relative w-full md:w-[45%] lg:w-[40%] bg-[#1B6B3A] overflow-hidden">
-        {/* Background Image with Green Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat mix-blend-overlay opacity-50"
-          style={{ backgroundImage: `url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1000&q=80")` }}
-        ></div>
-        {/* Additional gradient for smoothing */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1B6B3A] via-transparent to-[#1B6B3A]/80"></div>
-
-        <div className="relative z-10 flex flex-col h-full p-10 lg:p-14">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-auto">
-            <div className="w-12 h-12 relative rounded-xl bg-white/10 p-1 overflow-hidden">
-              <Image src="/logo.png" alt="Blackmaket" fill className="object-contain" sizes="48px" />
-            </div>
-            <span className="font-extrabold text-white text-2xl tracking-tighter">
-              Blackmaket
-            </span>
-          </div>
-
-          {/* Main Content */}
-          <div className="mt-auto mb-20 lg:mb-32">
-            <h1 className="text-[40px] lg:text-[56px] font-extrabold text-[#D2F4DE] leading-[1.1] mb-6 tracking-tight">
-              L'héritage du<br />
-              Bénin à<br />
-              portée de<br />
-              main.
-            </h1>
-            <p className="text-[#a1dfbe] text-lg max-w-sm leading-relaxed font-medium">
-              Rejoignez la première place de marché dédiée à l'artisanat d'excellence et aux produits authentiques du Dahomey.
-            </p>
-          </div>
-
-          {/* Footer Avatars */}
-          <div className="flex items-center gap-4 mt-auto">
+    <div className="min-h-screen flex font-sans bg-white">
+      {/* Left panel - Image (Shopify Style) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 items-center justify-center overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=1200"
+          alt="Shopping expérience"
+          fill
+          className="object-cover object-center opacity-80"
+          sizes="50vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
+        <div className="absolute bottom-20 left-12 right-12 text-white">
+          <h2 className="text-4xl lg:text-5xl font-extrabold mb-4 leading-tight tracking-tight">
+            Vendez et achetez<br/>l'excellence.
+          </h2>
+          <p className="text-lg text-white/90 font-medium max-w-lg mb-8">
+            Rejoignez des créateurs talentueux et des clients passionnés par notre savoir-faire local.
+          </p>
+          <div className="flex items-center gap-3">
             <div className="flex -space-x-3">
               {[
                 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop',
                 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop',
                 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=100&h=100&fit=crop',
               ].map((src, i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-[#1B6B3A] overflow-hidden relative">
-                  <Image
-                    src={src}
-                    alt={`Artisan ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="40px"
-                  />
+                <div key={i} className="w-10 h-10 rounded-full border-2 border-gray-900 overflow-hidden relative">
+                  <Image src={src} alt="Utilisateur" fill className="object-cover" sizes="40px" />
                 </div>
               ))}
             </div>
-            <span className="text-sm text-[#A0D9B9] font-medium">+2,500 artisans nous font confiance</span>
+            <div className="text-sm font-bold text-white">
+              +5,000 artisans
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right Panel - Form */}
-      <div className="flex-1 flex flex-col justify-center bg-[#F9FAFA] p-8 sm:p-12 lg:p-20 relative overflow-y-auto">
-        <div className="max-w-[500px] w-full mx-auto">
-
-          <div className="mb-10">
-            <h2 className="text-[32px] font-extrabold text-[#111827] tracking-tight mb-2">Créer un compte</h2>
-            <p className="text-sm font-medium text-gray-500">Prêt à découvrir ou à vendre le meilleur du Bénin ?</p>
+      {/* Right panel - Form */}
+      <div className="w-full lg:w-1/2 h-screen overflow-y-auto">
+        <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-12">
+          <div className="w-full max-w-md">
+          
+          {/* Mobile Logo */}
+          <div className="lg:hidden flex mb-6">
+            <Link href="/">
+              <div className="w-14 h-14 relative">
+                <Image src="/logo.png" alt="CauriMarket" fill className="object-contain" sizes="56px" />
+              </div>
+            </Link>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <h1 className="text-3xl font-extrabold text-[#202223] mb-2 tracking-tight">Créer un compte</h1>
+          <p className="text-sm text-[#6d7175] mb-8">
+            Vous avez déjà un compte ?{' '}
+            <Link href="/connexion" className="font-medium text-[#008060] hover:underline">
+              Se connecter
+            </Link>
+          </p>
+          
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-600 text-sm p-4 rounded-md flex items-center gap-3">
+              <span className="material-symbols-outlined text-[20px]">error</span>
+              {error}
+            </div>
+          )}
 
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            
             {/* Account Type Selection */}
-            <div className="grid grid-cols-2 gap-4 mb-2">
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, type: 'acheteur' })}
-                className={`relative flex flex-col items-center justify-center py-6 px-4 rounded-[16px] transition-all duration-200 border-2 ${form.type === 'acheteur' ? 'bg-white border-[#1B6B3A] shadow-sm' : 'bg-gray-100 border-transparent text-gray-400'}`}
-              >
-                {form.type === 'acheteur' && (
-                  <div className="absolute top-2 right-2 w-5 h-5 bg-[#1B6B3A] rounded-full flex items-center justify-center text-white shadow-sm">
-                    <span className="material-symbols-outlined text-[14px] font-bold">check</span>
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-[#202223] mb-2">
+                Type de compte
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, type: 'acheteur' })}
+                  className={`relative flex flex-col items-center justify-center p-3 sm:p-4 border rounded-xl cursor-pointer transition-all ${
+                    form.type === 'acheteur' 
+                      ? 'border-[#008060] bg-[#f4fdf8] text-[#008060] shadow-[0_0_0_1.5px_#008060]' 
+                      : 'border-[#c9cccf] bg-white text-[#6d7175] hover:border-[#8c9196]'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-1.5 focus:outline-none">
+                    <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
+                    <span className="text-sm font-bold">Client</span>
                   </div>
-                )}
-                <div className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center ${form.type === 'acheteur' ? 'bg-[#D2F4DE] text-[#1B6B3A]' : 'bg-gray-200 text-gray-500'}`}>
-                  <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
-                </div>
-                <span className={`text-[13px] font-bold ${form.type === 'acheteur' ? 'text-gray-900' : 'text-gray-500'}`}>Je suis un acheteur</span>
-              </button>
+                  {form.type === 'acheteur' && (
+                    <span className="material-symbols-outlined absolute top-2 right-2 text-[16px]">check_circle</span>
+                  )}
+                </button>
 
-              <button
-                type="button"
-                onClick={() => setForm({ ...form, type: 'artisan' })}
-                className={`relative flex flex-col items-center justify-center py-6 px-4 rounded-[16px] transition-all duration-200 border-2 ${form.type === 'artisan' ? 'bg-white border-[#1B6B3A] shadow-sm' : 'bg-gray-100 border-transparent text-gray-400'}`}
-              >
-                {form.type === 'artisan' && (
-                  <div className="absolute top-2 right-2 w-5 h-5 bg-[#1B6B3A] rounded-full flex items-center justify-center text-white shadow-sm">
-                    <span className="material-symbols-outlined text-[14px] font-bold">check</span>
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, type: 'vendeur' })}
+                  className={`relative flex flex-col items-center justify-center p-3 sm:p-4 border rounded-xl cursor-pointer transition-all ${
+                    form.type === 'vendeur' 
+                      ? 'border-[#008060] bg-[#f4fdf8] text-[#008060] shadow-[0_0_0_1.5px_#008060]' 
+                      : 'border-[#c9cccf] bg-white text-[#6d7175] hover:border-[#8c9196]'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-1.5 focus:outline-none">
+                    <span className="material-symbols-outlined text-[24px]">storefront</span>
+                    <span className="text-sm font-bold">Vendeur</span>
                   </div>
-                )}
-                <div className={`w-12 h-12 rounded-full mb-3 flex items-center justify-center ${form.type === 'artisan' ? 'bg-[#D2F4DE] text-[#1B6B3A]' : 'bg-gray-200 text-gray-500'}`}>
-                  <span className="material-symbols-outlined text-[24px]">storefront</span>
-                </div>
-                <span className={`text-[13px] font-bold ${form.type === 'artisan' ? 'text-gray-900' : 'text-gray-500'}`}>Je suis un artisan</span>
-              </button>
-            </div>
-
-            {/* Inputs */}
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-2">Nom complet</label>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">person</span>
-                <input
-                  type="text"
-                  placeholder="Ex: Koffi Mensah"
-                  className="w-full bg-[#EAECEE] text-sm font-medium pl-12 pr-4 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
-                  value={form.nom} onChange={e => setForm({ ...form, nom: e.target.value })}
-                  required
-                />
+                  {form.type === 'vendeur' && (
+                    <span className="material-symbols-outlined absolute top-2 right-2 text-[16px]">check_circle</span>
+                  )}
+                </button>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-2">Email</label>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[20px] pointer-events-none">mail</span>
-                <input
-                  type="email"
-                  placeholder="koffi@exemple.bj"
-                  className="w-full bg-[#EAECEE] text-sm font-medium pl-12 pr-4 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
-                  value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                  required
-                />
-              </div>
+              <label className="block text-sm font-medium text-[#202223] mb-1.5">Nom complet</label>
+              <input
+                type="text"
+                required
+                value={form.nom}
+                onChange={(e) => setForm({ ...form, nom: e.target.value })}
+                className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors"
+                placeholder="Votre nom"
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-2">Téléphone <span className="text-gray-400 font-normal">(optionnel)</span></label>
-              <div className="flex gap-2">
-                <div className="flex items-center gap-2 bg-[#EAECEE] pl-4 pr-3 py-3.5 rounded-[12px] border border-transparent shrink-0">
-                  <span className="text-base leading-none">🇧🇯</span>
-                  <span className="text-sm font-bold text-gray-700">+229</span>
-                </div>
-                <input
-                  type="tel"
-                  placeholder="01 00 00 00 00"
-                  className="w-full bg-[#EAECEE] text-sm font-medium px-4 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
-                  value={form.tel} onChange={e => setForm({ ...form, tel: e.target.value })}
-                />
-              </div>
+              <label className="block text-sm font-medium text-[#202223] mb-1.5">Adresse e-mail</label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors"
+                placeholder="votre@email.com"
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-2">Mot de passe</label>
+              <label className="block text-sm font-medium text-[#202223] mb-1.5">
+                Téléphone <span className="text-[#6d7175] font-normal">(optionnel)</span>
+              </label>
+              <input
+                type="tel"
+                value={form.tel}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  // Only allow digits, space, and + at the beginning or -
+                  if (/^[0-9+ \-]*$/.test(val)) {
+                    setForm({ ...form, tel: val });
+                  }
+                }}
+                className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors"
+                placeholder="+229 01 00 00 00"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#202223] mb-1.5">Mot de passe</label>
               <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[20px] pointer-events-none">lock</span>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••••••"
-                  className="w-full bg-[#EAECEE] text-sm font-extrabold tracking-widest pl-12 pr-12 py-3.5 rounded-[12px] border border-transparent outline-none focus:border-[#1B6B3A] focus:bg-white transition-colors"
-                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
                   required
                   minLength={8}
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors pr-11"
+                  placeholder="••••••••"
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-800 transition-colors">
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)} 
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#6d7175] hover:text-[#202223] transition-colors"
+                >
                   <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
               </div>
             </div>
 
-            {/* Checkbox */}
-            <div className="flex items-start gap-3 mt-2">
-              <input type="checkbox" id="terms" required className="mt-1 w-4 h-4 rounded border-gray-300 text-[#1B6B3A] focus:ring-[#1B6B3A]" />
-              <label htmlFor="terms" className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                J'accepte les <Link href="/cgu" className="font-bold text-[#1B6B3A] hover:underline">Conditions Générales d'Utilisation</Link> et la <Link href="/confidentialite" className="font-bold text-[#1B6B3A] hover:underline">Politique de Confidentialité</Link> de Blackmaket.
-              </label>
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[#008060] hover:bg-[#006e52] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008060] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Création...' : 'S\'inscrire'}
+              </button>
             </div>
-
-            {/* Message d'erreur */}
-            {error && (
-              <div className="bg-red-50 text-red-500 text-sm font-bold p-4 rounded-[12px] border border-red-100 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px]">error</span>
-                {error}
-              </div>
-            )}
-
-            {/* Submit */}
-            <button disabled={loading} className="w-full bg-[#004e2c] hover:bg-[#134e29] text-white font-bold text-[15px] py-4 rounded-[100px] mt-4 flex justify-center items-center gap-2 transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed">
-              {loading ? 'Création en cours...' : 'Créer mon compte'}
-              {!loading && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
-            </button>
-
+            
+            <p className="text-xs text-[#6d7175] text-center mt-4">
+              En vous inscrivant, vous acceptez nos{' '}
+              <Link href="/cgu" className="text-[#008060] hover:underline">Conditions d'utilisation</Link>.
+            </p>
           </form>
 
-          {/* Social Buttons */}
-          <div className="grid grid-cols-1 gap-3 mt-6">
-            <button
-              type="button"
-              onClick={handleGoogleSignIn}
-              disabled={loadingGoogle}
-              className="flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors disabled:opacity-70 shadow-sm"
-            >
-              <div className="w-5 h-5 relative shrink-0">
-                <Image
-                  src="https://www.svgrepo.com/show/475656/google-color.svg"
-                  alt="Google"
-                  fill
-                  className="object-contain"
-                  sizes="20px"
-                />
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#e1e3e5]" />
               </div>
-              <span className="text-[13px] font-bold text-gray-800">
-                {loadingGoogle ? 'Redirection...' : "Continuer avec Google"}
-              </span>
-            </button>
-          </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-3 bg-white text-[#6d7175] font-medium">Ou avec</span>
+              </div>
+            </div>
 
-          {/* Paiements sécurisés */}
-          <div className="flex items-center justify-center gap-3 mt-8">
-            <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
-              <div className="flex -space-x-0.5">
-                <div className="w-5 h-5 rounded-full bg-[#FFCC00] flex items-center justify-center font-black text-[5px] text-[#003366]">MTN</div>
-                <div className="w-5 h-5 rounded-full bg-[#0066CC] flex items-center justify-center font-black text-[5px] text-white">Moov</div>
-              </div>
-              <span className="text-[9px] font-bold text-gray-500">Paiements sécurisés</span>
+            <div className="mt-8">
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={loadingGoogle}
+                className="w-full flex justify-center items-center py-3 px-4 border border-[#c9cccf] rounded-lg shadow-sm bg-white text-sm font-bold text-[#202223] hover:bg-[#f4f6f8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008060] disabled:opacity-60 transition-colors"
+              >
+                <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width={20} height={20} className="mr-3" />
+                {loadingGoogle ? 'Redirection...' : 'Continuer avec Google'}
+              </button>
+            </div>
             </div>
           </div>
-
-          {/* Login Link */}
-          <p className="text-center text-sm font-medium text-gray-500 mt-6">
-            Déjà membre ? <Link href="/connexion" className="font-bold text-[#1B6B3A] hover:underline">Connectez-vous ici</Link>
-          </p>
-
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export default function MotDePasseOubliePage() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#1B6B3A' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'white' }}>storefront</span>
             </div>
-            <span className="text-2xl font-extrabold tracking-tight" style={{ color: '#1B6B3A' }}>BéninMarket</span>
+            <span className="text-2xl font-extrabold tracking-tight" style={{ color: '#1B6B3A' }}>CauriMarket</span>
           </div>
 
           {!envoye ? (

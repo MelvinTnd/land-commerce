@@ -123,7 +123,7 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, r
         <div className="relative z-10">
           <span className="material-symbols-outlined text-[28px] mb-2 block" style={{ color: '#D4920A' }}>storefront</span>
           <h4 className="font-extrabold text-white text-[14px] leading-tight mb-1">
-            Vendez sur BéninMarket
+            Vendez sur CauriMarket
           </h4>
           <p className="text-[11px] font-medium mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Rejoignez des centaines d&apos;artisans béninois en 2 minutes.

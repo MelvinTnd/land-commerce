@@ -237,7 +237,11 @@ export default function PaiementPage() {
                         <label className="block text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: '#6B7280' }}>{f.label}</label>
                         <input
                           type={f.type} value={form[f.key]}
-                          onChange={e => updateForm(f.key, e.target.value)}
+                          onChange={e => {
+                            const val = e.target.value;
+                            if (f.type === 'tel' && !/^[0-9+ \-]*$/.test(val)) return;
+                            updateForm(f.key, val);
+                          }}
                           placeholder={f.placeholder}
                           className="w-full px-4 py-3 rounded-xl text-[13px] font-medium outline-none transition-all"
                           style={{ background: '#F7F5F0', border: '1.5px solid #E5E7EB' }}
@@ -357,7 +361,10 @@ export default function PaiementPage() {
                       🇧🇯 +229
                     </div>
                     <input type="tel" value={numeroPaiement}
-                      onChange={e => setNumeroPaiement(e.target.value)}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (/^[0-9+ \-]*$/.test(val)) setNumeroPaiement(val);
+                      }}
                       placeholder="97 00 00 00"
                       className="flex-1 px-4 py-3 rounded-xl text-[14px] font-bold outline-none transition-all"
                       style={{ background: 'white', border: '1.5px solid #E5E7EB' }}
@@ -551,7 +558,7 @@ function ResumeCommande({ articles, sousTotal, fraisLivraison, totalFinal, adres
             <div key={i} className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[13px]" style={{ color: '#1B6B3A' }}>{icon}</span>
               <span className="text-[11px] font-medium" style={{ color: '#9CA3AF' }}>
-                {['Paiement 100% sécurisé', 'Protection acheteur Blackmaket', 'Livraison partout au Bénin'][i]}
+                {['Paiement 100% sécurisé', 'Protection acheteur CauriMarket', 'Livraison partout au Bénin'][i]}
               </span>
             </div>
           ))}

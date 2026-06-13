@@ -43,86 +43,49 @@ function ProductCard({ p, onAddToCart }) {
 
   return (
     <Link href={`/produits/${p.slug || p.id}`}
-      className="group"
+      className="group block"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}>
-      <div className="bg-white rounded-[20px] overflow-hidden transition-all duration-300"
-        style={{
-          border: '1px solid #F0F0F0',
-          boxShadow: hovered ? '0 16px 48px rgba(0,0,0,0.12)' : '0 2px 8px rgba(0,0,0,0.04)',
-          transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-        }}>
-
-        {/* Image */}
-        <div className="relative overflow-hidden" style={{ paddingBottom: '100%' }}>
-          <Image
-            src={getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name })}
-            alt={p.name} fill
-            className="object-cover transition-transform duration-500"
-            style={{ transform: hovered ? 'scale(1.08)' : 'scale(1)' }}
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-          />
-          {/* Badges */}
-          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
-            {p.is_featured && (
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-black text-white"
-                style={{ background: 'linear-gradient(135deg,#D4920A,#F59E0B)' }}>⭐ À la une</span>
-            )}
-            {discount > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-black text-white"
-                style={{ background: '#EF4444' }}>-{discount}%</span>
-            )}
-          </div>
-          {/* Stock badge */}
-          {p.stock === 0 && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span className="px-3 py-1 rounded-full text-xs font-black text-white"
-                style={{ background: 'rgba(0,0,0,0.7)' }}>Épuisé</span>
-            </div>
+      <div className="relative aspect-[4/5] bg-[#F7F7F7] overflow-hidden mb-3">
+        <Image
+          src={getProductImage({ image: p.image, slug: p.slug, categorie: p.category?.name })}
+          alt={p.name} fill
+          className="object-cover transition-transform duration-[800ms]"
+          style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          unoptimized
+        />
+        {/* Badges */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+          {discount > 0 && (
+            <span className="px-2 py-1 bg-[#008060] text-white text-[10px] font-bold uppercase tracking-wider">Sale</span>
           )}
         </div>
-
-        {/* Content */}
-        <div className="p-3.5">
-          <p className="font-bold text-[12px] truncate mb-0.5" style={{ color: '#374151' }}>
-            {p.category?.name || ''}
-          </p>
-          <p className="font-black text-[14px] truncate mb-2" style={{ color: '#0D0D0D' }}>
-            {p.name}
-          </p>
-          {p.avg_rating > 0 && (
-            <div className="flex items-center gap-1.5 mb-2">
-              <StarRating rating={p.avg_rating} size={11} />
-              <span className="text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
-                ({p.avg_rating?.toFixed(1)})
-              </span>
-            </div>
-          )}
-          <div className="flex items-center justify-between mt-1">
-            <div>
-              <p className="font-black text-[15px]" style={{ color: '#1B6B3A' }}>
-                {finalPrice.toLocaleString('fr-FR')} <span className="text-[10px] font-bold">CFA</span>
-              </p>
-              {p.promo_price && (
-                <p className="text-[10px] line-through" style={{ color: '#C4C4C4' }}>
-                  {parseFloat(p.price).toLocaleString('fr-FR')} CFA
-                </p>
-              )}
-            </div>
-            <button
+        {/* Quick add */}
+        <div className={`absolute bottom-0 left-0 right-0 p-2 transform transition-all duration-300 ${hovered ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 lg:hidden'}`}>
+          <button
               onClick={handleAdd}
               disabled={p.stock === 0}
-              className="w-8 h-8 rounded-xl flex items-center justify-center transition-all active:scale-90"
-              style={{
-                background: added ? '#059669' : '#1B6B3A',
-                opacity: p.stock === 0 ? 0.4 : 1,
-              }}>
-              <span className="material-symbols-outlined text-white text-[16px]">
-                {added ? 'check' : 'add_shopping_cart'}
-              </span>
-            </button>
-          </div>
+              className="w-full bg-white text-black py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors border border-gray-200"
+          >
+            {p.stock === 0 ? 'Sold Out' : added ? 'Ajouté' : 'Ajouter rapide'}
+          </button>
+        </div>
+      </div>
+      
+      {/* Content under image */}
+      <div>
+        <p className="font-bold text-[10px] uppercase tracking-widest text-[#6B7280] mb-0.5">{p.category?.name || 'Artisanat'}</p>
+        <p className="font-medium text-[14px] text-gray-900 leading-snug mb-1 truncate">{p.name}</p>
+        <div className="flex items-center gap-2">
+          {p.promo_price ? (
+            <>
+              <span className="font-semibold text-gray-900">{finalPrice.toLocaleString('fr-FR')} CFA</span>
+              <span className="text-gray-400 line-through text-xs">{parseFloat(p.price).toLocaleString('fr-FR')} CFA</span>
+            </>
+          ) : (
+            <span className="font-semibold text-gray-900">{finalPrice.toLocaleString('fr-FR')} CFA</span>
+          )}
         </div>
       </div>
     </Link>
@@ -175,7 +138,7 @@ export default function BoutiqueDetailPage() {
     <div className="flex items-center justify-center" style={{ minHeight: '80vh', background: '#F7F5F0' }}>
       <div className="flex flex-col items-center gap-4">
         <div className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin"
-          style={{ borderColor: '#1B6B3A', borderTopColor: 'transparent' }} />
+          style={{ borderColor: '#008060', borderTopColor: 'transparent' }} />
         <p className="text-sm font-bold" style={{ color: '#9CA3AF' }}>Chargement de la boutique…</p>
       </div>
     </div>
@@ -192,7 +155,7 @@ export default function BoutiqueDetailPage() {
       </div>
       <Link href="/boutiques"
         className="px-6 py-3 rounded-2xl font-black text-sm text-white transition-all hover:shadow-lg hover:-translate-y-0.5"
-        style={{ background: '#1B6B3A' }}>
+        style={{ background: '#008060' }}>
         ← Voir toutes les boutiques
       </Link>
     </div>
@@ -228,121 +191,58 @@ export default function BoutiqueDetailPage() {
       {/* ══════════════════════════════════════════════════════ */}
       {/* HERO — Bannière + Profil du vendeur                   */}
       {/* ══════════════════════════════════════════════════════ */}
-      <div className="relative" style={{ background: '#0D0D0D' }}>
+      <div className="relative w-full h-[40vh] min-h-[300px] flex flex-col justify-center items-center text-center p-4 overflow-hidden" style={{ background: '#0D0D0D' }}>
+        <Image
+          src={bannerSrc}
+          alt={`Bannière ${shop.name}`}
+          fill className="object-cover opacity-60 mix-blend-overlay"
+          priority sizes="100vw"
+          unoptimized
+        />
+        <div className="absolute inset-0 bg-black/40" />
 
-        {/* Bannière */}
-        <div className="relative w-full" style={{ height: 320 }}>
-          <Image
-            src={bannerSrc}
-            alt={`Bannière ${shop.name}`}
-            fill className="object-cover"
-            priority sizes="100vw"
-            unoptimized
-          />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0"
-            style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.92) 100%)' }} />
-
-          {/* Bouton retour */}
-          <Link href="/boutiques"
-            className="absolute top-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] text-white transition-all hover:bg-white/20"
-            style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Boutiques
-          </Link>
-        </div>
-
-        {/* ─── Profil du vendeur (dans le hero, sans débordement) ─── */}
-        <div className="absolute bottom-0 left-0 right-0 px-4 pb-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-
-              {/* Logo */}
-              <div className="relative shrink-0"
-                style={{
-                  width: 96, height: 96,
-                  borderRadius: 22,
-                  border: '3px solid rgba(255,255,255,0.9)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-                  background: '#fff',
-                  overflow: 'hidden',
-                }}>
-                <SafeImage src={logoSrc} name={shop.name} alt={shop.name} fill className="object-cover" />
-              </div>
-
-              {/* Infos */}
-              <div className="flex-1 min-w-0 pb-1">
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h1 className="text-[24px] sm:text-[28px] font-black text-white leading-tight">
-                    {shop.name}
-                  </h1>
-                  {shop.status === 'active' && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black"
-                      style={{ background: 'rgba(27,107,58,0.85)', color: '#A7F3D0', border: '1px solid rgba(167,243,208,0.3)' }}>
-                      <span className="material-symbols-outlined text-[10px]">verified</span>
-                      VÉRIFIÉ
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  {shop.location && (
-                    <span className="flex items-center gap-1 text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      <span className="material-symbols-outlined text-[13px]">location_on</span>
-                      {shop.location}
-                    </span>
-                  )}
-                  {avgRating && (
-                    <span className="flex items-center gap-1 text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      <span className="material-symbols-outlined text-[13px]" style={{ color: '#F59E0B', fontVariationSettings: "'FILL' 1" }}>star</span>
-                      {avgRating} ({shop.total_reviews || reviews.length} avis)
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1 text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    <span className="material-symbols-outlined text-[13px]">inventory_2</span>
-                    {products.length} article{products.length !== 1 ? 's' : ''}
-                  </span>
-                </div>
-              </div>
-
-              {/* CTA contacter */}
-              <div className="shrink-0">
-                <Link href={contactUrl}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-[13px] text-white transition-all hover:shadow-xl hover:-translate-y-0.5"
-                  style={{ background: 'linear-gradient(135deg,#1B6B3A,#145530)', boxShadow: '0 4px 16px rgba(27,107,58,0.4)' }}>
-                  <span className="material-symbols-outlined text-[17px]">chat_bubble</span>
-                  Contacter
-                </Link>
-              </div>
-            </div>
+        <Link href="/boutiques"
+          className="absolute top-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[12px] text-white transition-all hover:bg-white/20"
+          style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          Boutiques
+        </Link>
+        
+        <div className="relative z-10 flex flex-col items-center mt-8">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 mb-5 rounded-full overflow-hidden border-2 border-white shadow-lg bg-white">
+            <SafeImage src={logoSrc} name={shop.name} alt={shop.name} fill className="object-cover" />
           </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">
+            {shop.name}
+          </h1>
+          <div className="flex items-center gap-4 text-xs font-bold text-white/90 uppercase tracking-widest mb-6">
+            {shop.location && <span>{shop.location}</span>}
+            {avgRating && <span>• {avgRating} ({shop.total_reviews || reviews.length} avis)</span>}
+          </div>
+          <Link href={contactUrl} className="bg-white text-black px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-colors">
+            Contacter le vendeur
+          </Link>
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════ */}
       {/* BARRE DE NAVIGATION STICKY (onglets)                  */}
       {/* ══════════════════════════════════════════════════════ */}
-      <div className="sticky top-[72px] z-20 bg-white" style={{ borderBottom: '1px solid #EBEBEB', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+      <div className="sticky top-[72px] z-20 bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="flex items-center gap-1">
+          <div className="flex justify-center items-center gap-8">
             {[
-              { key: 'produits', label: 'Produits', icon: 'inventory_2', count: products.length },
-              { key: 'avis', label: 'Avis', icon: 'star', count: reviews.length },
-              { key: 'apropos', label: 'À propos', icon: 'info', count: null },
+              { key: 'produits', label: 'Produits', count: products.length },
+              { key: 'avis', label: 'Avis', count: reviews.length },
+              { key: 'apropos', label: 'À propos', count: null },
             ].map(tab => (
               <button key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className="flex items-center gap-2 px-5 py-4 text-[13px] font-bold transition-all relative"
-                style={{ color: activeTab === tab.key ? '#1B6B3A' : '#6B7280' }}>
-                <span className="material-symbols-outlined text-[16px]">{tab.icon}</span>
+                className={`py-5 text-sm font-bold uppercase tracking-widest transition-all relative ${activeTab === tab.key ? 'text-[#0D0D0D]' : 'text-gray-400 hover:text-gray-900'}`}>
                 {tab.label}
-                {tab.count !== null && tab.count > 0 && (
-                  <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full"
-                    style={{ background: activeTab === tab.key ? '#E6F8EA' : '#F3F4F6', color: activeTab === tab.key ? '#1B6B3A' : '#9CA3AF' }}>
-                    {tab.count}
-                  </span>
-                )}
+                {tab.count !== null && tab.count > 0 && <span className="ml-1.5 text-[10px]">({tab.count})</span>}
                 {activeTab === tab.key && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full" style={{ background: '#1B6B3A' }} />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
                 )}
               </button>
             ))}
@@ -383,7 +283,7 @@ export default function BoutiqueDetailPage() {
                     onClick={() => setFilterCat(cat)}
                     className="shrink-0 px-4 py-1.5 rounded-full text-[12px] font-bold transition-all capitalize"
                     style={filterCat === cat
-                      ? { background: '#1B6B3A', color: 'white' }
+                      ? { background: '#008060', color: 'white' }
                       : { background: 'white', color: '#6B7280', border: '1.5px solid #EBEBEB' }}>
                     {cat === 'tous' ? 'Tous les produits' : cat}
                   </button>
@@ -404,7 +304,7 @@ export default function BoutiqueDetailPage() {
                 {(searchTerm || filterCat !== 'tous') && (
                   <button onClick={() => { setSearchTerm(''); setFilterCat('tous') }}
                     className="mt-4 px-5 py-2 rounded-xl font-bold text-sm transition-all hover:opacity-80"
-                    style={{ color: '#1B6B3A', background: '#E6F8EA' }}>
+                    style={{ color: '#008060', background: '#E6F8EA' }}>
                     Réinitialiser les filtres
                   </button>
                 )}
@@ -514,7 +414,7 @@ export default function BoutiqueDetailPage() {
                 </div>
                 <Link href={`/compte?tab=avis`}
                   className="px-5 py-2.5 rounded-2xl font-black text-[12px] text-white transition-all hover:opacity-90"
-                  style={{ background: '#1B6B3A' }}>
+                  style={{ background: '#008060' }}>
                   Évaluer
                 </Link>
               </div>
@@ -530,7 +430,7 @@ export default function BoutiqueDetailPage() {
             <div className="bg-white rounded-[24px] p-6" style={{ border: '1px solid #EBEBEB' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: '#E6F8EA' }}>
-                  <span className="material-symbols-outlined text-[16px]" style={{ color: '#1B6B3A' }}>storefront</span>
+                  <span className="material-symbols-outlined text-[16px]" style={{ color: '#008060' }}>storefront</span>
                 </div>
                 <h2 className="font-black text-[16px]" style={{ color: '#111827' }}>À propos de {shop.name}</h2>
               </div>
@@ -555,7 +455,7 @@ export default function BoutiqueDetailPage() {
                     style={{ borderBottom: '1px solid #F9F9F9' }}>
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                       style={{ background: '#F7F5F0' }}>
-                      <span className="material-symbols-outlined text-[17px]" style={{ color: '#1B6B3A' }}>{item.icon}</span>
+                      <span className="material-symbols-outlined text-[17px]" style={{ color: '#008060' }}>{item.icon}</span>
                     </div>
                     <div className="flex-1">
                       <p className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#C4C4C4' }}>{item.label}</p>
@@ -568,7 +468,7 @@ export default function BoutiqueDetailPage() {
 
             {/* CTA contacter */}
             <div className="rounded-[24px] p-6 text-white"
-              style={{ background: 'linear-gradient(135deg, #1B6B3A 0%, #0D4A28 100%)' }}>
+              style={{ background: 'linear-gradient(135deg, #008060 0%, #0D4A28 100%)' }}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-black text-[16px] mb-1">Vous avez une question ?</p>

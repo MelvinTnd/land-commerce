@@ -139,7 +139,7 @@ export default function ReviewsTab({ token }) {
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-black text-[13px] text-white"
-                      style={{ background: '#1B6B3A' }}>
+                      style={{ background: '#008060' }}>
                       {initials}
                     </div>
                     <div>
@@ -164,7 +164,7 @@ export default function ReviewsTab({ token }) {
                   <div className="mt-3 flex items-center gap-2">
                     <span className="material-symbols-outlined text-[13px]" style={{ color: '#9CA3AF' }}>inventory_2</span>
                     <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#9CA3AF' }}>
-                      Produit : <span style={{ color: '#1B6B3A' }}>{r.product?.name || r.product}</span>
+                      Produit : <span style={{ color: '#008060' }}>{r.product?.name || r.product}</span>
                     </p>
                   </div>
                 )}

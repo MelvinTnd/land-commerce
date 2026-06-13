@@ -147,7 +147,7 @@ export default function OrdersTab({ token }) {
         <div className={`bg-white rounded-[24px] overflow-hidden ${selectedOrder ? 'hidden lg:block lg:flex-1' : 'flex-1'}`} style={{ border: '1px solid #EBEBEB' }}>
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-[#008060] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center px-6">
@@ -200,7 +200,7 @@ export default function OrdersTab({ token }) {
 
                         {/* Montant */}
                         <td className="px-5 py-4">
-                          <span className="text-[12px] font-black" style={{ color: '#1B6B3A' }}>
+                          <span className="text-[12px] font-black" style={{ color: '#008060' }}>
                             {formatMoney(order.items_subtotal || order.total_amount)}
                           </span>
                         </td>
@@ -258,7 +258,7 @@ export default function OrdersTab({ token }) {
 
         {/* Détail commande */}
         {selectedOrder && (
-          <div className="w-full lg:w-[380px] bg-white rounded-[24px] shrink-0" style={{ border: '2px solid #1B6B3A' }}>
+          <div className="w-full lg:w-[380px] bg-white rounded-[24px] shrink-0" style={{ border: '2px solid #008060' }}>
             {/* Header */}
             <div className="px-6 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid #F0FDF4' }}>
               <div>
@@ -311,14 +311,14 @@ export default function OrdersTab({ token }) {
                         <p className="text-[12px] font-bold truncate" style={{ color: '#0D0D0D' }}>{item.product_name}</p>
                         <p className="text-[10px]" style={{ color: '#9CA3AF' }}>x{item.quantity}</p>
                       </div>
-                      <span className="text-[12px] font-black ml-3" style={{ color: '#1B6B3A' }}>
+                      <span className="text-[12px] font-black ml-3" style={{ color: '#008060' }}>
                         {formatMoney(item.unit_price * item.quantity)}
                       </span>
                     </div>
                   ))}
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-[12px] font-bold" style={{ color: '#6B7280' }}>Sous-total boutique</span>
-                    <span className="text-[14px] font-black" style={{ color: '#1B6B3A' }}>
+                    <span className="text-[14px] font-black" style={{ color: '#008060' }}>
                       {formatMoney(selectedOrder.items_subtotal || selectedOrder.total_amount)}
                     </span>
                   </div>
@@ -341,7 +341,7 @@ export default function OrdersTab({ token }) {
                           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[12px] font-bold transition-all disabled:opacity-50"
                           style={isDanger
                             ? { background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA' }
-                            : { background: '#1B6B3A', color: 'white' }
+                            : { background: '#008060', color: 'white' }
                           }
                         >
                           {updating === selectedOrder.id

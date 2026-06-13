@@ -448,7 +448,11 @@ export default function ComptePage() {
                         type={field.type}
                         value={profil[field.key]}
                         disabled={!editMode}
-                        onChange={(e) => setProfil({ ...profil, [field.key]: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (field.type === 'tel' && !/^[0-9+ \-]*$/.test(val)) return;
+                          setProfil({ ...profil, [field.key]: val });
+                        }}
                         className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
                         style={{
                           background: editMode ? '#F7F5F0' : '#FAFAF8',
@@ -538,7 +542,10 @@ export default function ComptePage() {
                       </div>
                       <div>
                         <label className="block text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: '#6B7280' }}>Téléphone</label>
-                        <input type="tel" value={addressForm.telephone} onChange={e => setAddressForm({ ...addressForm, telephone: e.target.value })}
+                        <input type="tel" value={addressForm.telephone} onChange={e => {
+                          const val = e.target.value;
+                          if (/^[0-9+ \-]*$/.test(val)) setAddressForm({ ...addressForm, telephone: val });
+                        }}
                           placeholder="+229 97 00 00 00" className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: '#F7F5F0', border: '1.5px solid #E5E7EB' }} />
                       </div>
                       <div>

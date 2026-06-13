@@ -15,22 +15,22 @@ function MessagesInner() {
   const searchParams = useSearchParams()
   const { data: session, status } = useSession()
 
-  const [conversations, setConversations]   = useState([])
-  const [activeConv, setActiveConv]         = useState(null)   // conv id sélectionné
-  const [messages, setMessages]             = useState([])
-  const [newMessage, setNewMessage]         = useState('')
-  const [loading, setLoading]               = useState(true)
-  const [sending, setSending]               = useState(false)
-  const [convMeta, setConvMeta]             = useState(null)
-  const [error, setError]                   = useState('')
+  const [conversations, setConversations] = useState([])
+  const [activeConv, setActiveConv] = useState(null)   // conv id sélectionné
+  const [messages, setMessages] = useState([])
+  const [newMessage, setNewMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [sending, setSending] = useState(false)
+  const [convMeta, setConvMeta] = useState(null)
+  const [error, setError] = useState('')
   // Pour le mode "initier une nouvelle conversation"
-  const [initShop, setInitShop]             = useState(null)   // { id, name, slug, logo }
-  const [initSending, setInitSending]       = useState(false)
-  const [initMessage, setInitMessage]       = useState('')
+  const [initShop, setInitShop] = useState(null)   // { id, name, slug, logo }
+  const [initSending, setInitSending] = useState(false)
+  const [initMessage, setInitMessage] = useState('')
   const messagesEndRef = useRef(null)
 
-  const token    = session?.user?.apiToken
-  const userId   = session?.user?.id
+  const token = session?.user?.apiToken
+  const userId = session?.user?.id
   const userRole = session?.user?.role
 
   // Sauvegarder token dans localStorage
@@ -59,7 +59,7 @@ function MessagesInner() {
   useEffect(() => {
     if (!token || loading) return
 
-    const shopParam    = searchParams.get('shop')    // slug de la boutique
+    const shopParam = searchParams.get('shop')    // slug de la boutique
     const vendeurParam = searchParams.get('vendeur') // user_id du vendeur
 
     if (!shopParam) return
@@ -82,7 +82,7 @@ function MessagesInner() {
     getShopBySlug(shopParam)
       .then(shop => {
         setInitShop({
-          id:   shop.user_id,   // on envoie le message à l'user_id du vendeur (shop endpoint utilise shopId)
+          id: shop.user_id,   // on envoie le message à l'user_id du vendeur (shop endpoint utilise shopId)
           shopId: shop.id,
           name: shop.name,
           slug: shop.slug,
@@ -92,7 +92,7 @@ function MessagesInner() {
       .catch(() => {
         setError('Impossible de trouver la boutique.')
       })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, loading, searchParams])
 
   // ── Scroll auto ────────────────────────────────────────────────────────────
@@ -174,14 +174,14 @@ function MessagesInner() {
     if (!dateStr) return ''
     const d = new Date(dateStr)
     const diffMin = Math.floor((Date.now() - d) / 60000)
-    if (diffMin < 1)  return "À l'instant"
+    if (diffMin < 1) return "À l'instant"
     if (diffMin < 60) return `Il y a ${diffMin} min`
     const diffH = Math.floor(diffMin / 60)
-    if (diffH < 24)   return `Il y a ${diffH}h`
+    if (diffH < 24) return `Il y a ${diffH}h`
     return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
   }
 
-  const getContactName   = (conv) => conv?.with?.name || conv?.shop?.name || 'Utilisateur'
+  const getContactName = (conv) => conv?.with?.name || conv?.shop?.name || 'Utilisateur'
   const getContactAvatar = (conv) => {
     const name = getContactName(conv)
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1B6B3A&color=fff&size=100`
@@ -198,7 +198,7 @@ function MessagesInner() {
 
   // Déterminer le panneau central à afficher
   const showNewConversation = !!initShop && !activeConv
-  const showConversation    = !!activeConv
+  const showConversation = !!activeConv
 
   return (
     <div className="min-h-screen pt-20 font-sans" style={{ background: '#F7F5F0' }}>
