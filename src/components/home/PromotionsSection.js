@@ -134,34 +134,28 @@ export default function PromotionsSection() {
   if (!p) return null
 
   return (
-    <section className="py-8 px-6 md:px-12 lg:px-20" style={{ background: '#F7F5F0' }}>
+    <section className="py-16 md:py-24 px-6 md:px-12 lg:px-20 bg-gray-50/50">
       <div className="max-w-[1280px] mx-auto">
 
         {/* Section header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.22em] mb-4"
-              style={{ background: 'rgba(212,146,10,0.1)', color: '#D4920A', border: '1px solid rgba(212,146,10,0.2)' }}>
-              <span className="material-symbols-outlined text-[14px]">local_offer</span>
-              Offres Spéciales
-            </span>
-            <h2 className="text-4xl md:text-[52px] font-black text-[#0D0D0D] tracking-tight leading-[1.05]">
-              Promotions <span style={{ color: '#D4920A' }}>&amp; Ventes Flash</span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
+              Promotions <span style={{ color: '#1B6B3A' }}>&amp; Ventes Flash</span>
             </h2>
           </div>
           <Link href="/promotions"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full text-[11px] font-black uppercase tracking-widest transition-all hover:opacity-80"
-            style={{ background: '#0D0D0D', color: 'white' }}>
-            Toutes les promotions
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white">
+            Toutes les offres
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 
         {/* Main layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
           {/* Big promo card */}
-          <div className="lg:col-span-3 relative overflow-hidden group" style={{ borderRadius: '32px', minHeight: '360px' }}>
+          <div className="lg:col-span-3 relative group bg-gray-100 border border-gray-200 overflow-hidden" style={{ minHeight: '460px' }}>
             {promos.map((pr, i) => (
               <div key={pr.id || i} className="absolute inset-0 transition-opacity duration-700"
                 style={{ opacity: i === actif ? 1 : 0, pointerEvents: i === actif ? 'auto' : 'none' }}>
@@ -175,23 +169,23 @@ export default function PromotionsSection() {
             ))}
 
             {/* Content overlay */}
-            <div className="absolute inset-0 flex flex-col justify-between p-5 sm:p-8 z-10">
+            <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 z-10">
               {/* Top row */}
               <div className="flex items-start justify-between">
-                <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-widest text-white"
-                  style={{ background: color }}>
+                <span className="px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-white"
+                  style={{ background: '#1B6B3A' }}>
                   {tag}
                 </span>
-                <span className="text-[22px] sm:text-[28px] font-black text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-[12px]"
-                  style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}>
+                <span className="text-[20px] sm:text-[24px] font-bold text-white px-3 sm:px-4 py-1 sm:py-1.5"
+                  style={{ background: '#D4920A' }}>
                   {reduction}
                 </span>
               </div>
 
               {/* Bottom content */}
               <div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">{p.titre}</h3>
-                <p className="text-white/60 text-xs sm:text-sm font-medium mb-4 sm:mb-6 max-w-sm">{p.description}</p>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">{p.titre}</h3>
+                <p className="text-white/80 text-sm font-medium mb-6 max-w-sm leading-relaxed">{p.description}</p>
 
                 {/* Countdown */}
                 <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 flex-wrap">
@@ -205,12 +199,11 @@ export default function PromotionsSection() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center justify-between flex-wrap gap-4">
                   <Link href="/produits"
-                    className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-[11px] sm:text-[12px] font-black uppercase tracking-widest text-black transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                    style={{ background: '#D4920A' }}>
+                    className="flex items-center gap-2 px-8 py-3 text-[11px] sm:text-[12px] font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+                    style={{ background: '#1B6B3A' }}>
                     Profiter de l&apos;offre
-                    <span className="material-symbols-outlined text-[16px] sm:text-[18px]">arrow_forward</span>
                   </Link>
 
                   {/* Dots nav */}
@@ -231,33 +224,31 @@ export default function PromotionsSection() {
           </div>
 
           {/* Side list */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
+          <div className="lg:col-span-2 flex flex-col gap-3">
             {promos.map((pr, i) => {
               const prColor = getColor(pr)
+              const isActive = i === actif;
               return (
                 <button key={pr.id || i} onClick={() => setActif(i)}
-                  className="group relative flex items-center gap-4 p-4 text-left transition-all duration-300 overflow-hidden"
+                  className="group relative flex items-center gap-4 p-4 text-left transition-colors duration-300 border bg-white"
                   style={{
-                    borderRadius: '24px',
-                    background: i === actif ? 'white' : 'rgba(255,255,255,0.5)',
-                    border: i === actif ? `1.5px solid ${prColor}40` : '1.5px solid transparent',
-                    boxShadow: i === actif ? `0 8px 30px rgba(0,0,0,0.1)` : 'none',
+                    borderColor: isActive ? '#1B6B3A' : '#E5E7EB',
                   }}>
-                  <div className="relative w-[90px] h-[90px] rounded-[18px] overflow-hidden shrink-0">
-                    <Image src={getImage(pr)} alt={pr.titre} fill className="object-cover transition-transform duration-300 group-hover:scale-110" sizes="90px" unoptimized />
+                  <div className="relative w-[90px] h-[90px] bg-gray-100 border border-gray-100 shrink-0">
+                    <Image src={getImage(pr)} alt={pr.titre} fill className="object-cover transition-transform duration-300 group-hover:scale-105" sizes="90px" unoptimized />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider text-white mb-2"
+                  <div className="flex-1 min-w-0 py-1">
+                    <span className="inline-block px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-white mb-2"
                       style={{ background: prColor }}>{getReduction(pr)}</span>
-                    <h4 className="font-black text-[14px] text-[#0D0D0D] leading-tight line-clamp-1 mb-1">{pr.titre}</h4>
+                    <h4 className="font-bold text-[14px] text-gray-900 leading-tight line-clamp-1 mb-1 transition-colors group-hover:text-[#1B6B3A]">{pr.titre}</h4>
                     <p className="text-[11px] font-medium line-clamp-2" style={{ color: '#9CA3AF' }}>{pr.description}</p>
                   </div>
-                  <span className="material-symbols-outlined text-[20px] shrink-0 transition-all duration-300 group-hover:translate-x-1"
-                    style={{ color: i === actif ? prColor : '#D1D5DB' }}>chevron_right</span>
+                  <span className="material-symbols-outlined text-[20px] shrink-0 transition-opacity duration-300"
+                    style={{ color: '#1B6B3A', opacity: isActive ? 1 : 0 }}>arrow_forward</span>
 
                   {/* Active indicator bar */}
-                  {i === actif && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 rounded-r-full" style={{ background: prColor }} />
+                  {isActive && (
+                    <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: '#1B6B3A' }} />
                   )}
                 </button>
               )
@@ -265,9 +256,8 @@ export default function PromotionsSection() {
 
             {/* CTA mobile */}
             <Link href="/promotions"
-              className="md:hidden flex items-center justify-center gap-2 py-4 rounded-[20px] text-[11px] font-black uppercase tracking-widest mt-2"
-              style={{ background: '#0D0D0D', color: 'white' }}>
-              Voir toutes les promotions
+              className="md:hidden flex items-center justify-center gap-2 py-4 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest mt-2 hover:bg-gray-900 hover:text-white transition-colors">
+              Voir toutes les offres
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </Link>
           </div>

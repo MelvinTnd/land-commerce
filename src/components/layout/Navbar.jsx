@@ -101,45 +101,41 @@ export default function Navbar() {
         {/* Search bar — bouton qui ouvre le modal */}
         <button
           onClick={() => setShowSearch(true)}
-          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-200 text-left"
-          style={{ background: '#F1EFEA', border: '2px solid transparent' }}
+          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2 border border-gray-200 transition-all duration-200 text-left hover:border-gray-900 bg-white"
         >
-          <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>search</span>
-          <span className="text-[13px] font-medium flex-1" style={{ color: '#9CA3AF' }}>Rechercher un produit, un artisan...</span>
-          <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold" style={{ background: '#E5E7EB', color: '#9CA3AF' }}>⌘K</kbd>
+          <span className="material-symbols-outlined text-[18px] text-gray-500">search</span>
+          <span className="text-[13px] font-medium flex-1 text-gray-400">Rechercher un produit, un artisan...</span>
+          <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 border text-[10px] font-bold text-gray-400">⌘K</kbd>
         </button>
 
         {/* Nav links */}
-        <div className="hidden lg:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-6">
           {navLinks.map(link => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
             return (
               <Link key={link.label} href={link.href}
-                className="px-4 py-2 rounded-full text-[13px] font-bold transition-all"
-                style={{
-                  color: isActive ? '#1B6B3A' : '#374151',
-                  background: isActive ? 'rgba(27,107,58,0.08)' : 'transparent',
-                }}>
+                className="py-2 text-[13px] font-bold uppercase tracking-widest transition-colors relative group"
+                style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
                 {link.label}
+                <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }}></span>
               </Link>
             )
           })}
         </div>
 
         {/* Right icons */}
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-4 ml-auto">
 
           {/* Mobile search */}
-          <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+          <button className="md:hidden w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
             onClick={() => setShowSearch(true)}>
-            <span className="material-symbols-outlined text-[20px]" style={{ color: '#374151' }}>search</span>
+            <span className="material-symbols-outlined text-[20px]">search</span>
           </button>
 
           {/* Messages */}
           {user && (
             <Link href="/messages"
-              className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
-              style={{ color: '#374151' }}>
+              className="relative w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
               <span className="material-symbols-outlined text-[22px]">chat</span>
               {unreadMessages > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
@@ -162,11 +158,10 @@ export default function Navbar() {
 
           {/* Panier */}
           <Link href="/panier"
-            className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
-            style={{ color: '#374151' }}>
+            className="relative w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
             <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
             {totalArticles > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-bold text-[9px]"
                 style={{ background: '#D4920A' }}>
                 {totalArticles}
               </span>
@@ -177,9 +172,8 @@ export default function Navbar() {
           <div className="relative" ref={userRef}>
             {user ? (
               <button onClick={() => setUserMenu(!userMenu)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full transition-all hover:bg-gray-100"
-                style={{ border: '1.5px solid #EBEBEB' }}>
-                <div className="w-7 h-7 rounded-full overflow-hidden relative bg-[#1B6B3A] flex items-center justify-center" >
+                className="flex items-center gap-2 pl-2 pr-3 py-1 border border-gray-200 transition-colors hover:border-gray-900 bg-white">
+                <div className="w-7 h-7 relative bg-[#1B6B3A] flex items-center justify-center overflow-hidden" >
                   {user.image
                     ? <Image src={user.image} alt={user.name || ''} fill className="object-cover" sizes="28px" />
                     : <span className="text-[12px] font-black text-white">{(user.name || 'U')[0].toUpperCase()}</span>
@@ -192,8 +186,8 @@ export default function Navbar() {
               </button>
             ) : (
               <Link href="/connexion"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-black uppercase tracking-wider transition-all hover:-translate-y-0.5 text-white"
-                style={{ background: '#0D0D0D' }}>
+                className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest border border-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
+                style={{ color: '#0D0D0D' }}>
                 <span className="material-symbols-outlined text-[16px]">person</span>
                 <span className="hidden sm:block">Connexion</span>
               </Link>
@@ -201,8 +195,7 @@ export default function Navbar() {
 
             {/* Dropdown user */}
             {userMenu && user && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-[20px] py-2 z-50"
-                style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)', border: '1px solid #EBEBEB' }}>
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white py-2 z-50 border border-gray-200 shadow-xl">
                 {/* User info */}
                 <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid #F3F4F6' }}>
                   <p className="font-black text-[13px] text-[#0D0D0D]">{user.name}</p>
