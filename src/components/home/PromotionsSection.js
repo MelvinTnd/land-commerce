@@ -145,7 +145,7 @@ export default function PromotionsSection() {
             </h2>
           </div>
           <Link href="/promotions"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white">
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-50 hover:text-[#1B6B3A] hover:border-[#1B6B3A] bg-white">
             Toutes les offres
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
@@ -256,7 +256,7 @@ export default function PromotionsSection() {
 
             {/* CTA mobile */}
             <Link href="/promotions"
-              className="md:hidden flex items-center justify-center gap-2 py-4 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest mt-2 hover:bg-gray-900 hover:text-white transition-colors">
+              className="md:hidden flex items-center justify-center gap-2 py-4 border border-gray-200 bg-white text-gray-900 text-[11px] font-bold uppercase tracking-widest mt-2 hover:bg-gray-50 hover:text-[#1B6B3A] hover:border-[#1B6B3A] transition-colors">
               Voir toutes les offres
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </Link>

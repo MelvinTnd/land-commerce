@@ -75,7 +75,7 @@ export default function ContactPage() {
                   { icon: 'share' },
                 ].map(s => (
                   <button key={s.icon}
-                    className="w-10 h-10 border border-gray-200 flex items-center justify-center transition-colors hover:border-gray-900 hover:bg-gray-900"
+                    className="w-10 h-10 border border-gray-200 flex items-center justify-center transition-colors hover:border-[#1B6B3A] hover:bg-[#1B6B3A] hover:text-white"
                     style={{ color: '#6B7280' }}
                     onMouseEnter={e => { e.currentTarget.style.color = 'white' }}
                     onMouseLeave={e => { e.currentTarget.style.color = '#6B7280' }}>

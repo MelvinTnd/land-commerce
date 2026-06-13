@@ -58,7 +58,7 @@ function ProduitsContent() {
       {/* ── Bouton FAB Filtres mobile ── */}
       <button
         onClick={() => setShowFiltresMobile(true)}
-        className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3 border border-gray-900 bg-white shadow-lg text-[11px] font-black uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white"
+        className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3 border border-gray-200 bg-white shadow-lg text-[11px] font-black uppercase tracking-widest transition-all hover:bg-gray-50 hover:text-[#1B6B3A] hover:border-[#1B6B3A]"
         style={{ color: '#0D0D0D' }}
       >
         <span className="material-symbols-outlined text-[18px]">tune</span>

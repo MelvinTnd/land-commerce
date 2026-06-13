@@ -93,9 +93,9 @@ export default function Navbar() {
         {/* Search bar */}
         <button
           onClick={() => setShowSearch(true)}
-          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2 border border-gray-200 transition-all duration-200 text-left hover:border-gray-900 bg-white"
+          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2 border border-gray-200 transition-all duration-200 text-left hover:border-[#1B6B3A] bg-gray-50 hover:bg-white"
         >
-          <span className="material-symbols-outlined text-[18px] text-gray-500">search</span>
+          <span className="material-symbols-outlined text-[18px] text-gray-400">search</span>
           <span className="text-[13px] font-medium flex-1 text-gray-400">Rechercher un produit, un artisan...</span>
           <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 border text-[10px] font-bold text-gray-400">⌘K</kbd>
         </button>
@@ -164,7 +164,7 @@ export default function Navbar() {
           <div className="relative" ref={userRef}>
             {user ? (
               <button onClick={() => setUserMenu(!userMenu)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1 border border-gray-200 transition-colors hover:border-gray-900 bg-white">
+                className="flex items-center gap-2 pl-2 pr-3 py-1 border border-gray-200 transition-colors hover:border-[#1B6B3A] bg-white">
                 <div className="w-7 h-7 bg-[#1B6B3A] flex items-center justify-center overflow-hidden">
                   <span className="text-[12px] font-black text-white">{(user.name || 'U')[0].toUpperCase()}</span>
                 </div>
@@ -175,7 +175,7 @@ export default function Navbar() {
               </button>
             ) : (
               <Link href="/connexion"
-                className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest border border-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
+                className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest border border-gray-200 transition-colors hover:border-[#1B6B3A] hover:text-[#1B6B3A] bg-white"
                 style={{ color: '#0D0D0D' }}>
                 <span className="material-symbols-outlined text-[16px]">person</span>
                 <span className="hidden sm:block">Connexion</span>

@@ -58,7 +58,7 @@ export default function AboutPage() {
                   Explorer le marché
                 </Link>
                 <Link href="/contact"
-                  className="px-7 py-3 font-black text-[11px] uppercase tracking-widest border border-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
+                  className="px-7 py-3 font-black text-[11px] uppercase tracking-widest border border-gray-200 bg-white transition-colors hover:border-[#1B6B3A] hover:text-[#1B6B3A] hover:bg-gray-50"
                   style={{ color: '#0D0D0D' }}>
                   Nous contacter
                 </Link>

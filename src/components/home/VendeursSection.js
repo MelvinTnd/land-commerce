@@ -48,7 +48,7 @@ export default function VendeursSection() {
             </h2>
           </div>
           <Link href="/boutiques"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white">
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-200 bg-white text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-50 hover:text-[#1B6B3A] hover:border-[#1B6B3A]">
             Toutes les boutiques
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
