@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 
 const footerLinks = {
@@ -21,7 +22,7 @@ export default function Footer() {
     <footer style={{ background: '#fff', borderTop: '1px solid #E5E7EB' }}>
 
       {/* Newsletter */}
-      <div style={{ background: '#0D0D0D' }}>
+      <div style={{ background: '#F7F5F0', borderBottom: '1px solid #E5E7EB' }}>
         <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.22em] mb-3 flex items-center gap-2"
@@ -29,14 +30,14 @@ export default function Footer() {
               <span className="w-4 h-px bg-[#1B6B3A] inline-block" />
               Newsletter
             </span>
-            <h3 className="text-2xl font-black tracking-tight text-white mb-1">
+            <h3 className="text-2xl font-black tracking-tight mb-1" style={{ color: '#0D0D0D' }}>
               Ne ratez aucune offre exclusive
             </h3>
-            <p className="text-[14px] font-medium max-w-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-[14px] font-medium max-w-sm" style={{ color: '#6B7280' }}>
               Recevez promotions, nouveautés artisanales et conseils chaque semaine.
             </p>
           </div>
-          <div className="flex w-full md:max-w-sm shrink-0">
+          <div className="flex w-full md:max-w-sm shrink-0" style={{ border: '1px solid #E5E7EB' }}>
             <input
               type="email"
               placeholder="votre@email.bj"
@@ -74,7 +75,7 @@ export default function Footer() {
                 { icon: 'share', label: 'Partager' },
               ].map(s => (
                 <button key={s.label}
-                  className="w-9 h-9 border border-gray-200 flex items-center justify-center transition-all hover:border-gray-900 hover:bg-gray-900"
+                  className="w-9 h-9 border border-gray-200 flex items-center justify-center transition-all hover:border-[#1B6B3A] hover:bg-[#1B6B3A]"
                   style={{ color: '#6B7280' }}
                   onMouseEnter={e => { e.currentTarget.style.color = 'white' }}
                   onMouseLeave={e => { e.currentTarget.style.color = '#6B7280' }}>

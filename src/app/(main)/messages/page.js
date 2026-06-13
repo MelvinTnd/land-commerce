@@ -206,10 +206,10 @@ function MessagesInner() {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 flex items-center justify-center" style={{ background: '#0D0D0D' }}>
-                <span className="material-symbols-outlined text-[20px] text-white">chat</span>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center border" style={{ background: 'white', borderColor: '#E5E7EB' }}>
+              <span className="material-symbols-outlined text-[20px]" style={{ color: '#0D0D0D' }}>chat</span>
+            </div>
             <div>
               <h1 className="text-xl font-black" style={{ color: '#0D0D0D' }}>Messages</h1>
               <p className="text-[11px] font-medium" style={{ color: '#9CA3AF' }}>
@@ -460,7 +460,7 @@ function MessagesInner() {
                           <div className="max-w-[75%]">
                             <div className="px-4 py-3 text-[13px] font-medium leading-relaxed"
                               style={isMine ? {
-                                background: '#0D0D0D', color: 'white',
+                                background: '#1B6B3A', color: 'white',
                               } : {
                                 background: '#F7F5F0', color: '#374151',
                                 border: '1px solid #E5E7EB',

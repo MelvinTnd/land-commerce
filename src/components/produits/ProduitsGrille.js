@@ -139,9 +139,9 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
 
       {/* ── Skeletons ── */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="bg-white p-4 animate-pulse">
+            <div key={i} className="bg-white p-4 animate-pulse" style={{ border: '1px solid #E5E7EB' }}>
               <div className="bg-gray-100 mb-4" style={{ aspectRatio: '1/1' }} />
               <div className="h-2.5 bg-gray-100 mb-2 w-1/3" />
               <div className="h-4 bg-gray-100 mb-3" />
@@ -162,14 +162,15 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
       ) : vue === 'grille' ? (
 
         /* ── GRILLE ── */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {produits.map(p => {
             const inCart = estDansPanier(p.id)
             const isFav = favoris.includes(p.id)
             const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null
 
             return (
-              <div key={p.id} className="group bg-white flex flex-col overflow-hidden">
+              <div key={p.id} className="group bg-white flex flex-col overflow-hidden transition-all hover:shadow-lg"
+                style={{ border: '1px solid #E5E7EB' }}>
 
                 {/* Image */}
                 <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
@@ -278,13 +279,14 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
       ) : (
 
         /* ── LISTE ── */
-        <div className="flex flex-col divide-y divide-gray-100">
+        <div className="flex flex-col gap-4">
           {produits.map(p => {
             const inCart = estDansPanier(p.id)
             const isFav = favoris.includes(p.id)
             const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null
             return (
-              <div key={p.id} className="group flex gap-5 bg-white py-5 transition-colors hover:bg-gray-50">
+              <div key={p.id} className="group flex gap-5 bg-white py-5 px-5 transition-colors hover:shadow-md"
+                style={{ border: '1px solid #E5E7EB' }}>
                 <div className="relative shrink-0 w-28 aspect-square overflow-hidden bg-gray-100">
                   <Link href={`/produits/${p.slug || p.id}`} style={{ position: 'absolute', inset: 0 }}>
                     <img src={p.image} alt={p.nom} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />

@@ -182,8 +182,7 @@ export default function PanierPage() {
                       onFocus={e => e.target.style.borderColor = '#0D0D0D'}
                       onBlur={e => e.target.style.borderColor = '#E5E7EB'} />
                     <button onClick={() => setPromoApplied(true)}
-                      className="px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-white transition-opacity hover:opacity-90"
-                      style={{ background: '#0D0D0D' }}>
+                      className="px-4 py-2.5 text-[11px] font-black uppercase tracking-widest text-[#0D0D0D] border-y border-r border-gray-200 bg-white transition-opacity hover:opacity-90">
                       OK
                     </button>
                   </div>

@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -167,17 +168,17 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ background: '#0D0D0D', borderTop: '1px solid #1a1a1a' }}>
+      <section style={{ background: '#F7F5F0', borderTop: '1px solid #E5E7EB' }}>
         <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-20 text-center">
           <span className="text-[10px] font-black uppercase tracking-[0.22em] mb-4 flex items-center justify-center gap-2"
             style={{ color: '#1B6B3A' }}>
             <span className="w-4 h-px bg-[#1B6B3A] inline-block" />
             Rejoindre CauriMarket
           </span>
-          <h2 className="text-3xl md:text-4xl font-black mb-4 text-white tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight" style={{ color: '#0D0D0D' }}>
             Rejoignez l&apos;aventure CauriMarket
           </h2>
-          <p className="text-[15px] font-medium mx-auto mb-10 max-w-md" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-[15px] font-medium mx-auto mb-10 max-w-md" style={{ color: '#6B7280' }}>
             Que vous soyez artisan, producteur ou passionné de culture béninoise, votre place est ici.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -187,8 +188,8 @@ export default function AboutPage() {
               Devenir Vendeur
             </Link>
             <Link href="/produits"
-              className="px-8 py-4 font-black text-[11px] uppercase tracking-widest border transition-colors hover:bg-white hover:text-gray-900"
-              style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}>
+              className="px-8 py-4 font-black text-[11px] uppercase tracking-widest border transition-colors hover:bg-[#1B6B3A] hover:text-white hover:border-[#1B6B3A]"
+              style={{ borderColor: '#D1D5DB', color: '#374151' }}>
               Explorer le Marché
             </Link>
           </div>

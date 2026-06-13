@@ -151,7 +151,7 @@ export default function ComptePage() {
             <span style={{ color: '#0D0D0D' }}>Mon Compte</span>
           </div>
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 flex items-center justify-center text-xl font-black text-white" style={{ background: '#0D0D0D' }}>
+            <div className="w-14 h-14 flex items-center justify-center text-xl font-black text-white" style={{ background: '#1B6B3A' }}>
               {profil.prenom.charAt(0)}{profil.nom.charAt(0)}
             </div>
             <div>
