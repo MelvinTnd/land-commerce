@@ -67,10 +67,8 @@ export default function Footer() {
                 { icon: 'share', label: 'Partager' },
               ].map(s => (
                 <button key={s.label}
-                  className="w-10 h-10 border border-gray-200 flex items-center justify-center transition-colors"
-                  style={{ color: '#1B6B3A' }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = '#1B6B3A'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = '#E5E7EB'}>
+                  className="w-10 h-10 border border-gray-200 flex items-center justify-center transition-colors hover:border-[#1B6B3A]"
+                  style={{ color: '#1B6B3A' }}>
                   <span className="material-symbols-outlined text-[18px]">{s.icon}</span>
                 </button>
               ))}
