@@ -81,32 +81,24 @@ export default function Navbar() {
         borderBottom: '1px solid #F0EDE8',
         boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
       }}>
-      <div className="max-w-[1400px] mx-auto flex items-center h-[68px] gap-4">
+      <div className="max-w-[1400px] mx-auto flex items-center justify-between h-[68px]">
 
         {/* Logo — texte seul */}
-        <Link href="/" className="flex items-center shrink-0">
-          <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
-            Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
-          </span>
-        </Link>
+        <div className="flex-1 flex shrink-0">
+          <Link href="/" className="flex items-center">
+            <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
+              Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
+            </span>
+          </Link>
+        </div>
 
-        {/* Search bar */}
-        <button
-          onClick={() => setShowSearch(true)}
-          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2 border border-gray-200 transition-all duration-200 text-left hover:border-[#1B6B3A] bg-gray-50 hover:bg-white"
-        >
-          <span className="material-symbols-outlined text-[18px] text-gray-400">search</span>
-          <span className="text-[13px] font-medium flex-1 text-gray-400">Rechercher un produit, un artisan...</span>
-          <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 border text-[10px] font-bold text-gray-400">⌘K</kbd>
-        </button>
-
-        {/* Nav links */}
-        <div className="hidden lg:flex items-center gap-6">
+        {/* Nav links (Centrés) */}
+        <div className="hidden lg:flex flex-1 items-center justify-center gap-8">
           {navLinks.map(link => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
             return (
               <Link key={link.label} href={link.href}
-                className="py-2 text-[13px] font-bold uppercase tracking-widest transition-colors relative group"
+                className="py-5 text-[12px] font-black uppercase tracking-widest transition-colors relative group"
                 style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
                 {link.label}
                 <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }} />
@@ -116,21 +108,21 @@ export default function Navbar() {
         </div>
 
         {/* Right icons */}
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
 
-          {/* Mobile search */}
-          <button className="md:hidden w-10 h-10 flex items-center justify-center"
+          {/* Search icon (Desktop & Mobile) */}
+          <button className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
             onClick={() => setShowSearch(true)}>
-            <span className="material-symbols-outlined text-[20px]" style={{ color: '#0D0D0D' }}>search</span>
+            <span className="material-symbols-outlined text-[24px]">search</span>
           </button>
 
           {/* Messages */}
           {user && (
             <Link href="/messages"
-              className="relative w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-              <span className="material-symbols-outlined text-[22px]">chat</span>
+              className="relative hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+              <span className="material-symbols-outlined text-[24px]">chat</span>
               {unreadMessages > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 text-white flex items-center justify-center font-black text-[9px]"
+                <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
                   style={{ background: '#EF4444' }}>
                   {unreadMessages}
                 </span>
@@ -138,22 +130,20 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* Vendeur */}
+          {/* Vendeur Icon */}
           {role === 'vendeur' && (
             <Link href="/vendeur"
-              className="hidden md:flex items-center gap-1.5 px-4 py-2 text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90"
-              style={{ background: 'rgba(27,107,58,0.1)', color: '#1B6B3A' }}>
-              <span className="material-symbols-outlined text-[16px]">storefront</span>
-              <span className="hidden lg:block">Mon Espace</span>
+              className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+              <span className="material-symbols-outlined text-[24px]">storefront</span>
             </Link>
           )}
 
           {/* Panier */}
           <Link href="/panier"
-            className="relative w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-            <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
+            className="relative flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+            <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
             {totalArticles > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 text-white flex items-center justify-center font-bold text-[9px]"
+              <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
                 style={{ background: '#D4920A' }}>
                 {totalArticles}
               </span>
@@ -161,24 +151,16 @@ export default function Navbar() {
           </Link>
 
           {/* User menu */}
-          <div className="relative" ref={userRef}>
+          <div className="relative flex items-center" ref={userRef}>
             {user ? (
               <button onClick={() => setUserMenu(!userMenu)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1 border border-gray-200 transition-colors hover:border-[#1B6B3A] bg-white">
-                <div className="w-7 h-7 bg-[#1B6B3A] flex items-center justify-center overflow-hidden">
-                  <span className="text-[12px] font-black text-white">{(user.name || 'U')[0].toUpperCase()}</span>
-                </div>
-                <span className="hidden sm:block text-[12px] font-black max-w-[80px] truncate" style={{ color: '#0D0D0D' }}>
-                  {user.name?.split(' ')[0]}
-                </span>
-                <span className="material-symbols-outlined text-[16px]" style={{ color: '#9CA3AF' }}>expand_more</span>
+                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                <span className="material-symbols-outlined text-[24px]">person</span>
               </button>
             ) : (
               <Link href="/connexion"
-                className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest border border-gray-200 transition-colors hover:border-[#1B6B3A] hover:text-[#1B6B3A] bg-white"
-                style={{ color: '#0D0D0D' }}>
-                <span className="material-symbols-outlined text-[16px]">person</span>
-                <span className="hidden sm:block">Connexion</span>
+                className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                <span className="material-symbols-outlined text-[24px]">person</span>
               </Link>
             )}
 
