@@ -326,136 +326,124 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           HERO BANNIÈRE
       ══════════════════════════════════════════════ */}
-      <div className="relative h-[400px] lg:h-[550px] w-full overflow-hidden bg-[#0D2B1A]">
-        {/* Main Banner Image (Cover to fill background) */}
+      <div className="relative h-[250px] lg:h-[350px] w-full overflow-hidden bg-[#F1F2F4]">
+        {/* Main Banner Image */}
         <div className="absolute inset-0 z-10">
           <Image
             src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
             alt={boutique.nom}
             fill
-            className="object-cover opacity-70"
+            className="object-cover"
             sizes="100vw"
             priority
             onError={e => { e.target.style.opacity = '0' }}
             unoptimized
           />
         </div>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+        {/* Subtle gradient overlay to make text readable but keep it clean */}
+        <div className="absolute inset-0 bg-black/20 z-10" />
 
         {/* Retour */}
-        <div className="absolute top-28 left-4 sm:left-8 lg:left-12 z-10">
+        <div className="absolute top-24 left-4 sm:left-8 lg:left-12 z-20">
           <Link href="/boutiques"
-            className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs font-bold uppercase tracking-wider transition-colors bg-black/20 backdrop-blur-sm px-3.5 py-2 rounded-full">
-            <span className="material-symbols-outlined text-[15px]">arrow_back</span>
+            className="inline-flex items-center gap-1.5 text-white text-xs font-semibold hover:underline">
+            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             Boutiques
           </Link>
-        </div>
-
-        {/* Texte décoratif fond */}
-        <div className="absolute bottom-6 right-6 text-white/5 font-black text-[96px] leading-none select-none pointer-events-none hidden lg:block">
-          {boutique.certifie ? 'VÉRIFIÉ' : 'MARKET'}
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════
-          CARTE PROFIL (chevauchant le banner)
+          CARTE PROFIL
       ══════════════════════════════════════════════ */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 -mt-28 relative z-10">
-        <div className="bg-white rounded-[28px] shadow-2xl shadow-black/10 overflow-hidden">
-
-          {/* Bande couleur top */}
-          <div className="h-1.5 bg-gradient-to-r from-[#1B6B3A] via-[#D4920A] to-[#1B6B3A]" />
-
-          <div className="p-6 sm:p-8 lg:p-10">
-            <div className="flex flex-col lg:flex-row gap-7 items-start">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
+        <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+          <div className="p-6 sm:p-8">
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
 
               {/* Logo */}
-              <div className="shrink-0 -mt-16 sm:-mt-20 lg:-mt-24 relative">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-[22px] sm:rounded-[28px] overflow-hidden bg-white shadow-2xl ring-8 ring-white">
+              <div className="shrink-0 -mt-16 sm:-mt-20 relative">
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm">
                   <Image 
                     src={logoSrc} 
                     alt={boutique.nom} 
                     fill 
                     className="object-cover" 
-                    sizes="144px" 
+                    sizes="128px" 
                     unoptimized 
                     onError={(e) => {
-                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=1B6B3A&color=fff&size=200`
+                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=000000&color=fff&size=200`
                     }}
                   />
                 </div>
                 {boutique.certifie && (
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-[#1B6B3A] rounded-full flex items-center justify-center shadow-lg ring-2 ring-white">
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-black rounded-full flex items-center justify-center border-2 border-white shadow-sm" title="Boutique vérifiée">
                     <span className="material-symbols-outlined text-white text-[16px]">verified</span>
                   </div>
                 )}
               </div>
 
               {/* Infos principales */}
-              <div className="flex-1 min-w-0 pt-1">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+              <div className="flex-1 min-w-0 pt-2 lg:pt-0">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-6">
                   <div>
-                    <div className="flex items-center gap-3 flex-wrap mb-1">
-                      <h1 className="text-2xl lg:text-[28px] font-extrabold text-gray-900 tracking-tight">{boutique.nom}</h1>
-                      {boutique.certifie && (
-                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider">
-                          <span className="material-symbols-outlined text-[12px]">verified</span> Vendeur Vérifié
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-500 font-medium flex items-center gap-1.5 mb-4">
-                      <span className="material-symbols-outlined text-[14px]">storefront</span>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">{boutique.nom}</h1>
+                    <p className="text-sm text-gray-500 flex items-center gap-2 mb-5">
                       {boutique.categorie}
-                      <span className="text-gray-300">·</span>
-                      <span className="material-symbols-outlined text-[14px]">location_on</span>
+                      <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                       {boutique.localisation}
                     </p>
 
-                    {/* Stats rapides */}
-                    <div className="flex flex-wrap gap-4">
-                      {[
-                        { icon: 'star', val: boutique.note || '—', sub: `${boutique.totalAvis} avis`, color: 'text-amber-500' },
-                        { icon: 'inventory_2', val: boutique.totalProduits, sub: 'articles', color: 'text-violet-500' },
-                        { icon: 'shopping_bag', val: boutique.totalVentes || '—', sub: 'ventes', color: 'text-[#1B6B3A]' },
-                        { icon: 'calendar_month', val: boutique.membreDepuis || '—', sub: 'membre depuis', color: 'text-blue-500' },
-                      ].map((s, i) => (
-                        <div key={i} className="flex items-center gap-2 bg-gray-50 border border-gray-100 px-3.5 py-2.5 rounded-2xl">
-                          <span className={`material-symbols-outlined text-[18px] ${s.color}`}>{s.icon}</span>
-                          <div>
-                            <p className="text-[13px] font-extrabold text-gray-900 leading-none">{s.val}</p>
-                            <p className="text-[10px] text-gray-400 font-medium">{s.sub}</p>
-                          </div>
+                    {/* Stats rapides minimales */}
+                    <div className="flex flex-wrap gap-x-8 gap-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[18px] text-gray-900">star</span>
+                        <div>
+                          <p className="text-[14px] font-semibold text-gray-900 leading-tight">{boutique.note || '—'}</p>
+                          <p className="text-[11px] text-gray-500">{boutique.totalAvis} avis</p>
                         </div>
-                      ))}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[18px] text-gray-900">inventory_2</span>
+                        <div>
+                          <p className="text-[14px] font-semibold text-gray-900 leading-tight">{boutique.totalProduits}</p>
+                          <p className="text-[11px] text-gray-500">articles</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[18px] text-gray-900">monitoring</span>
+                        <div>
+                          <p className="text-[14px] font-semibold text-gray-900 leading-tight">{boutique.totalVentes || '—'}</p>
+                          <p className="text-[11px] text-gray-500">ventes</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   {/* Boutons d'action */}
-                  <div className="flex gap-2.5 shrink-0 flex-wrap">
+                  <div className="flex gap-3 shrink-0 flex-wrap">
                     <button
                       onClick={handleShare}
-                      className="flex items-center gap-1.5 border border-gray-200 hover:border-gray-400 text-gray-600 hover:text-gray-900 font-bold text-xs px-4 py-2.5 rounded-full transition-all"
+                      className="flex items-center justify-center w-10 h-10 border border-gray-200 text-gray-600 hover:text-black hover:border-black rounded-full transition-colors"
+                      title="Partager la boutique"
                     >
-                      <span className="material-symbols-outlined text-[15px]">{shareCopied ? 'check' : 'share'}</span>
-                      {shareCopied ? 'Lien copié !' : 'Partager'}
+                      <span className="material-symbols-outlined text-[18px]">{shareCopied ? 'check' : 'share'}</span>
                     </button>
                     {boutique.whatsapp && (
                       <a
                         href={`https://wa.me/${boutique.whatsapp.replace(/\D/g,'')}`}
                         target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 bg-green-50 hover:bg-green-100 text-green-700 font-bold text-xs px-4 py-2.5 rounded-full transition-all border border-green-100"
+                        className="flex items-center justify-center w-10 h-10 border border-gray-200 text-gray-600 hover:text-black hover:border-black rounded-full transition-colors"
+                        title="Contacter sur WhatsApp"
                       >
-                        <span className="material-symbols-outlined text-[15px]">chat</span>
-                        WhatsApp
+                        <span className="material-symbols-outlined text-[18px]">chat</span>
                       </a>
                     )}
                     <button
                       onClick={() => setShowContact(v => !v)}
-                      className="flex items-center gap-1.5 bg-[#1B6B3A] hover:bg-[#134e29] text-white font-bold text-xs px-5 py-2.5 rounded-full transition-all shadow-md shadow-green-900/20"
+                      className="flex items-center gap-2 bg-black hover:bg-gray-800 text-white font-semibold text-[13px] px-6 py-2.5 rounded-full transition-colors shadow-sm"
                     >
-                      <span className="material-symbols-outlined text-[15px]">mail</span>
+                      <span className="material-symbols-outlined text-[18px]">mail</span>
                       Contacter
                     </button>
                   </div>
@@ -463,16 +451,16 @@ export default function BoutiquePage() {
 
                 {/* Description */}
                 {boutique.description && (
-                  <p className="text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4 italic">
-                    &ldquo;{boutique.description}&rdquo;
+                  <p className="text-[13px] text-gray-600 leading-relaxed max-w-3xl">
+                    {boutique.description}
                   </p>
                 )}
 
                 {/* Tags */}
                 {boutique.tags?.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-3">
+                  <div className="flex flex-wrap gap-2 mt-4">
                     {boutique.tags.map(tag => (
-                      <span key={tag} className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-widest">
+                      <span key={tag} className="text-gray-500 px-3 py-1 bg-gray-50 rounded-full text-[11px] font-medium border border-gray-100">
                         {tag}
                       </span>
                     ))}
@@ -545,30 +533,34 @@ export default function BoutiquePage() {
       )}
 
       {/* ══════════════════════════════════════════════
-          ONGLETS
+          ONGLETS (Shopify Dawn Style)
       ══════════════════════════════════════════════ */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="flex flex-wrap items-center gap-1 sm:gap-2 bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8 border-b border-gray-200">
+        <div className="flex items-center gap-8">
           {[
-            { id: 'produits', label: 'Articles', icon: 'storefront', count: produits.length },
-            { id: 'avis', label: 'Avis', icon: 'star', count: boutique.totalAvis },
-            { id: 'infos', label: 'À propos', icon: 'info', count: null },
+            { id: 'produits', label: 'Produits', count: produits.length },
+            { id: 'avis', label: 'Avis', count: boutique.totalAvis },
+            { id: 'infos', label: 'À propos', count: null },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setOnglet(tab.id)}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-bold text-[11px] sm:text-[13px] transition-all ${
+              className={`pb-4 text-[14px] font-medium transition-colors relative ${
                 onglet === tab.id
-                  ? 'bg-[#1B6B3A] text-white shadow-md shadow-green-900/20'
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                  ? 'text-black'
+                  : 'text-gray-500 hover:text-gray-800'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px] sm:text-[17px]">{tab.icon}</span>
-              {tab.label}
-              {tab.count > 0 && (
-                <span className={`text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2 py-0.5 rounded-full ${onglet === tab.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                  {tab.count}
-                </span>
+              <div className="flex items-center gap-2">
+                {tab.label}
+                {tab.count > 0 && (
+                  <span className={`text-[11px] px-2 py-0.5 rounded-full ${onglet === tab.id ? 'bg-black text-white' : 'bg-gray-100 text-gray-600'}`}>
+                    {tab.count}
+                  </span>
+                )}
+              </div>
+              {onglet === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
               )}
             </button>
           ))}
@@ -578,26 +570,23 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           CONTENU ONGLET
       ══════════════════════════════════════════════ */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* ── PRODUITS ── */}
         {onglet === 'produits' && (
           <div>
             {/* Barre recherche */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <div className="relative flex-1 max-w-sm">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[18px]">search</span>
+            <div className="flex justify-start mb-8">
+              <div className="relative w-full max-w-sm">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[18px]">search</span>
                 <input
                   type="text"
-                  placeholder="Rechercher un article..."
+                  placeholder="Rechercher..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full bg-white border border-gray-200 focus:border-[#1B6B3A] outline-none rounded-2xl pl-11 pr-4 py-3 text-sm font-medium transition-colors shadow-sm"
+                  className="w-full bg-transparent border-b border-gray-300 focus:border-black outline-none pl-10 pr-4 py-2 text-sm transition-colors rounded-none shadow-none"
                 />
               </div>
-              <p className="text-xs text-gray-400 font-medium self-center">
-                {produitsFiltres.length} article{produitsFiltres.length > 1 ? 's' : ''} disponible{produitsFiltres.length > 1 ? 's' : ''}
-              </p>
             </div>
 
             {produitsFiltres.length === 0 ? (

@@ -47,81 +47,63 @@ export default function BoutiquesPage() {
   return (
     <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
 
-      {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: '460px' }}>
-        {/* Image de fond */}
-        <div className="absolute inset-0">
-          <Image src="/images/hero/boutiques-hero.jpg" alt="Boutiques artisanales" fill className="object-cover" priority sizes="100vw" />
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(135deg, rgba(13,13,13,0.80) 0%, rgba(27,107,58,0.55) 60%, rgba(13,13,13,0.70) 100%)'
-          }} />
-        </div>
-        {/* Ligne rainbow */}
-        <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg,#1B6B3A,#D4920A,#7C3AED,#1B6B3A)' }} />
+      {/* ── Hero (Dawn aesthetic) ── */}
+      <div className="relative overflow-hidden bg-[#F1F2F4] border-b border-gray-200" style={{ minHeight: '380px' }}>
+        <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-20 flex flex-col items-center text-center">
+          
+          {/* Texte */}
+          <div className="max-w-2xl mb-8">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-4">
+              Nos Créateurs
+            </span>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4">
+              Boutiques & Artisans
+            </h1>
+            <p className="text-[15px] font-medium leading-relaxed text-gray-600">
+              Découvrez des créateurs passionnés. Chaque boutique reflète un savoir-faire unique et une histoire authentique.
+            </p>
+          </div>
 
-        <div className="relative z-10 max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-
-            {/* Texte */}
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.22em] mb-5"
-                style={{ background: 'rgba(255,255,255,0.12)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
-                <span className="material-symbols-outlined text-[14px]">storefront</span>
-                Nos Créateurs
-              </span>
-              <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.05] mb-4">
-                Boutiques <span style={{ color: '#4ADE80' }}>&amp;</span> Artisans
-              </h1>
-              <p className="text-[16px] font-medium leading-relaxed max-w-xl" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Chaque boutique est le reflet d&apos;un savoir-faire unique. Parcourez les univers de nos vendeurs passionnés.
-              </p>
+          {/* Stats en version minimale */}
+          <div className="flex gap-8 mb-10 text-gray-900 border-t border-b border-gray-200 py-4">
+            <div className="flex flex-col items-center">
+              <span className="font-bold text-2xl">{boutiques.length || '—'}</span>
+              <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">Boutiques</span>
             </div>
-
-            {/* Stats */}
-            <div className="flex gap-4 shrink-0 flex-wrap">
-              {[
-                { v: `${boutiques.length || '—'}`, l: 'Boutiques actives', icon: 'storefront' },
-                { v: '500+', l: 'Artisans vérifiés', icon: 'verified' },
-              ].map(s => (
-                <div key={s.l} className="flex flex-col items-center text-center px-6 py-4 rounded-2xl"
-                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(12px)' }}>
-                  <span className="material-symbols-outlined text-[22px] mb-1" style={{ color: '#4ADE80' }}>{s.icon}</span>
-                  <span className="font-black text-[22px] text-white">{s.v}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wide mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.l}</span>
-                </div>
-              ))}
+            <div className="w-px bg-gray-200" />
+            <div className="flex flex-col items-center">
+              <span className="font-bold text-2xl">500+</span>
+              <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">Vendeurs vérifiés</span>
             </div>
           </div>
 
           {/* Search + Tri */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 max-w-2xl">
-            <div className="flex items-center gap-3 px-5 py-3.5 rounded-2xl flex-1 transition-all"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
-              <span className="material-symbols-outlined text-[20px]" style={{ color: 'rgba(255,255,255,0.6)' }}>search</span>
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl">
+            <div className="flex items-center flex-1 border-b border-gray-300 focus-within:border-black transition-colors px-2 py-2">
+              <span className="material-symbols-outlined text-gray-400 text-[20px] mr-3">search</span>
               <input
                 type="text"
-                placeholder="Rechercher une boutique ou une ville..."
+                placeholder="Rechercher une boutique..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="flex-1 text-[14px] font-medium outline-none bg-transparent text-white placeholder-white/50"
+                className="flex-1 text-[14px] bg-transparent outline-none text-black placeholder-gray-400"
               />
               {search && (
                 <button onClick={() => setSearch('')}>
-                  <span className="material-symbols-outlined text-[18px]" style={{ color: 'rgba(255,255,255,0.6)' }}>close</span>
+                  <span className="material-symbols-outlined text-gray-400 text-[18px]">close</span>
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-2 px-4 py-3.5 rounded-2xl"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
-              <span className="material-symbols-outlined text-[18px]" style={{ color: 'rgba(255,255,255,0.6)' }}>sort</span>
+            <div className="flex items-center gap-2 border-b border-gray-300 focus-within:border-black transition-colors px-2 py-2">
+              <span className="material-symbols-outlined text-gray-400 text-[18px]">sort</span>
               <select
                 value={tri}
                 onChange={e => setTri(e.target.value)}
-                className="text-[13px] font-bold outline-none bg-transparent cursor-pointer text-white"
+                className="text-[13px] font-semibold outline-none bg-transparent cursor-pointer text-gray-900 pr-2"
               >
-                <option value="recent" className="text-black">Récents</option>
-                <option value="note" className="text-black">Mieux notés</option>
-                <option value="produits" className="text-black">Plus de produits</option>
+                <option value="recent">Récents</option>
+                <option value="note">Mieux notés</option>
+                <option value="produits">Le plus d'articles</option>
               </select>
             </div>
           </div>
@@ -162,85 +144,81 @@ export default function BoutiquesPage() {
             <p className="text-sm" style={{ color: '#9CA3AF' }}>Essayez un autre terme de recherche</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filtered.map(b => (
               <div key={b.slug}
-                className="group bg-white overflow-hidden transition-all duration-400 hover:-translate-y-2 hover:shadow-xl flex flex-col"
-                style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 16px rgba(0,0,0,0.05)' }}>
+                className="group bg-white overflow-hidden flex flex-col border border-gray-200 rounded-none transition-shadow hover:shadow-md">
 
                 {/* Banner */}
-                <div className="relative h-48 overflow-hidden" style={{ borderRadius: '28px 28px 0 0', background: 'linear-gradient(135deg, #0D2B1A, #1B6B3A)' }}>
+                <div className="relative h-40 overflow-hidden bg-gray-100">
                   <SafeImage
                     src={b.banner || getShopBannerImage({ name: b.nom, description: b.description })}
                     alt={b.nom}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="400px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="300px"
                   />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55) 100%)' }} />
+                  <div className="absolute inset-0 bg-black/10" />
 
                   {/* Badge vérifié */}
                   {b.badge && (
-                    <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider"
-                      style={{ background: 'rgba(27,107,58,0.85)', color: 'white', backdropFilter: 'blur(4px)' }}>
+                    <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white text-[9px] font-bold uppercase tracking-widest shadow-sm">
                       <span className="material-symbols-outlined text-[11px]">verified</span>
                       Vérifié
                     </div>
                   )}
                 </div>
 
-                {/* Logo — DANS le bloc content, pas en translate-y */}
-                <div className="px-6 pt-4 pb-0 flex items-center gap-3">
-                  <div className="relative w-14 h-14 rounded-2xl overflow-hidden shrink-0"
-                    style={{ border: '2.5px solid #E6F8EA', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', background: '#fff' }}>
+                {/* Logo */}
+                <div className="px-5 pt-4 flex items-center gap-3 relative -mt-10">
+                  <div className="relative w-16 h-16 bg-white border border-gray-200 overflow-hidden shrink-0 shadow-sm rounded-none">
                     <SafeImage
                       src={b.logo}
                       name={b.nom}
                       alt={b.nom}
                       fill
                       className="object-cover"
-                      sizes="56px"
+                      sizes="64px"
                     />
                   </div>
-                  <div className="min-w-0">
-                    <h2 className="text-[16px] font-black truncate group-hover:text-[#1B6B3A] transition-colors" style={{ color: '#0D0D0D' }}>
-                      {b.nom}
-                    </h2>
-                    <div className="flex items-center gap-1 text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
-                      <span className="material-symbols-outlined text-[12px]">location_on</span>
-                      {b.lieu}
-                    </div>
-                  </div>
-                  {b.avgRating > 0 && (
-                    <div className="ml-auto flex items-center gap-1 shrink-0">
-                      <span className="material-symbols-outlined text-[12px]" style={{ color: '#F59E0B', fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-[12px] font-black" style={{ color: '#0D0D0D' }}>{b.avgRating.toFixed(1)}</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Content */}
-                <div className="px-6 pt-4 pb-6 flex flex-col flex-1">
-                  <p className="text-[12px] leading-relaxed line-clamp-2 mb-4" style={{ color: '#9CA3AF' }}>
-                    {b.description}
-                  </p>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-black px-3 py-1.5 rounded-full" style={{ background: '#F3F4F6', color: '#6B7280' }}>
-                      {b.produits} produit{b.produits > 1 ? 's' : ''}
-                    </span>
-                    {b.totalReviews > 0 && (
-                      <span className="text-[10px] font-bold" style={{ color: '#9CA3AF' }}>
-                        {b.totalReviews} avis
-                      </span>
+                <div className="px-5 pt-3 pb-5 flex flex-col flex-1">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="min-w-0 pr-2">
+                      <h2 className="text-[16px] font-bold text-gray-900 group-hover:underline truncate decoration-1 underline-offset-2">
+                        <Link href={`/boutiques/${b.slug}`}>
+                          {b.nom}
+                        </Link>
+                      </h2>
+                      <div className="flex items-center gap-1 text-[11px] text-gray-500 mt-1">
+                        <span className="material-symbols-outlined text-[14px]">location_on</span>
+                        {b.lieu}
+                      </div>
+                    </div>
+                    {b.avgRating > 0 && (
+                      <div className="flex items-center gap-1 shrink-0 bg-gray-50 px-2 py-1 border border-gray-100">
+                        <span className="material-symbols-outlined text-[12px] text-gray-900" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[12px] font-semibold text-gray-900">{b.avgRating.toFixed(1)}</span>
+                      </div>
                     )}
                   </div>
 
-                  <Link href={`/boutiques/${b.slug}`}
-                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-wider transition-all group-hover:bg-[#1B6B3A] group-hover:text-white"
-                    style={{ background: '#F0FDF4', color: '#1B6B3A', border: '1.5px solid rgba(27,107,58,0.2)' }}>
-                    Visiter la boutique
-                    <span className="material-symbols-outlined text-[16px] transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
-                  </Link>
+                  <p className="text-[13px] text-gray-600 leading-relaxed line-clamp-2 mb-5 flex-1 pt-1">
+                    {b.description}
+                  </p>
+
+                  <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
+                    <span className="text-[12px] font-medium text-gray-700">
+                      {b.produits} article{b.produits > 1 ? 's' : ''}
+                    </span>
+                    <Link href={`/boutiques/${b.slug}`}
+                      className="text-[11px] font-bold text-black uppercase tracking-wider flex items-center gap-1 group-hover:underline">
+                      Visiter
+                      <span className="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward_ios</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
