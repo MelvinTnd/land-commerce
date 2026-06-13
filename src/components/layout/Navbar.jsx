@@ -88,11 +88,11 @@ export default function Navbar() {
         }}>
         <div className="max-w-[1400px] mx-auto">
           
-          {/* Ligne principale : Icônes | Logo | Icônes */}
+          {/* Ligne unique (pas de double navbar) */}
           <div className="flex items-center justify-between h-[68px] px-4 md:px-6">
 
-            {/* Gauche : Hamburger (mobile) + Loupe */}
-            <div className="flex flex-1 items-center gap-2">
+            {/* Gauche : Hamburger (mobile) + Loupe + Liens de Navigation */}
+            <div className="flex flex-1 items-center gap-2 lg:gap-6">
               <button className="lg:hidden flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
                 onClick={() => setMobileMenu(!mobileMenu)}>
                 <span className="material-symbols-outlined text-[24px]">
@@ -100,10 +100,25 @@ export default function Navbar() {
                 </span>
               </button>
 
-              <button className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
+              <button className="w-10 h-10 flex items-center justify-start transition-colors hover:text-[#1B6B3A] text-gray-900"
                 onClick={() => setShowSearch(true)}>
                 <span className="material-symbols-outlined text-[24px]">search</span>
               </button>
+
+              {/* Ligne 1 : Liens de navigation (Desktop) alignés à gauche */}
+              <div className="hidden lg:flex items-center gap-6">
+                {navLinks.map(link => {
+                  const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+                  return (
+                    <Link key={link.label} href={link.href}
+                      className="py-5 text-[12px] font-bold uppercase tracking-widest transition-colors relative group"
+                      style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
+                      {link.label}
+                      <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }} />
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
 
             {/* Centre : Logo textuel */}
@@ -203,22 +218,6 @@ export default function Navbar() {
                 )}
               </Link>
             </div>
-          </div>
-
-          {/* Ligne 2 : Liens de navigation (Desktop) */}
-          <div className="hidden lg:flex items-center justify-center gap-10"
-            style={{ borderTop: '1px solid #F0EDE8' }}>
-            {navLinks.map(link => {
-              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-              return (
-                <Link key={link.label} href={link.href}
-                  className="py-3 text-[12px] font-bold uppercase tracking-widest transition-colors relative group"
-                  style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
-                  {link.label}
-                  <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }} />
-                </Link>
-              )
-            })}
           </div>
 
         </div>
