@@ -166,35 +166,7 @@ export default function PromotionsPage() {
         </div>
       </div>
 
-      {/* ── Newsletter CTA ── */}
-      <div style={{ background: '#F7F5F0', borderTop: '1px solid #E5E7EB' }}>
-        <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-16">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.22em] mb-3 flex items-center gap-2"
-                style={{ color: '#D4920A' }}>
-                <span className="w-4 h-px bg-[#D4920A] inline-block" />
-                Newsletter
-              </span>
-              <h3 className="text-2xl font-black tracking-tight mb-2" style={{ color: '#0D0D0D' }}>
-                Ne manquez aucune offre
-              </h3>
-              <p className="text-[14px] font-medium" style={{ color: '#6B7280' }}>
-                Recevez les alertes promotions directement dans votre boîte mail.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-0 w-full md:max-w-sm shrink-0">
-              <input type="email" placeholder="votre@email.bj"
-                className="flex-1 px-5 py-3.5 text-[13px] font-medium outline-none border border-gray-300 bg-white focus:border-gray-900 transition-colors"
-                style={{ color: '#0D0D0D' }} />
-              <button className="px-6 py-3.5 font-black text-[11px] uppercase tracking-widest text-white transition-opacity hover:opacity-90"
-                style={{ background: '#1B6B3A' }}>
-                S&apos;abonner
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
     </div>
   )
