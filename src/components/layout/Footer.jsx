@@ -7,101 +7,114 @@ const footerLinks = {
     { label: 'Tous les produits', href: '/produits' },
     { label: 'Boutiques', href: '/boutiques' },
     { label: 'Promotions', href: '/promotions' },
-    { label: 'Devenir créateur', href: '/inscription-vendeur' },
+    { label: 'Devenir vendeur', href: '/inscription-vendeur' },
   ],
   Support: [
-    { label: 'Nous contacter', href: '/contact' },
+    { label: 'Contact', href: '/contact' },
     { label: 'Mon compte', href: '/compte' },
   ],
 }
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer style={{ background: '#fff' }}>
 
-      {/* ── NEWSLETTER ── */}
-      <div className="border-b border-gray-200 px-6 md:px-12 lg:px-20 py-16" style={{ background: '#F7F9F8' }}>
-        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* Newsletter band */}
+      <div className="relative overflow-hidden px-6 md:px-12 lg:px-20 py-14"
+        style={{ background: 'transparent', borderBottom: '1px solid rgba(27,107,58,0.1)' }}>
+        <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full pointer-events-none"
+          style={{ background: 'rgba(27,107,58,0.08)' }} />
+        <div className="absolute -left-10 -bottom-10 w-48 h-48 rounded-full pointer-events-none"
+          style={{ background: 'rgba(212,146,10,0.08)' }} />
+
+        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div>
-            <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
-              Inscrivez-vous à notre newsletter
+            <p className="text-[11px] font-black uppercase tracking-[0.22em] mb-2" style={{ color: '#1B6B3A' }}>
+              Newsletter
+            </p>
+            <h3 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: '#0D0D0D' }}>
+              Ne ratez aucune offre exclusive
             </h3>
-            <p className="text-sm text-gray-600 max-w-sm">
-              Soyez les premiers informés de nos nouvelles collections et offres exclusives.
+            <p className="text-sm mt-2 max-w-sm" style={{ color: '#6B7280' }}>
+              Recevez promotions, nouveautés artisanales et conseils chaque semaine.
             </p>
           </div>
-          <div className="flex w-full md:w-auto h-12 border bg-white" style={{ borderColor: '#1B6B3A' }}>
+           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:min-w-[340px]">
             <input
               type="email"
-              placeholder="votre@email.com"
-              className="flex-1 px-4 py-0 text-sm outline-none bg-transparent text-gray-900"
+              placeholder="votre@email.bj"
+              className="flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium outline-none bg-white transition-all"
+              style={{ border: '1.5px solid rgba(27,107,58,0.25)', color: '#0D0D0D' }}
             />
-            <button className="px-6 text-[11px] font-bold uppercase tracking-widest text-white transition-colors"
-               style={{ background: '#1B6B3A' }}>
-              S'inscrire
+            <button className="px-6 py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-wider shrink-0 text-white transition-all hover:opacity-90"
+              style={{ background: '#1B6B3A', boxShadow: '0 4px 16px rgba(27,107,58,0.25)' }}>
+              S&apos;abonner
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── MAIN GRID ── */}
+      {/* Main grid */}
       <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
 
           {/* Brand */}
           <div className="md:col-span-4">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="font-bold text-[24px] tracking-tight leading-none" style={{ color: '#1B6B3A' }}>
-                CauriMarket.
+            <div className="flex items-center gap-2.5 mb-5">
+              <div className="w-10 h-10 relative rounded-xl overflow-hidden">
+                <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="40px" />
+              </div>
+              <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
+                Bénin<span style={{ color: '#1B6B3A' }}>Market</span>
               </span>
             </div>
-            <p className="text-[13px] leading-relaxed mb-8 max-w-xs text-gray-500">
-              Le rendez-vous incontournable pour découvrir l'excellence et le savoir-faire des créateurs béninois.
+            <p className="text-[14px] leading-relaxed mb-7 max-w-xs" style={{ color: '#6B7280' }}>
+              Le premier marché en ligne dédié à la promotion des PME et artisans béninois authentiques à travers le monde.
             </p>
 
             {/* Social icons */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex gap-3 mb-8">
               {[
                 { icon: 'language', label: 'Web' },
                 { icon: 'alternate_email', label: 'Email' },
                 { icon: 'share', label: 'Partager' },
               ].map(s => (
                 <button key={s.label}
-                  className="w-10 h-10 border border-gray-200 flex items-center justify-center transition-colors hover:border-[#1B6B3A]"
-                  style={{ color: '#1B6B3A' }}>
-                  <span className="material-symbols-outlined text-[18px]">{s.icon}</span>
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:-translate-y-0.5 hover:shadow-md bg-white"
+                  style={{ border: '1.5px solid rgba(27,107,58,0.2)' }}>
+                  <span className="material-symbols-outlined text-[18px]" style={{ color: '#1B6B3A' }}>{s.icon}</span>
                 </button>
               ))}
             </div>
 
             {/* Trust badges */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {[
                 { icon: 'verified_user', label: 'Paiement 100% sécurisé' },
-                { icon: 'local_shipping', label: 'Livraison express disponible' },
-                { icon: 'support_agent', label: 'Service client dédié' },
+                { icon: 'local_shipping', label: 'Livraison dans tout le Bénin' },
+                { icon: 'support_agent', label: 'Support 6j/7' },
               ].map(b => (
-                <div key={b.label} className="flex items-center gap-3 text-gray-600">
+                <div key={b.label} className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[16px]" style={{ color: '#1B6B3A' }}>{b.icon}</span>
-                  <span className="text-[11px] font-bold uppercase tracking-widest">{b.label}</span>
+                  <span className="text-[11px] font-bold" style={{ color: '#9CA3AF' }}>{b.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Links */}
-          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+          <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
             {Object.entries(footerLinks).map(([category, links]) => (
               <div key={category}>
-                <h4 className="text-[11px] font-bold uppercase tracking-widest mb-6 border-b pb-2 inline-block"
-                  style={{ color: '#1A1A1A', borderColor: '#E5E7EB' }}>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.22em] mb-5" style={{ color: '#9CA3AF' }}>
                   {category}
                 </h4>
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {links.map(link => (
                     <li key={link.href}>
                       <Link href={link.href}
-                        className="text-[13px] text-gray-600 transition-colors hover:text-[#1B6B3A]">
+                        className="text-[13px] font-medium transition-colors hover:text-[#1B6B3A]"
+                        style={{ color: '#6B7280' }}>
                         {link.label}
                       </Link>
                     </li>
@@ -113,20 +126,20 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── BOTTOM BAR ── */}
-      <div className="border-t border-gray-200 px-6 md:px-12 lg:px-20 py-6 bg-white">
-        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-bold">
-            © 2026 CauriMarket. Tous droits réservés.
+      {/* Bottom bar */}
+      <div className="px-6 md:px-12 lg:px-20 py-5" style={{ borderTop: '1px solid rgba(0,0,0,0.07)', background: '#fff' }}>
+        <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[12px] font-medium" style={{ color: '#9CA3AF' }}>
+            © 2026 BéninMarket — Fait avec ❤️ pour l&apos;artisanat béninois
           </p>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: '#1B6B3A' }}>
+            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#1B6B3A' }} />
+            <span className="text-[11px] font-bold" style={{ color: '#9CA3AF' }}>
               En ligne · Bénin
             </span>
           </div>
         </div>
       </div>
-
     </footer>
   )
 }

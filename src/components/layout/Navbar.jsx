@@ -10,9 +10,9 @@ import GlobalSearch from '@/components/search/GlobalSearch'
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
-  { label: 'Catalogue', href: '/produits' },
-  { label: 'Créateurs', href: '/boutiques' },
-  { label: 'Exclusivités', href: '/promotions' },
+  { label: 'Produits', href: '/produits' },
+  { label: 'Boutiques', href: '/boutiques' },
+  { label: 'Promotions', href: '/promotions' },
 ]
 
 export default function Navbar() {
@@ -79,191 +79,207 @@ export default function Navbar() {
 
   return (
     <>
-    {/* ── TOP ANNOUNCEMENT BAR ── */}
-    <div className="text-white text-[10px] font-bold uppercase tracking-widest text-center py-2 relative z-50"
-         style={{ background: '#1B6B3A' }}>
-      Livraison offerte à partir de 50.000 CFA d'achat
-    </div>
-
-    <nav className="fixed top-8 left-0 right-0 z-40 transition-all duration-300 bg-white"
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 md:px-6"
       style={{
-        borderBottom: '1px solid #E5E7EB',
-        background: scrolled ? 'rgba(255,255,255,0.98)' : 'white',
-        backdropFilter: scrolled ? 'blur(10px)' : 'none',
+        background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        borderBottom: '1px solid #F0EDE8',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.06)' : 'none',
       }}>
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 flex items-center h-[72px] gap-6">
+      <div className="max-w-[1400px] mx-auto flex items-center h-[68px] gap-4">
 
-        {/* Hamburger (Mobile) */}
-        <button className="lg:hidden w-10 h-10 flex items-center justify-start transition-colors"
-          onClick={() => setMobileMenu(!mobileMenu)}>
-          <span className="material-symbols-outlined text-[24px]" style={{ color: '#1B6B3A' }}>
-            {mobileMenu ? 'close' : 'menu'}
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <div className="w-9 h-9 relative rounded-xl overflow-hidden">
+            <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="36px" />
+          </div>
+          <span className="hidden sm:block font-black text-[18px] tracking-tight" style={{ color: '#0D0D0D' }}>
+            Bénin<span style={{ color: '#1B6B3A' }}>Market</span>
           </span>
-        </button>
+        </Link>
 
-        {/* Search bare (Desktop) */}
+        {/* Search bar — bouton qui ouvre le modal */}
         <button
           onClick={() => setShowSearch(true)}
-          className="hidden lg:flex w-8 h-8 items-center justify-center transition-colors"
+          className="hidden md:flex flex-1 max-w-md mx-4 items-center gap-2 px-4 py-2.5 rounded-full transition-all duration-200 text-left"
+          style={{ background: '#F1EFEA', border: '2px solid transparent' }}
         >
-          <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>search</span>
+          <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>search</span>
+          <span className="text-[13px] font-medium flex-1" style={{ color: '#9CA3AF' }}>Rechercher un produit, un artisan...</span>
+          <kbd className="hidden lg:flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold" style={{ background: '#E5E7EB', color: '#9CA3AF' }}>⌘K</kbd>
         </button>
 
         {/* Nav links */}
-        <div className="hidden lg:flex items-center gap-8 ml-4">
+        <div className="hidden lg:flex items-center gap-1">
           {navLinks.map(link => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
             return (
               <Link key={link.label} href={link.href}
-                className="text-[12px] font-bold uppercase tracking-widest transition-all py-2"
+                className="px-4 py-2 rounded-full text-[13px] font-bold transition-all"
                 style={{
-                  borderBottom: isActive ? '2px solid #1B6B3A' : '2px solid transparent',
-                  color: isActive ? '#1B6B3A' : '#4B5563',
-                }}
-                onMouseEnter={(e) => { if(!isActive) e.currentTarget.style.color = '#1B6B3A' }}
-                onMouseLeave={(e) => { if(!isActive) e.currentTarget.style.color = '#4B5563' }}
-              >
+                  color: isActive ? '#1B6B3A' : '#374151',
+                  background: isActive ? 'rgba(27,107,58,0.08)' : 'transparent',
+                }}>
                 {link.label}
               </Link>
             )
           })}
         </div>
 
-        {/* Logo (Center) */}
-        <div className="flex-1 flex justify-center items-center">
-          <Link href="/" className="flex items-center">
-             <span className="font-bold text-[22px] tracking-tight leading-none" style={{ color: '#1A1A1A' }}>
-                Cauri<span style={{ color: '#1B6B3A' }}>Market.</span>
-              </span>
-          </Link>
-        </div>
-
         {/* Right icons */}
-        <div className="flex items-center gap-5 justify-end lg:flex-1 shrink-0">
+        <div className="flex items-center gap-2 ml-auto">
 
           {/* Mobile search */}
-          <button className="lg:hidden w-8 h-8 flex items-center justify-center transition-colors"
+          <button className="md:hidden w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
             onClick={() => setShowSearch(true)}>
-            <span className="material-symbols-outlined text-[22px]" style={{ color: '#1B6B3A' }}>search</span>
+            <span className="material-symbols-outlined text-[20px]" style={{ color: '#374151' }}>search</span>
           </button>
+
+          {/* Messages */}
+          {user && (
+            <Link href="/messages"
+              className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+              style={{ color: '#374151' }}>
+              <span className="material-symbols-outlined text-[22px]">chat</span>
+              {unreadMessages > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
+                  style={{ background: '#EF4444' }}>
+                  {unreadMessages}
+                </span>
+              )}
+            </Link>
+          )}
 
           {/* Vendeur space */}
           {role === 'vendeur' && (
             <Link href="/vendeur"
-              className="hidden md:flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest transition-all hover:opacity-70"
-              style={{ color: '#1B6B3A' }}>
-              <span className="material-symbols-outlined text-[18px]">storefront</span>
-              <span className="hidden xl:block">Espace Créateur</span>
+              className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90"
+              style={{ background: 'rgba(27,107,58,0.1)', color: '#1B6B3A' }}>
+              <span className="material-symbols-outlined text-[16px]">storefront</span>
+              <span className="hidden lg:block">Mon Espace</span>
             </Link>
           )}
 
-          {/* User menu */}
-          <div className="relative" ref={userRef}>
-            {user ? (
-              <button onClick={() => setUserMenu(!userMenu)}
-                className="flex items-center gap-2 transition-all hover:opacity-70">
-                <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>person</span>
-              </button>
-            ) : (
-              <Link href="/connexion"
-                className="flex items-center gap-2 transition-all hover:opacity-70">
-                <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>person</span>
-              </Link>
-            )}
-
-            {/* Dropdown user */}
-            {userMenu && user && (
-              <div className="absolute right-0 top-full mt-4 w-60 bg-white border shadow-xl py-2 z-50" style={{ borderColor: '#E5E7EB' }}>
-                {/* User info */}
-                <div className="px-5 py-4 mb-2 border-b border-gray-100">
-                  <p className="font-bold text-[13px] text-gray-900">{user.name}</p>
-                  <p className="text-[11px] text-gray-500 mb-2 truncate">{user.email}</p>
-                  <span className="inline-block px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-white" style={{ background: '#1B6B3A' }}>
-                    {role || 'Membre'}
-                  </span>
-                </div>
-
-                {[
-                  { href: '/compte', icon: 'person', label: 'Mon compte' },
-                  { href: '/messages', icon: 'chat', label: 'Messages', badge: unreadMessages > 0 ? unreadMessages : null },
-                  { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
-                  ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
-                ].map(item => (
-                  <Link key={item.href} href={item.href}
-                    onClick={() => setUserMenu(false)}
-                    className="flex items-center justify-between px-5 py-3 text-[12px] font-bold uppercase tracking-widest transition-colors hover:bg-gray-50 text-gray-600 hover:text-gray-900">
-                    <div className="flex items-center gap-3">
-                      <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
-                      {item.label}
-                    </div>
-                    {item.badge && (
-                      <span className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center text-[9px]">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                ))}
-
-                <button onClick={handleLogout}
-                  className="flex items-center gap-3 px-5 py-3 text-[12px] font-bold uppercase tracking-widest transition-colors hover:bg-red-50 text-red-600 w-full text-left mt-2 border-t border-gray-100">
-                  <span className="material-symbols-outlined text-[18px]">logout</span>
-                  Déconnexion
-                </button>
-              </div>
-            )}
-          </div>
-
           {/* Panier */}
           <Link href="/panier"
-            className="relative flex items-center justify-center transition-colors hover:opacity-70">
-            <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>shopping_bag</span>
+            className="relative w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            style={{ color: '#374151' }}>
+            <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
             {totalArticles > 0 && (
-              <span className="absolute -top-1 -right-2 min-w-[16px] h-[16px] px-1 rounded-full text-white bg-black flex items-center justify-center font-bold text-[9px]"
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full text-white flex items-center justify-center font-black text-[9px]"
                 style={{ background: '#D4920A' }}>
                 {totalArticles}
               </span>
             )}
           </Link>
 
+          {/* User menu */}
+          <div className="relative" ref={userRef}>
+            {user ? (
+              <button onClick={() => setUserMenu(!userMenu)}
+                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full transition-all hover:bg-gray-100"
+                style={{ border: '1.5px solid #EBEBEB' }}>
+                <div className="w-7 h-7 rounded-full overflow-hidden relative bg-[#1B6B3A] flex items-center justify-center" >
+                  {user.image
+                    ? <Image src={user.image} alt={user.name || ''} fill className="object-cover" sizes="28px" />
+                    : <span className="text-[12px] font-black text-white">{(user.name || 'U')[0].toUpperCase()}</span>
+                  }
+                </div>
+                <span className="hidden sm:block text-[12px] font-black max-w-[80px] truncate" style={{ color: '#0D0D0D' }}>
+                  {user.name?.split(' ')[0]}
+                </span>
+                <span className="material-symbols-outlined text-[16px]" style={{ color: '#9CA3AF' }}>expand_more</span>
+              </button>
+            ) : (
+              <Link href="/connexion"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-black uppercase tracking-wider transition-all hover:-translate-y-0.5 text-white"
+                style={{ background: '#0D0D0D' }}>
+                <span className="material-symbols-outlined text-[16px]">person</span>
+                <span className="hidden sm:block">Connexion</span>
+              </Link>
+            )}
+
+            {/* Dropdown user */}
+            {userMenu && user && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-[20px] py-2 z-50"
+                style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.15)', border: '1px solid #EBEBEB' }}>
+                {/* User info */}
+                <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid #F3F4F6' }}>
+                  <p className="font-black text-[13px] text-[#0D0D0D]">{user.name}</p>
+                  <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{user.email}</p>
+                  <span className="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wide"
+                    style={{ background: role === 'vendeur' ? 'rgba(27,107,58,0.1)' : 'rgba(0,0,0,0.06)', color: role === 'vendeur' ? '#1B6B3A' : '#6B7280' }}>
+                    {role || 'acheteur'}
+                  </span>
+                </div>
+
+                {[
+                  { href: '/compte', icon: 'person', label: 'Mon compte' },
+                  { href: '/messages', icon: 'chat', label: 'Mes messages' },
+                  { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
+                  ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
+                ].map(item => (
+                  <Link key={item.href} href={item.href}
+                    onClick={() => setUserMenu(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-gray-50"
+                    style={{ color: '#374151' }}>
+                    <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+
+                <button onClick={handleLogout}
+                  className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-red-50 w-full text-left mt-1"
+                  style={{ color: '#EF4444', borderTop: '1px solid #F3F4F6' }}>
+                  <span className="material-symbols-outlined text-[18px]">logout</span>
+                  Se déconnecter
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Hamburger */}
+          <button className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full transition-colors hover:bg-gray-100"
+            onClick={() => setMobileMenu(!mobileMenu)}>
+            <span className="material-symbols-outlined text-[22px]" style={{ color: '#374151' }}>
+              {mobileMenu ? 'close' : 'menu'}
+            </span>
+          </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileMenu && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200">
-          <div className="flex flex-col p-6 gap-6">
-            {navLinks.map(link => (
-              <Link key={link.label} href={link.href}
-                onClick={() => setMobileMenu(false)}
-                className="text-[16px] font-bold uppercase tracking-widest transition-colors"
-                style={{ color: pathname === link.href ? '#1B6B3A' : '#4B5563' }}
-              >
-                {link.label}
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-white py-4 px-6"
+          style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.1)', borderTop: '1px solid #F0EDE8' }}>
+          {navLinks.map(link => (
+            <Link key={link.label} href={link.href}
+              onClick={() => setMobileMenu(false)}
+              className="flex items-center gap-3 py-3 px-4 rounded-xl text-[14px] font-bold transition-colors hover:bg-gray-50 mb-1"
+              style={{ color: pathname === link.href ? '#1B6B3A' : '#374151' }}>
+              {link.label}
+            </Link>
+          ))}
+          {!user ? (
+            <div className="flex gap-3 mt-3 pt-3" style={{ borderTop: '1px solid #F0EDE8' }}>
+              <Link href="/connexion" onClick={() => setMobileMenu(false)}
+                className="flex-1 py-3 rounded-2xl text-center text-[13px] font-black text-white"
+                style={{ background: '#0D0D0D' }}>
+                Connexion
               </Link>
-            ))}
-            
-            <div className="border-t border-gray-100 pt-6 mt-2 flex flex-col gap-4">
-              {!user ? (
-                <>
-                  <Link href="/connexion" onClick={() => setMobileMenu(false)}
-                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest text-white"
-                     style={{ background: '#1B6B3A' }}>
-                    Connexion
-                  </Link>
-                  <Link href="/inscription" onClick={() => setMobileMenu(false)}
-                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest bg-white"
-                    style={{ border: '1px solid #1B6B3A', color: '#1B6B3A' }}>
-                    Créer un compte
-                  </Link>
-                </>
-              ) : (
-                <button onClick={() => { setMobileMenu(false); handleLogout() }}
-                  className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest text-white bg-red-600 border border-red-600">
-                  Déconnexion
-                </button>
-              )}
+              <Link href="/inscription" onClick={() => setMobileMenu(false)}
+                className="flex-1 py-3 rounded-2xl text-center text-[13px] font-black"
+                style={{ background: '#F3F4F6', color: '#374151' }}>
+                S'inscrire
+              </Link>
             </div>
-          </div>
+          ) : (
+            <button onClick={() => { setMobileMenu(false); handleLogout() }}
+              className="w-full mt-3 py-3 rounded-2xl text-[13px] font-black text-white"
+              style={{ background: '#EF4444' }}>
+              Se déconnecter
+            </button>
+          )}
         </div>
       )}
     </nav>
