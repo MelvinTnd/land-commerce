@@ -102,11 +102,9 @@ function ConnexionForm() {
           <div className="w-full max-w-md">
           
           {/* Mobile Logo */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Link href="/">
-              <div className="w-16 h-16 relative">
-                <Image src="/logo.png" alt="CauriMarket" fill className="object-contain" sizes="64px" />
-              </div>
+          <div className="lg:hidden flex mb-8">
+            <Link href="/" className="font-black text-[24px] tracking-tight" style={{ color: '#0D0D0D' }}>
+              Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
             </Link>
           </div>
 
@@ -135,7 +133,7 @@ function ConnexionForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors"
+                className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#1B6B3A] focus:border-[#1B6B3A] sm:text-sm text-[#202223] transition-colors"
                 placeholder="votre@email.com"
               />
             </div>
@@ -155,7 +153,7 @@ function ConnexionForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-[#008060] sm:text-sm text-[#202223] transition-colors pr-11"
+                  className="appearance-none block w-full px-4 py-2.5 border border-[#c9cccf] rounded-lg shadow-sm placeholder-[#8c9196] focus:outline-none focus:ring-2 focus:ring-[#1B6B3A] focus:border-[#1B6B3A] sm:text-sm text-[#202223] transition-colors pr-11"
                   placeholder="••••••••"
                 />
                 <button 
@@ -174,7 +172,7 @@ function ConnexionForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[#008060] hover:bg-[#006e52] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008060] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-black uppercase tracking-widest text-white bg-[#1B6B3A] hover:bg-[#155a30] focus:outline-none transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? 'Connexion en cours...' : 'Se connecter'}
               </button>
@@ -195,7 +193,7 @@ function ConnexionForm() {
               <button
                 onClick={handleGoogleSignIn}
                 disabled={loadingGoogle}
-                className="w-full flex justify-center items-center py-3 px-4 border border-[#c9cccf] rounded-lg shadow-sm bg-white text-sm font-bold text-[#202223] hover:bg-[#f4f6f8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008060] disabled:opacity-60 transition-colors"
+                className="w-full flex justify-center items-center py-3 px-4 border border-gray-200 bg-white text-sm font-bold text-[#202223] hover:bg-[#f4f6f8] focus:outline-none transition-colors disabled:opacity-60"
               >
                 <Image src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width={20} height={20} className="mr-3" />
                 {loadingGoogle ? 'Connexion...' : 'Google'}

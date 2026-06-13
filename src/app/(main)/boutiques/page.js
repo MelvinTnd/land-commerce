@@ -45,18 +45,19 @@ export default function BoutiquesPage() {
     })
 
   return (
-    <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
 
       {/* ── Hero (Dawn aesthetic) ── */}
-      <div className="relative overflow-hidden bg-[#F1F2F4] border-b border-gray-200" style={{ minHeight: '380px' }}>
+      <div style={{ background: '#F7F5F0', borderBottom: '1px solid #E5E7EB' }}>
         <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-20 flex flex-col items-center text-center">
           
           {/* Texte */}
           <div className="max-w-2xl mb-8">
-            <span className="inline-block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-4">
+            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] mb-4" style={{ color: '#1B6B3A' }}>
+              <span className="w-4 h-px bg-[#1B6B3A] inline-block" />
               Nos Créateurs
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-4">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-none mb-4" style={{ color: '#0D0D0D' }}>
               Boutiques & Artisans
             </h1>
             <p className="text-[15px] font-medium leading-relaxed text-gray-600">
@@ -121,13 +122,12 @@ export default function BoutiquesPage() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white rounded-[28px] overflow-hidden animate-pulse"
-                style={{ border: '1px solid #EBEBEB' }}>
+              <div key={i} className="bg-white overflow-hidden animate-pulse" style={{ border: '1px solid #E5E7EB' }}>
                 <div className="h-48 bg-gray-100" />
                 <div className="p-6">
                   <div className="h-4 bg-gray-100 rounded mb-3 w-2/3" />
-                  <div className="h-3 bg-gray-100 rounded mb-4 w-full" />
-                  <div className="h-10 bg-gray-100 rounded-2xl" />
+                  <div className="h-3 bg-gray-100 mb-4 w-full" />
+                  <div className="h-10 bg-gray-100" />
                 </div>
               </div>
             ))}

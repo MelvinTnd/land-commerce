@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 const footerLinks = {
   Marketplace: [
@@ -12,42 +11,40 @@ const footerLinks = {
   Support: [
     { label: 'Contact', href: '/contact' },
     { label: 'Mon compte', href: '/compte' },
+    { label: 'CGU', href: '/cgu' },
+    { label: 'Confidentialité', href: '/confidentialite' },
   ],
 }
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#fff' }}>
+    <footer style={{ background: '#fff', borderTop: '1px solid #E5E7EB' }}>
 
-      {/* Newsletter band */}
-      <div className="relative overflow-hidden px-6 md:px-12 lg:px-20 py-14"
-        style={{ background: 'transparent', borderBottom: '1px solid rgba(27,107,58,0.1)' }}>
-        <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full pointer-events-none"
-          style={{ background: 'rgba(27,107,58,0.08)' }} />
-        <div className="absolute -left-10 -bottom-10 w-48 h-48 rounded-full pointer-events-none"
-          style={{ background: 'rgba(212,146,10,0.08)' }} />
-
-        <div className="max-w-[1280px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+      {/* Newsletter */}
+      <div style={{ background: '#0D0D0D' }}>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.22em] mb-2" style={{ color: '#1B6B3A' }}>
+            <span className="text-[10px] font-black uppercase tracking-[0.22em] mb-3 flex items-center gap-2"
+              style={{ color: '#1B6B3A' }}>
+              <span className="w-4 h-px bg-[#1B6B3A] inline-block" />
               Newsletter
-            </p>
-            <h3 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: '#0D0D0D' }}>
+            </span>
+            <h3 className="text-2xl font-black tracking-tight text-white mb-1">
               Ne ratez aucune offre exclusive
             </h3>
-            <p className="text-sm mt-2 max-w-sm" style={{ color: '#6B7280' }}>
+            <p className="text-[14px] font-medium max-w-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
               Recevez promotions, nouveautés artisanales et conseils chaque semaine.
             </p>
           </div>
-           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:min-w-[340px]">
+          <div className="flex w-full md:max-w-sm shrink-0">
             <input
               type="email"
               placeholder="votre@email.bj"
-              className="flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium outline-none bg-white transition-all"
-              style={{ border: '1.5px solid rgba(27,107,58,0.25)', color: '#0D0D0D' }}
+              className="flex-1 px-5 py-3.5 text-[13px] font-medium outline-none bg-white border-0 transition-all"
+              style={{ color: '#0D0D0D' }}
             />
-            <button className="px-6 py-3.5 rounded-2xl text-[12px] font-black uppercase tracking-wider shrink-0 text-white transition-all hover:opacity-90"
-              style={{ background: '#1B6B3A', boxShadow: '0 4px 16px rgba(27,107,58,0.25)' }}>
+            <button className="px-6 py-3.5 font-black text-[11px] uppercase tracking-widest text-white shrink-0 transition-opacity hover:opacity-90"
+              style={{ background: '#1B6B3A' }}>
               S&apos;abonner
             </button>
           </div>
@@ -55,34 +52,33 @@ export default function Footer() {
       </div>
 
       {/* Main grid */}
-      <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-16">
+      <div className="max-w-[1280px] mx-auto px-6 md:px-12 lg:px-20 py-14">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
 
           {/* Brand */}
           <div className="md:col-span-4">
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-10 h-10 relative rounded-xl overflow-hidden">
-                <Image src="/logo.png" alt="CauriMarket" fill className="object-contain" sizes="40px" />
-              </div>
-              <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
+            <Link href="/" className="inline-block mb-5">
+              <span className="font-black text-[22px] tracking-tight" style={{ color: '#0D0D0D' }}>
                 Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
               </span>
-            </div>
+            </Link>
             <p className="text-[14px] leading-relaxed mb-7 max-w-xs" style={{ color: '#6B7280' }}>
               Le premier marché en ligne dédié à la promotion des PME et artisans béninois authentiques à travers le monde.
             </p>
 
             {/* Social icons */}
-            <div className="flex gap-3 mb-8">
+            <div className="flex gap-2 mb-8">
               {[
                 { icon: 'language', label: 'Web' },
                 { icon: 'alternate_email', label: 'Email' },
                 { icon: 'share', label: 'Partager' },
               ].map(s => (
                 <button key={s.label}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:-translate-y-0.5 hover:shadow-md bg-white"
-                  style={{ border: '1.5px solid rgba(27,107,58,0.2)' }}>
-                  <span className="material-symbols-outlined text-[18px]" style={{ color: '#1B6B3A' }}>{s.icon}</span>
+                  className="w-9 h-9 border border-gray-200 flex items-center justify-center transition-all hover:border-gray-900 hover:bg-gray-900"
+                  style={{ color: '#6B7280' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = 'white' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#6B7280' }}>
+                  <span className="material-symbols-outlined text-[17px]">{s.icon}</span>
                 </button>
               ))}
             </div>
@@ -106,7 +102,7 @@ export default function Footer() {
           <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
             {Object.entries(footerLinks).map(([category, links]) => (
               <div key={category}>
-                <h4 className="text-[10px] font-black uppercase tracking-[0.22em] mb-5" style={{ color: '#9CA3AF' }}>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.22em] mb-5" style={{ color: '#0D0D0D' }}>
                   {category}
                 </h4>
                 <ul className="space-y-3">
@@ -127,13 +123,13 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="px-6 md:px-12 lg:px-20 py-5" style={{ borderTop: '1px solid rgba(0,0,0,0.07)', background: '#fff' }}>
+      <div className="px-6 md:px-12 lg:px-20 py-5" style={{ borderTop: '1px solid #F0EDE8' }}>
         <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[12px] font-medium" style={{ color: '#9CA3AF' }}>
             © 2026 CauriMarket — Fait avec ❤️ pour l&apos;artisanat béninois
           </p>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#1B6B3A' }} />
+            <div className="w-2 h-2 animate-pulse" style={{ background: '#1B6B3A' }} />
             <span className="text-[11px] font-bold" style={{ color: '#9CA3AF' }}>
               En ligne · Bénin
             </span>

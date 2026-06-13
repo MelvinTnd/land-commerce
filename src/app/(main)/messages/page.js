@@ -206,10 +206,10 @@ function MessagesInner() {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl flex items-center justify-center" style={{ background: '#E6F8EA' }}>
-              <span className="material-symbols-outlined text-[22px]" style={{ color: '#1B6B3A' }}>chat</span>
-            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 flex items-center justify-center" style={{ background: '#0D0D0D' }}>
+                <span className="material-symbols-outlined text-[20px] text-white">chat</span>
+              </div>
             <div>
               <h1 className="text-xl font-black" style={{ color: '#0D0D0D' }}>Messages</h1>
               <p className="text-[11px] font-medium" style={{ color: '#9CA3AF' }}>
@@ -231,8 +231,8 @@ function MessagesInner() {
         )}
 
         {/* Layout conversations + messages */}
-        <div className="bg-white rounded-[28px] overflow-hidden flex"
-          style={{ border: '1px solid #EBEBEB', height: 'calc(100vh - 180px)', minHeight: '520px' }}>
+        <div className="bg-white overflow-hidden flex"
+          style={{ border: '1px solid #E5E7EB', height: 'calc(100vh - 180px)', minHeight: '520px' }}>
 
           {/* ── Sidebar conversations ── */}
           <div className={`w-full md:w-[320px] shrink-0 flex flex-col
@@ -458,14 +458,12 @@ function MessagesInner() {
                       return (
                         <div key={msg.id || i} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
                           <div className="max-w-[75%]">
-                            <div className="px-4 py-3 rounded-[20px] text-[13px] font-medium leading-relaxed"
+                            <div className="px-4 py-3 text-[13px] font-medium leading-relaxed"
                               style={isMine ? {
-                                background: '#1B6B3A', color: 'white',
-                                borderBottomRightRadius: '6px',
+                                background: '#0D0D0D', color: 'white',
                               } : {
-                                background: 'white', color: '#374151',
-                                border: '1px solid #EBEBEB',
-                                borderBottomLeftRadius: '6px',
+                                background: '#F7F5F0', color: '#374151',
+                                border: '1px solid #E5E7EB',
                               }}>
                               {msg.content}
                             </div>
