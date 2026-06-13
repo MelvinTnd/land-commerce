@@ -74,142 +74,154 @@ export default function Navbar() {
 
   return (
     <>
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 md:px-6"
-      style={{
-        background: scrolled ? 'rgba(255,255,255,0.97)' : 'white',
-        backdropFilter: scrolled ? 'blur(20px)' : 'none',
-        borderBottom: '1px solid #F0EDE8',
-        boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none',
-      }}>
-      <div className="max-w-[1400px] mx-auto flex items-center justify-between h-[68px]">
+      {/* Barre d'annonce (non fixe, par dessus la navbar) */}
+      <div className="bg-[#1A1A1A] text-center py-2 transition-all">
+        <p className="text-[10px] font-black uppercase tracking-[0.22em]" style={{ color: '#F7F5F0' }}>
+          Livraison gratuite à partir de 50 000 FCFA
+        </p>
+      </div>
 
-        {/* Logo — texte seul */}
-        <div className="flex-1 flex shrink-0">
-          <Link href="/" className="flex items-center">
-            <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
-              Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
-            </span>
-          </Link>
-        </div>
+      <nav className="sticky top-0 left-0 right-0 z-50 transition-all duration-300 bg-white"
+        style={{
+          boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.04)' : 'none',
+          borderBottom: '1px solid #F0EDE8',
+        }}>
+        <div className="max-w-[1400px] mx-auto">
+          
+          {/* Ligne principale : Icônes | Logo | Icônes */}
+          <div className="flex items-center justify-between h-[68px] px-4 md:px-6">
 
-        {/* Nav links (Centrés) */}
-        <div className="hidden lg:flex flex-1 items-center justify-center gap-8">
-          {navLinks.map(link => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-            return (
-              <Link key={link.label} href={link.href}
-                className="py-5 text-[12px] font-black uppercase tracking-widest transition-colors relative group"
-                style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
-                {link.label}
-                <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }} />
-              </Link>
-            )
-          })}
-        </div>
-
-        {/* Right icons */}
-        <div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
-
-          {/* Search icon (Desktop & Mobile) */}
-          <button className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
-            onClick={() => setShowSearch(true)}>
-            <span className="material-symbols-outlined text-[24px]">search</span>
-          </button>
-
-          {/* Messages */}
-          {user && (
-            <Link href="/messages"
-              className="relative hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-              <span className="material-symbols-outlined text-[24px]">chat</span>
-              {unreadMessages > 0 && (
-                <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
-                  style={{ background: '#EF4444' }}>
-                  {unreadMessages}
+            {/* Gauche : Hamburger (mobile) + Loupe */}
+            <div className="flex flex-1 items-center gap-2">
+              <button className="lg:hidden flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
+                onClick={() => setMobileMenu(!mobileMenu)}>
+                <span className="material-symbols-outlined text-[24px]">
+                  {mobileMenu ? 'close' : 'menu'}
                 </span>
-              )}
-            </Link>
-          )}
-
-          {/* Vendeur Icon */}
-          {role === 'vendeur' && (
-            <Link href="/vendeur"
-              className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-              <span className="material-symbols-outlined text-[24px]">storefront</span>
-            </Link>
-          )}
-
-          {/* Panier */}
-          <Link href="/panier"
-            className="relative flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-            <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
-            {totalArticles > 0 && (
-              <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
-                style={{ background: '#D4920A' }}>
-                {totalArticles}
-              </span>
-            )}
-          </Link>
-
-          {/* User menu */}
-          <div className="relative flex items-center" ref={userRef}>
-            {user ? (
-              <button onClick={() => setUserMenu(!userMenu)}
-                className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-                <span className="material-symbols-outlined text-[24px]">person</span>
               </button>
-            ) : (
-              <Link href="/connexion"
-                className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
-                <span className="material-symbols-outlined text-[24px]">person</span>
+
+              <button className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900"
+                onClick={() => setShowSearch(true)}>
+                <span className="material-symbols-outlined text-[24px]">search</span>
+              </button>
+            </div>
+
+            {/* Centre : Logo textuel */}
+            <div className="flex-1 flex justify-center shrink-0">
+              <Link href="/" className="flex items-center">
+                <span className="font-black text-[22px] tracking-tight" style={{ color: '#0D0D0D' }}>
+                  Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
+                </span>
               </Link>
-            )}
+            </div>
 
-            {/* Dropdown */}
-            {userMenu && user && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white py-2 z-50 border border-gray-200 shadow-lg">
-                <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid #F3F4F6' }}>
-                  <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>{user.name}</p>
-                  <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{user.email}</p>
-                  <span className="inline-block mt-1.5 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wide"
-                    style={{ background: role === 'vendeur' ? 'rgba(27,107,58,0.1)' : 'rgba(0,0,0,0.06)', color: role === 'vendeur' ? '#1B6B3A' : '#6B7280' }}>
-                    {role || 'acheteur'}
-                  </span>
-                </div>
+            {/* Droite : User, Messages, Vendeur, Panier */}
+            <div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
 
-                {[
-                  { href: '/compte', icon: 'person', label: 'Mon compte' },
-                  { href: '/messages', icon: 'chat', label: 'Mes messages' },
-                  { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
-                  ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
-                ].map(item => (
-                  <Link key={item.href} href={item.href}
-                    onClick={() => setUserMenu(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-gray-50"
-                    style={{ color: '#374151' }}>
-                    <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>{item.icon}</span>
-                    {item.label}
+              {/* Messages */}
+              {user && (
+                <Link href="/messages"
+                  className="relative hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                  <span className="material-symbols-outlined text-[24px]">chat</span>
+                  {unreadMessages > 0 && (
+                    <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
+                      style={{ background: '#EF4444' }}>
+                      {unreadMessages}
+                    </span>
+                  )}
+                </Link>
+              )}
+
+              {/* Vendeur Icon */}
+              {role === 'vendeur' && (
+                <Link href="/vendeur"
+                  className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                  <span className="material-symbols-outlined text-[24px]">storefront</span>
+                </Link>
+              )}
+
+              {/* User menu */}
+              <div className="relative flex items-center" ref={userRef}>
+                {user ? (
+                  <button onClick={() => setUserMenu(!userMenu)}
+                    className="w-10 h-10 flex items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                    <span className="material-symbols-outlined text-[24px]">person</span>
+                  </button>
+                ) : (
+                  <Link href="/connexion"
+                    className="hidden sm:flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                    <span className="material-symbols-outlined text-[24px]">person</span>
                   </Link>
-                ))}
+                )}
 
-                <button onClick={handleLogout}
-                  className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-red-50 w-full text-left mt-1"
-                  style={{ color: '#EF4444', borderTop: '1px solid #F3F4F6' }}>
-                  <span className="material-symbols-outlined text-[18px]">logout</span>
-                  Se déconnecter
-                </button>
+                {/* Dropdown */}
+                {userMenu && user && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white py-2 z-50 border border-gray-200 shadow-lg">
+                    <div className="px-4 py-3 mb-1" style={{ borderBottom: '1px solid #F3F4F6' }}>
+                      <p className="font-black text-[13px]" style={{ color: '#0D0D0D' }}>{user.name}</p>
+                      <p className="text-[11px]" style={{ color: '#9CA3AF' }}>{user.email}</p>
+                      <span className="inline-block mt-1.5 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-wide"
+                        style={{ background: role === 'vendeur' ? 'rgba(27,107,58,0.1)' : 'rgba(0,0,0,0.06)', color: role === 'vendeur' ? '#1B6B3A' : '#6B7280' }}>
+                        {role || 'acheteur'}
+                      </span>
+                    </div>
+
+                    {[
+                      { href: '/compte', icon: 'person', label: 'Mon compte' },
+                      { href: '/messages', icon: 'chat', label: 'Mes messages' },
+                      { href: '/panier', icon: 'shopping_bag', label: 'Mon panier' },
+                      ...(role === 'vendeur' ? [{ href: '/vendeur', icon: 'storefront', label: 'Espace vendeur' }] : []),
+                    ].map(item => (
+                      <Link key={item.href} href={item.href}
+                        onClick={() => setUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-gray-50"
+                        style={{ color: '#374151' }}>
+                        <span className="material-symbols-outlined text-[18px]" style={{ color: '#9CA3AF' }}>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    ))}
+
+                    <button onClick={handleLogout}
+                      className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold transition-colors hover:bg-red-50 w-full text-left mt-1"
+                      style={{ color: '#EF4444', borderTop: '1px solid #F3F4F6' }}>
+                      <span className="material-symbols-outlined text-[18px]">logout</span>
+                      Se déconnecter
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Panier (Toujours à l'extrême droite) */}
+              <Link href="/panier"
+                className="relative flex w-10 h-10 items-center justify-center transition-colors hover:text-[#1B6B3A] text-gray-900">
+                <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
+                {totalArticles > 0 && (
+                  <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 text-white flex items-center justify-center font-black text-[9px] rounded-full"
+                    style={{ background: '#D4920A' }}>
+                    {totalArticles}
+                  </span>
+                )}
+              </Link>
+            </div>
           </div>
 
-          {/* Hamburger */}
-          <button className="lg:hidden w-10 h-10 flex items-center justify-center"
-            onClick={() => setMobileMenu(!mobileMenu)}>
-            <span className="material-symbols-outlined text-[22px]" style={{ color: '#0D0D0D' }}>
-              {mobileMenu ? 'close' : 'menu'}
-            </span>
-          </button>
+          {/* Ligne 2 : Liens de navigation (Desktop) */}
+          <div className="hidden lg:flex items-center justify-center gap-10"
+            style={{ borderTop: '1px solid #F0EDE8' }}>
+            {navLinks.map(link => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+              return (
+                <Link key={link.label} href={link.href}
+                  className="py-3 text-[12px] font-bold uppercase tracking-widest transition-colors relative group"
+                  style={{ color: isActive ? '#1B6B3A' : '#1A1A1A' }}>
+                  {link.label}
+                  <span className="absolute left-0 right-0 bottom-0 h-[2px] transition-all duration-300 bg-[#1B6B3A]" style={{ opacity: isActive ? 1 : 0, transform: isActive ? 'scaleX(1)' : 'scaleX(0)' }} />
+                </Link>
+              )
+            })}
+          </div>
+
         </div>
-      </div>
 
       {/* Mobile menu */}
       {mobileMenu && (
