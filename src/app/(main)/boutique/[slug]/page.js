@@ -356,35 +356,39 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           CARTE PROFIL
       ══════════════════════════════════════════════ */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
-        <div className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-gray-100/80 overflow-hidden transform transition-all duration-700 hover:-translate-y-1">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+
+        {/* ── Rangée Logo (en dehors de la card = jamais coupé) ── */}
+        <div className="flex items-end pl-4 -mt-16 sm:-mt-20 mb-0">
+          <div className="relative shrink-0">
+            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-white border-4 border-white shadow-md ring-1 ring-gray-200">
+              <Image
+                src={logoSrc}
+                alt={boutique.nom}
+                fill
+                className="object-cover"
+                sizes="128px"
+                unoptimized
+                onError={(e) => {
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=1a1a1a&color=fff&size=200`
+                }}
+              />
+            </div>
+            {boutique.certifie && (
+              <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-black rounded-full flex items-center justify-center border-2 border-white shadow-sm" title="Boutique vérifiée">
+                <span className="material-symbols-outlined text-white text-[14px]">verified</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Card (sans overflow-hidden — ne coupe rien) ── */}
+        <div className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-gray-100 mt-4 transition-all duration-700 hover:-translate-y-0.5">
           <div className="p-6 sm:p-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
 
-              {/* Logo */}
-              <div className="shrink-0 -mt-16 sm:-mt-20 relative group/logo cursor-pointer">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm transition-transform duration-500 group-hover/logo:scale-[1.03]">
-                  <Image 
-                    src={logoSrc} 
-                    alt={boutique.nom} 
-                    fill 
-                    className="object-cover" 
-                    sizes="128px" 
-                    unoptimized 
-                    onError={(e) => {
-                      e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(boutique.nom)}&background=000000&color=fff&size=200`
-                    }}
-                  />
-                </div>
-                {boutique.certifie && (
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-black rounded-full flex items-center justify-center border-2 border-white shadow-sm" title="Boutique vérifiée">
-                    <span className="material-symbols-outlined text-white text-[16px]">verified</span>
-                  </div>
-                )}
-              </div>
-
               {/* Infos principales */}
-              <div className="flex-1 min-w-0 pt-2 lg:pt-0">
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-6">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">{boutique.nom}</h1>
