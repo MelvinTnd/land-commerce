@@ -84,7 +84,7 @@ export default function InscriptionVendeur() {
         body: form,
       })
 
-      const data = await res.json()
+      const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
         // Token invalide/expiré → rediriger vers la connexion
@@ -93,7 +93,12 @@ export default function InscriptionVendeur() {
           router.push('/connexion')
           return
         }
-        throw new Error(data.message || 'Erreur lors de la création')
+        // Erreurs de validation Laravel (422)
+        if (res.status === 422 && data.errors) {
+          const messages = Object.values(data.errors).flat().join(' | ')
+          throw new Error(messages)
+        }
+        throw new Error(data.message || `Erreur serveur (${res.status})`)
       }
 
       setSuccess(true)
