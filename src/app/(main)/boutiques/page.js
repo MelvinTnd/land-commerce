@@ -188,7 +188,7 @@ export default function BoutiquesPage() {
                   <div className="flex items-start justify-between mb-2">
                     <div className="min-w-0 pr-2">
                       <h2 className="text-[16px] font-bold text-gray-900 group-hover:underline truncate decoration-1 underline-offset-2">
-                        <Link href={`/boutiques/${b.slug}`}>
+                        <Link href={`/boutique/${b.slug}`}>
                           {b.nom}
                         </Link>
                       </h2>
@@ -213,7 +213,7 @@ export default function BoutiquesPage() {
                     <span className="text-[12px] font-medium text-gray-700">
                       {b.produits} article{b.produits > 1 ? 's' : ''}
                     </span>
-                    <Link href={`/boutiques/${b.slug}`}
+                    <Link href={`/boutique/${b.slug}`}
                       className="text-[11px] font-bold text-black uppercase tracking-wider flex items-center gap-1 group-hover:underline">
                       Visiter
                       <span className="material-symbols-outlined text-[16px] transition-transform group-hover:translate-x-1">arrow_forward_ios</span>

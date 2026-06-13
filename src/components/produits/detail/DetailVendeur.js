@@ -42,28 +42,23 @@ export default function DetailVendeur({ shop, rating, reviews }) {
   if (!shop) return null
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-16 border-t border-gray-200 pt-16">
 
       {/* Section vendeur */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-        {/* Image vendeur + citation */}
-        <div className="relative rounded-3xl overflow-hidden" style={{ height: '380px' }}>
+        {/* Image vendeur */}
+        <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden" style={{ border: '1px solid #EBEBEB' }}>
           <img
             src={getStorageUrl(shop.logo) || "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80"}
             alt={shop.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover grayscale-[20%] transition-transform hover:scale-105 duration-700"
           />
-          {/* Citation flottante */}
-          <div
-            className="absolute bottom-6 left-6 right-6 bg-white rounded-2xl p-4"
-            style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
-          >
-            <p className="text-sm italic mb-2" style={{ color: '#374151' }}>
-              "Mettre en valeur le savoir-faire béninois avec authenticité et passion, chaque jour."
-            </p>
-            <p className="text-xs font-bold uppercase tracking-widest" style={{ color: '#1B6B3A' }}>
-              — Artisan {shop.name}
+          {/* Citation superposée discrète */}
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <p className="text-white text-[15px] font-medium leading-relaxed drop-shadow-md">
+              "Mettre en valeur le savoir-faire avec authenticité et passion, chaque jour."
             </p>
           </div>
         </div>
@@ -71,76 +66,60 @@ export default function DetailVendeur({ shop, rating, reviews }) {
         {/* Infos vendeur */}
         <div className="flex flex-col gap-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#1B6B3A' }}>
+            <p className="text-[10px] font-bold uppercase tracking-widest mb-3 text-gray-500">
               L'Âme de l'Objet
             </p>
-            <h3 className="text-3xl font-extrabold" style={{ color: '#1A1A1A' }}>
+            <h3 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
               {shop.name}
             </h3>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>
-            {shop.description || "Cette boutique propose des pièces uniques issues de l'artisanat béninois. Découvrez leur univers et explorez l'authenticité de chaque création."}
+          <p className="text-[14px] leading-relaxed text-gray-600 font-medium">
+            {shop.description || "Cette boutique propose des pièces uniques issues de l'artisanat. Découvrez leur univers et explorez l'authenticité de chaque création."}
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 py-4 border-y border-gray-100 my-2">
             <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                style={{ background: '#F0EDE8' }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#1B6B3A' }}>
-                  location_on
-                </span>
-              </div>
-              <div>
-                <p className="text-xs font-bold" style={{ color: '#1A1A1A' }}>Localisation</p>
-                <p className="text-xs" style={{ color: '#9CA3AF' }}>{shop.location || "Bénin"}</p>
-              </div>
+              <span className="material-symbols-outlined text-[18px] text-gray-400">
+                location_on
+              </span>
+              <p className="text-[13px] font-medium text-gray-900">{shop.location || "Bénin"}</p>
             </div>
           </div>
 
           {/* Bouton Voir la boutique */}
-          <div className="flex gap-3 mt-2">
+          <div className="flex gap-3">
             <Link
               href={`/boutique/${shop.slug}`}
-              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all hover:opacity-90"
-              style={{ background: '#1B6B3A', color: 'white' }}
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 bg-black text-white text-[13px] font-semibold transition-colors hover:bg-gray-800"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>storefront</span>
-              Voir la Boutique
+              Visiter la boutique
             </Link>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all hover:bg-gray-100" style={{ border: '2px solid #E5E7EB', color: '#374151' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>chat</span>
-              Contacter
+            <button className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 border border-gray-300 text-[13px] font-semibold text-gray-900 transition-colors hover:border-black">
+              Contacter le vendeur
             </button>
           </div>
         </div>
       </div>
 
       {/* Fiche technique + Avis */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 pb-12 border-b border-gray-200">
 
         {/* Fiche technique */}
         <div>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-1 h-5 rounded-full" style={{ background: '#1B6B3A' }}/>
-            <h3 className="text-xl font-extrabold" style={{ color: '#1A1A1A' }}>Fiche Technique</h3>
+          <div className="mb-6 border-b border-gray-200 pb-4">
+            <h3 className="text-xl font-bold tracking-tight text-gray-900">Fiche Technique</h3>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 mb-10">
             {specs.map((spec) => (
-              <div
-                key={spec.label}
-                className="rounded-2xl p-4"
-                style={{ background: '#F7F5F0', border: '1px solid #E5E7EB' }}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#1B6B3A' }}>
+              <div key={spec.label} className="border-l border-gray-200 pl-4">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <span className="material-symbols-outlined text-[14px] text-gray-400">
                     {spec.icon}
                   </span>
-                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
                     {spec.label}
                   </p>
                 </div>
-                <p className="text-sm font-semibold" style={{ color: '#1A1A1A' }}>
+                <p className="text-[13px] font-medium text-gray-900">
                   {spec.valeur}
                 </p>
               </div>
@@ -150,26 +129,18 @@ export default function DetailVendeur({ shop, rating, reviews }) {
           {/* Conseils d'entretien */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#D4920A' }}>
+              <span className="material-symbols-outlined text-[18px] text-gray-900">
                 auto_fix_high
               </span>
-              <h4 className="text-base font-bold" style={{ color: '#1A1A1A' }}>Conseils d'entretien</h4>
+              <h4 className="text-sm font-bold tracking-tight text-gray-900">Conseils d'entretien</h4>
             </div>
-            <p className="text-xs mb-4" style={{ color: '#6B7280' }}>
-              L'ébène est un bois noble et dense qui vit avec son environnement. Pour préserver son éclat précieux :
-            </p>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-3">
               {conseils.map((c, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <div
-                    className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ background: i < 2 ? '#F0EDE8' : '#FEF2F2' }}
-                  >
-                    <span style={{ fontSize: '8px', color: i < 2 ? '#1B6B3A' : '#EF4444' }}>
-                      {i < 2 ? '✓' : '✗'}
-                    </span>
-                  </div>
-                  <p className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{c}</p>
+                <div key={i} className="flex items-start gap-3">
+                  <span className={`material-symbols-outlined text-[16px] mt-0.5 ${i < 2 ? 'text-gray-900' : 'text-gray-400'}`}>
+                    {i < 2 ? 'check' : 'close'}
+                  </span>
+                  <p className="text-[13px] text-gray-600 leading-relaxed font-medium">{c}</p>
                 </div>
               ))}
             </div>
@@ -177,56 +148,46 @@ export default function DetailVendeur({ shop, rating, reviews }) {
         </div>
 
         {/* Avis clients */}
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <div className="w-1 h-5 rounded-full" style={{ background: '#1B6B3A' }}/>
-              <h3 className="text-xl font-extrabold" style={{ color: '#1A1A1A' }}>Expériences Clients</h3>
-            </div>
-            <button className="text-xs font-semibold" style={{ color: '#1B6B3A' }}>
-              Voir tout →
+        <div className="border-l lg:border-l-0 border-gray-200 pl-0 lg:pl-0">
+          <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+            <h3 className="text-xl font-bold tracking-tight text-gray-900">Expériences Clients</h3>
+            <button className="text-[12px] font-semibold text-gray-500 hover:text-black uppercase tracking-widest border-b border-gray-400 transition-colors">
+              Voir tout
             </button>
           </div>
-          <div className="flex flex-col gap-4">
+          
+          <div className="flex flex-col gap-8">
             {avis.map((a) => (
-              <div
-                key={a.id}
-                className="rounded-2xl p-5"
-                style={{ background: '#F7F5F0', border: '1px solid #E5E7EB' }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white"
-                      style={{ background: '#1B6B3A' }}
-                    >
-                      {a.initiales}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold" style={{ color: '#1A1A1A' }}>{a.nom}</p>
-                      <p className="text-xs" style={{ color: '#9CA3AF' }}>{a.lieu}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-0.5">
+              <div key={a.id} className="pb-6 border-b border-gray-100 last:border-0 last:pb-0">
+                <div className="flex gap-1 mb-2">
                     {[1,2,3,4,5].map((i) => (
-                      <svg key={i} width="12" height="12" fill="#F5B731" viewBox="0 0 24 24">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                      </svg>
+                      <span key={i} className={`material-symbols-outlined text-[15px] ${i <= a.note ? 'text-black' : 'text-gray-200'}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                        star
+                      </span>
                     ))}
-                  </div>
                 </div>
-                <p className="text-xs leading-relaxed italic mb-3" style={{ color: '#6B7280' }}>
+                <p className="text-[14px] leading-relaxed mb-4 text-gray-800 font-medium">
                   {a.commentaire}
                 </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center bg-gray-100 text-xs font-bold text-gray-700 uppercase">
+                    {a.initiales}
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-semibold text-gray-900 leading-tight">{a.nom}</p>
+                    <p className="text-[11px] text-gray-500">{a.lieu}</p>
+                  </div>
+                </div>
                 {a.images.length > 0 && (
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-4">
                     {a.images.map((img, i) => (
-                      <img
-                        key={i}
-                        src={img}
-                        alt="avis"
-                        className="w-14 h-14 rounded-lg object-cover"
-                      />
+                      <div key={i} className="w-16 h-16 border border-gray-200 overflow-hidden">
+                        <img
+                          src={img}
+                          alt="avis"
+                          className="w-full h-full object-cover transition-transform hover:scale-110"
+                        />
+                      </div>
                     ))}
                   </div>
                 )}

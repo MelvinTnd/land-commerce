@@ -326,14 +326,14 @@ export default function BoutiquePage() {
       {/* ══════════════════════════════════════════════
           HERO BANNIÈRE
       ══════════════════════════════════════════════ */}
-      <div className="relative h-[250px] lg:h-[350px] w-full overflow-hidden bg-[#F1F2F4]">
-        {/* Main Banner Image */}
+      <div className="relative h-[250px] lg:h-[400px] w-full overflow-hidden bg-[#F1F2F4] group">
+        {/* Main Banner Image with gentle zoom effect */}
         <div className="absolute inset-0 z-10">
           <Image
             src={boutique.banner || getShopBannerImage({ name: boutique.nom, description: boutique.description })}
             alt={boutique.nom}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-1000 group-hover:scale-105"
             sizes="100vw"
             priority
             onError={e => { e.target.style.opacity = '0' }}
@@ -341,7 +341,7 @@ export default function BoutiquePage() {
           />
         </div>
         {/* Subtle gradient overlay to make text readable but keep it clean */}
-        <div className="absolute inset-0 bg-black/20 z-10" />
+        <div className="absolute inset-0 bg-black/10 z-10 transition-opacity duration-700 group-hover:opacity-0" />
 
         {/* Retour */}
         <div className="absolute top-24 left-4 sm:left-8 lg:left-12 z-20">
@@ -357,13 +357,13 @@ export default function BoutiquePage() {
           CARTE PROFIL
       ══════════════════════════════════════════════ */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
-        <div className="bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-gray-100/80 overflow-hidden transform transition-all duration-700 hover:-translate-y-1">
           <div className="p-6 sm:p-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
 
               {/* Logo */}
-              <div className="shrink-0 -mt-16 sm:-mt-20 relative">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm">
+              <div className="shrink-0 -mt-16 sm:-mt-20 relative group/logo cursor-pointer">
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-white border border-gray-200 shadow-sm transition-transform duration-500 group-hover/logo:scale-[1.03]">
                   <Image 
                     src={logoSrc} 
                     alt={boutique.nom} 
@@ -590,21 +590,22 @@ export default function BoutiquePage() {
             </div>
 
             {produitsFiltres.length === 0 ? (
-              <div className="bg-white rounded-3xl p-16 text-center shadow-sm border border-gray-100">
-                <span className="material-symbols-outlined text-5xl text-gray-200 mb-4 block">inventory_2</span>
-                <p className="font-bold text-gray-500">Aucun article trouvé</p>
-                {search && <button onClick={() => setSearch('')} className="text-xs text-[#1B6B3A] font-bold mt-2 hover:underline">Effacer la recherche</button>}
+              <div className="bg-[#F1F2F4] rounded-sm p-24 text-center border border-gray-200">
+                <span className="material-symbols-outlined text-4xl text-gray-400 mb-6 block drop-shadow-sm">search_off</span>
+                <p className="font-medium text-gray-500 uppercase tracking-widest text-[11px]">Aucun article trouvé</p>
+                {search && <button onClick={() => setSearch('')} className="text-[12px] text-black font-bold mt-4 border-b border-black pb-0.5 hover:text-gray-600 hover:border-gray-600 transition-colors">Effacer la recherche</button>}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {produitsFiltres.map(p => (
-                  <ProductCard
-                    key={p.id}
-                    p={p}
-                    boutiqueNom={boutique.nom}
-                    ajouterAuPanier={ajouterAuPanier}
-                    estDansPanier={estDansPanier}
-                  />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {produitsFiltres.map((p, index) => (
+                  <div key={p.id} className="transition-all duration-700 hover:-translate-y-1" style={{ animation: `fadeIn 0.5s ease-out ${index * 0.1}s both` }}>
+                    <ProductCard
+                      p={p}
+                      boutiqueNom={boutique.nom}
+                      ajouterAuPanier={ajouterAuPanier}
+                      estDansPanier={estDansPanier}
+                    />
+                  </div>
                 ))}
               </div>
             )}
