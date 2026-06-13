@@ -32,28 +32,27 @@ export default function ProduitsBoutiques() {
   if (boutiques.length === 0) return null
 
   return (
-    <section style={{ background: '#F7F5F0', padding: '64px 40px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <section className="bg-gray-50/50 py-16 px-6 lg:px-10 border-t border-gray-100">
+      <div className="max-w-[1280px] mx-auto">
 
         {/* En-tête */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <span style={{ fontSize: 10, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: '#1B6B3A', display: 'block', marginBottom: 6 }}>
+            <span className="text-[10px] font-bold uppercase tracking-widest block mb-2" style={{ color: '#1B6B3A' }}>
               Nos artisans
             </span>
-            <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111827', margin: 0 }}>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight m-0">
               Boutiques d&apos;Exception
             </h2>
-            <p style={{ fontSize: 13, color: '#9CA3AF', marginTop: 6, maxWidth: 380 }}>
+            <p className="text-sm font-medium text-gray-500 mt-2 max-w-sm leading-relaxed mb-0">
               Des artisans soigneusement sélectionnés pour la qualité et l&apos;authenticité de leur travail.
             </p>
           </div>
           <Link href="/boutiques"
-            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 999, border: '1.5px solid #1B6B3A', color: '#1B6B3A', fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-100"
+            style={{ border: '1.5px solid #1B6B3A', color: '#1B6B3A' }}>
             Toutes les boutiques
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 

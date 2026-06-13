@@ -96,7 +96,6 @@ export default function PromotionsSection() {
   const t = useCountdown(p?.date_fin || new Date().toISOString())
   const tag = getTag(p)
   const reduction = getReduction(p)
-  const image = getImage(p)
 
   useEffect(() => {
     if (promos.length <= 1) return
@@ -113,12 +112,13 @@ export default function PromotionsSection() {
         {/* ── HEADER ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight" style={{ color: '#1B6B3A' }}>
               Offres Exclusives.
             </h2>
           </div>
           <Link href="/promotions"
-            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border border-gray-900 text-gray-900 text-[11px] font-bold uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white">
+            className="hidden md:inline-flex items-center gap-2 px-6 py-3 border text-[11px] font-bold uppercase tracking-widest transition-all hover:opacity-80"
+            style={{ background: 'transparent', borderColor: '#1B6B3A', color: '#1B6B3A' }}>
             Toutes les promotions
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
@@ -136,18 +136,18 @@ export default function PromotionsSection() {
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   sizes="(max-width:1024px) 100vw, 60vw"
                   unoptimized />
-                <div className="absolute inset-0 bg-black/5" />
+                <div className="absolute inset-0 bg-black/10" />
               </div>
             ))}
 
             {/* Content overlay */}
-            <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 z-10 bg-gradient-to-t from-black/60 via-transparent to-transparent">
+            <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8 z-10 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
               {/* Top row */}
               <div className="flex items-start justify-between">
-                <span className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-black bg-white">
+                <span className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white" style={{ background: '#1B6B3A' }}>
                   {tag}
                 </span>
-                <span className="text-[20px] sm:text-[24px] font-bold text-white px-3 py-1 bg-red-600">
+                <span className="text-[20px] sm:text-[24px] font-bold text-white px-3 py-1" style={{ background: '#D4920A' }}>
                   {reduction}
                 </span>
               </div>
@@ -162,7 +162,7 @@ export default function PromotionsSection() {
 
               {/* Countdown */}
               <div className="flex items-center gap-2 sm:gap-4 mb-8">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-900 mr-2 border-r pr-6 border-gray-200">Expire dans</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest mr-2 border-r pr-6 border-gray-200" style={{ color: '#1B6B3A' }}>Expire dans</span>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <CountdownUnit value={t.h} label="H" />
                   <span className="text-lg font-bold text-gray-300">:</span>
@@ -174,7 +174,8 @@ export default function PromotionsSection() {
 
               <div className="flex gap-4">
                 <Link href="/produits"
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-black text-white text-[11px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">
+                  className="inline-flex items-center gap-2 px-8 py-4 text-white text-[11px] font-bold uppercase tracking-widest transition-opacity hover:opacity-90"
+                   style={{ background: '#1B6B3A' }}>
                   Profiter de l&apos;offre
                 </Link>
               </div>
@@ -182,16 +183,18 @@ export default function PromotionsSection() {
 
             <div className="flex-1 flex flex-col gap-3 mt-4 border-t border-gray-100 pt-8">
               {promos.map((pr, i) => {
+                const isActive = i === actif;
                 return (
                   <button key={pr.id || i} onClick={() => setActif(i)}
-                    className={`group relative flex items-center gap-4 p-3 text-left transition-colors duration-300 border ${i === actif ? 'border-gray-900 bg-gray-50' : 'border-gray-100 hover:border-gray-300 bg-white'}`}>
+                    className={`group relative flex items-center gap-4 p-3 text-left transition-colors duration-300 border bg-white`}
+                    style={{ borderColor: isActive ? '#1B6B3A' : '#F1F2F4' }}>
                     <div className="relative w-16 h-16 bg-gray-100 shrink-0 border border-gray-200">
                       <Image src={getImage(pr)} alt={pr.titre} fill className="object-cover" sizes="64px" unoptimized />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-bold text-red-600">{getReduction(pr)}</span>
-                        <h4 className="font-bold text-[13px] text-gray-900 line-clamp-1 group-hover:underline">{pr.titre}</h4>
+                        <span className="text-[10px] font-bold" style={{ color: '#D4920A' }}>{getReduction(pr)}</span>
+                        <h4 className="font-bold text-[13px] text-gray-900 line-clamp-1 group-hover:text-[#1B6B3A] transition-colors">{pr.titre}</h4>
                       </div>
                       <p className="text-[11px] font-normal text-gray-500 line-clamp-1">{pr.description}</p>
                     </div>
@@ -202,7 +205,8 @@ export default function PromotionsSection() {
 
             {/* CTA mobile */}
             <Link href="/promotions"
-              className="md:hidden flex items-center justify-center gap-2 p-4 text-[11px] font-bold uppercase tracking-widest border border-gray-900 text-gray-900 mt-2">
+              className="md:hidden flex items-center justify-center gap-2 p-4 text-[11px] font-bold uppercase tracking-widest border mt-2"
+              style={{ borderColor: '#1B6B3A', color: '#1B6B3A' }}>
               Voir toutes les promotions
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </Link>

@@ -28,7 +28,7 @@ function ProduitsContent() {
   const filtresActifs = categorieActive || recherche
 
   return (
-    <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
+    <div className="bg-white" style={{ minHeight: '100vh' }}>
       <ProduitsHeroArtisan total={totalProduits} />
 
       <div className="max-w-7xl mx-auto px-4 md:px-10 py-12 flex gap-10">
@@ -59,7 +59,7 @@ function ProduitsContent() {
       <button
         onClick={() => setShowFiltresMobile(true)}
         className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3.5 rounded-full shadow-xl text-white text-[13px] font-black transition-all hover:scale-105"
-        style={{ background: '#008060', boxShadow: '0 8px 32px rgba(27,107,58,0.4)' }}
+        style={{ background: '#1B6B3A', boxShadow: '0 8px 32px rgba(27,107,58,0.4)' }}
       >
         <span className="material-symbols-outlined text-[18px]">tune</span>
         Filtres
@@ -79,9 +79,9 @@ function ProduitsContent() {
             onClick={() => setShowFiltresMobile(false)}
           />
           {/* Panel */}
-          <div className="w-[320px] bg-[#F7F5F0] h-full overflow-y-auto flex flex-col shadow-2xl animate-slide-in-right">
+          <div className="w-[320px] bg-white h-full overflow-y-auto flex flex-col shadow-2xl animate-slide-in-right">
             <div className="flex items-center justify-between px-5 py-4 bg-white sticky top-0 z-10" style={{ borderBottom: '1px solid #E5E7EB' }}>
-              <span className="font-black text-[15px]" style={{ color: '#0D0D0D' }}>Filtres</span>
+              <span className="font-bold text-[15px] uppercase tracking-widest text-[#1A1A1A]">Filtres</span>
               <button
                 onClick={() => setShowFiltresMobile(false)}
                 className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-100"
@@ -107,7 +107,7 @@ function ProduitsContent() {
 
 export default function ProduitsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#008060] border-t-transparent rounded-full animate-spin"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin"></div></div>}>
       <ProduitsContent />
     </Suspense>
   )

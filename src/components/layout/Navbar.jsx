@@ -80,7 +80,8 @@ export default function Navbar() {
   return (
     <>
     {/* ── TOP ANNOUNCEMENT BAR ── */}
-    <div className="bg-black text-white text-[10px] font-bold uppercase tracking-widest text-center py-2 relative z-50">
+    <div className="text-white text-[10px] font-bold uppercase tracking-widest text-center py-2 relative z-50"
+         style={{ background: '#1B6B3A' }}>
       Livraison offerte à partir de 50.000 CFA d'achat
     </div>
 
@@ -95,7 +96,7 @@ export default function Navbar() {
         {/* Hamburger (Mobile) */}
         <button className="lg:hidden w-10 h-10 flex items-center justify-start transition-colors"
           onClick={() => setMobileMenu(!mobileMenu)}>
-          <span className="material-symbols-outlined text-[24px] text-gray-900">
+          <span className="material-symbols-outlined text-[24px]" style={{ color: '#1B6B3A' }}>
             {mobileMenu ? 'close' : 'menu'}
           </span>
         </button>
@@ -105,7 +106,7 @@ export default function Navbar() {
           onClick={() => setShowSearch(true)}
           className="hidden lg:flex w-8 h-8 items-center justify-center transition-colors"
         >
-          <span className="material-symbols-outlined text-[22px] text-gray-900 font-light">search</span>
+          <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>search</span>
         </button>
 
         {/* Nav links */}
@@ -114,9 +115,14 @@ export default function Navbar() {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
             return (
               <Link key={link.label} href={link.href}
-                className={`text-[12px] font-bold uppercase tracking-widest transition-all py-2 border-b-2 ${
-                  isActive ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-900'
-                }`}>
+                className="text-[12px] font-bold uppercase tracking-widest transition-all py-2"
+                style={{
+                  borderBottom: isActive ? '2px solid #1B6B3A' : '2px solid transparent',
+                  color: isActive ? '#1B6B3A' : '#4B5563',
+                }}
+                onMouseEnter={(e) => { if(!isActive) e.currentTarget.style.color = '#1B6B3A' }}
+                onMouseLeave={(e) => { if(!isActive) e.currentTarget.style.color = '#4B5563' }}
+              >
                 {link.label}
               </Link>
             )
@@ -126,8 +132,8 @@ export default function Navbar() {
         {/* Logo (Center) */}
         <div className="flex-1 flex justify-center items-center">
           <Link href="/" className="flex items-center">
-             <span className="font-bold text-[22px] tracking-tight text-gray-900 leading-none">
-                CauriMarket.
+             <span className="font-bold text-[22px] tracking-tight leading-none" style={{ color: '#1A1A1A' }}>
+                Cauri<span style={{ color: '#1B6B3A' }}>Market.</span>
               </span>
           </Link>
         </div>
@@ -138,13 +144,14 @@ export default function Navbar() {
           {/* Mobile search */}
           <button className="lg:hidden w-8 h-8 flex items-center justify-center transition-colors"
             onClick={() => setShowSearch(true)}>
-            <span className="material-symbols-outlined text-[22px] text-gray-900">search</span>
+            <span className="material-symbols-outlined text-[22px]" style={{ color: '#1B6B3A' }}>search</span>
           </button>
 
           {/* Vendeur space */}
           {role === 'vendeur' && (
             <Link href="/vendeur"
-              className="hidden md:flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest transition-all hover:opacity-70 text-gray-900">
+              className="hidden md:flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest transition-all hover:opacity-70"
+              style={{ color: '#1B6B3A' }}>
               <span className="material-symbols-outlined text-[18px]">storefront</span>
               <span className="hidden xl:block">Espace Créateur</span>
             </Link>
@@ -155,23 +162,23 @@ export default function Navbar() {
             {user ? (
               <button onClick={() => setUserMenu(!userMenu)}
                 className="flex items-center gap-2 transition-all hover:opacity-70">
-                <span className="material-symbols-outlined text-[22px] text-gray-900 font-light">person</span>
+                <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>person</span>
               </button>
             ) : (
               <Link href="/connexion"
                 className="flex items-center gap-2 transition-all hover:opacity-70">
-                <span className="material-symbols-outlined text-[22px] text-gray-900 font-light">person</span>
+                <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>person</span>
               </Link>
             )}
 
             {/* Dropdown user */}
             {userMenu && user && (
-              <div className="absolute right-0 top-full mt-4 w-60 bg-white border border-gray-200 shadow-xl py-2 z-50">
+              <div className="absolute right-0 top-full mt-4 w-60 bg-white border shadow-xl py-2 z-50" style={{ borderColor: '#E5E7EB' }}>
                 {/* User info */}
                 <div className="px-5 py-4 mb-2 border-b border-gray-100">
                   <p className="font-bold text-[13px] text-gray-900">{user.name}</p>
                   <p className="text-[11px] text-gray-500 mb-2 truncate">{user.email}</p>
-                  <span className="inline-block px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest bg-gray-100 text-gray-900">
+                  <span className="inline-block px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest text-white" style={{ background: '#1B6B3A' }}>
                     {role || 'Membre'}
                   </span>
                 </div>
@@ -209,9 +216,10 @@ export default function Navbar() {
           {/* Panier */}
           <Link href="/panier"
             className="relative flex items-center justify-center transition-colors hover:opacity-70">
-            <span className="material-symbols-outlined text-[22px] text-gray-900 font-light">shopping_bag</span>
+            <span className="material-symbols-outlined text-[22px] font-light" style={{ color: '#1B6B3A' }}>shopping_bag</span>
             {totalArticles > 0 && (
-              <span className="absolute -top-1 -right-2 min-w-[16px] h-[16px] px-1 rounded-full text-white bg-black flex items-center justify-center font-bold text-[9px]">
+              <span className="absolute -top-1 -right-2 min-w-[16px] h-[16px] px-1 rounded-full text-white bg-black flex items-center justify-center font-bold text-[9px]"
+                style={{ background: '#D4920A' }}>
                 {totalArticles}
               </span>
             )}
@@ -227,9 +235,9 @@ export default function Navbar() {
             {navLinks.map(link => (
               <Link key={link.label} href={link.href}
                 onClick={() => setMobileMenu(false)}
-                className={`text-[16px] font-bold uppercase tracking-widest transition-colors ${
-                  pathname === link.href ? 'text-black' : 'text-gray-500 hover:text-black'
-                }`}>
+                className="text-[16px] font-bold uppercase tracking-widest transition-colors"
+                style={{ color: pathname === link.href ? '#1B6B3A' : '#4B5563' }}
+              >
                 {link.label}
               </Link>
             ))}
@@ -238,11 +246,13 @@ export default function Navbar() {
               {!user ? (
                 <>
                   <Link href="/connexion" onClick={() => setMobileMenu(false)}
-                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest text-white bg-black border border-black">
+                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest text-white"
+                     style={{ background: '#1B6B3A' }}>
                     Connexion
                   </Link>
                   <Link href="/inscription" onClick={() => setMobileMenu(false)}
-                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest text-black bg-white border border-gray-300">
+                    className="w-full py-4 text-center text-[11px] font-bold uppercase tracking-widest bg-white"
+                    style={{ border: '1px solid #1B6B3A', color: '#1B6B3A' }}>
                     Créer un compte
                   </Link>
                 </>

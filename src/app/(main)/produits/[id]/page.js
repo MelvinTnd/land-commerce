@@ -54,7 +54,7 @@ export default function DetailProduitPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-[#1B6B3A] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -76,7 +76,7 @@ export default function DetailProduitPage() {
   const p = produit || fallbackProduit
 
   return (
-    <div style={{ background: '#F7F5F0', minHeight: '100vh' }}>
+    <div className="bg-white min-h-screen">
 
       {/* Breadcrumb + actions */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-4">
@@ -168,10 +168,8 @@ export default function DetailProduitPage() {
                     }
                   }}
                   placeholder={`Bonjour ${p.shop?.name || ''}, je m'intéresse à votre produit "${p.name}"...`}
-                  className="flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium outline-none transition-colors"
-                  style={{ background: '#F7F5F0', border: '1.5px solid #E5E7EB' }}
-                  onFocus={e => e.target.style.borderColor = '#1B6B3A'}
-                  onBlur={e => e.target.style.borderColor = '#E5E7EB'}
+                  className="flex-1 px-5 py-3.5 rounded-2xl text-sm font-medium outline-none transition-colors border focus:border-[#1B6B3A]"
+                  style={{ background: '#F1F2F4', borderColor: '#E5E7EB' }}
                 />
                 <button
                   disabled={!contactMsg.trim()}
@@ -184,7 +182,7 @@ export default function DetailProduitPage() {
                       setContactMsg('');
                     }).catch(err => alert(err.message));
                   }}
-                  className="bg-[#1B6B3A] hover:bg-[#134e29] text-white font-bold text-sm px-6 py-3.5 rounded-2xl whitespace-nowrap disabled:opacity-50 transition-all flex items-center gap-2"
+                  className="bg-[#1B6B3A] hover:opacity-90 text-white font-bold text-sm px-6 py-3.5 rounded-2xl whitespace-nowrap disabled:opacity-50 transition-opacity flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[17px]">send</span>
                   Envoyer
