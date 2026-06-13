@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const infos = [
   { icon: 'location_on', titre: 'Adresse', details: ['Quartier Cadjèhoun', 'Rue 1234, Cotonou, Bénin'], color: '#1B6B3A', bg: '#E6F8EA' },
-  { icon: 'mail', titre: 'Email', details: ['contact@beninmarket.bj', 'support@beninmarket.bj'], color: '#7C3AED', bg: '#EDE9FE' },
+  { icon: 'mail', titre: 'Email', details: ['contact@caurimarket.bj', 'support@caurimarket.bj'], color: '#7C3AED', bg: '#EDE9FE' },
   { icon: 'phone', titre: 'Téléphone', details: ['+229 97 00 00 00', 'Lun–Ven : 8h – 18h'], color: '#D4920A', bg: '#FEF3C7' },
 ]
 

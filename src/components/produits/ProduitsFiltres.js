@@ -32,7 +32,7 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, r
       })
   }, [])
 
-  // Debounce : déclenche la recherche 400ms après la frappe
+  // Debounce 400ms
   useEffect(() => {
     const timer = setTimeout(() => {
       if (setRecherche) setRecherche(localRecherche)
@@ -49,91 +49,89 @@ export default function ProduitsFiltres({ categorieActive, setCategorieActive, r
   const filtresActifs = categorieActive || localRecherche
 
   return (
-    <aside className="hidden lg:flex flex-col gap-5 w-64 shrink-0">
+    <aside className="hidden lg:flex flex-col gap-0 w-60 shrink-0">
 
-      {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid #E5E7EB' }}>
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px]" style={{ color: '#1B6B3A' }}>tune</span>
-          <span className="font-extrabold text-[15px]" style={{ color: '#111827' }}>Affiner la recherche</span>
-        </div>
+      {/* ─── Header ─── */}
+      <div className="flex items-center justify-between pb-4 mb-4" style={{ borderBottom: '1px solid #E5E7EB' }}>
+        <span className="font-black text-[11px] uppercase tracking-[0.22em]" style={{ color: '#0D0D0D' }}>Filtres</span>
         {filtresActifs && (
           <button onClick={resetFiltres}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-full hover:bg-red-50 transition-colors"
-            style={{ color: '#DC2626' }}>
+            className="text-[10px] font-bold uppercase tracking-widest transition-colors hover:text-[#1B6B3A]"
+            style={{ color: '#9CA3AF' }}>
             Réinitialiser
           </button>
         )}
       </div>
 
-      {/* ─── Barre de Recherche ─────────────────────────────────── */}
-      <div className="bg-white rounded-[20px] p-4" style={{ border: '1px solid #E5E7EB' }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-3" style={{ color: '#6B7280' }}>Recherche</p>
+      {/* ─── Recherche ─── */}
+      <div className="mb-6">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-3" style={{ color: '#9CA3AF' }}>Recherche</p>
         <div className="relative">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px]"
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[17px]"
             style={{ color: '#9CA3AF' }}>search</span>
           <input
             type="text"
             value={localRecherche}
             onChange={e => setLocalRecherche(e.target.value)}
             placeholder="Nom, description..."
-            className="w-full pl-10 pr-8 py-2.5 rounded-xl text-[13px] font-medium outline-none"
-            style={{ background: '#F9F9F9', border: '2px solid #E5E7EB', transition: 'border-color 0.2s' }}
-            onFocus={e => e.target.style.borderColor = '#1B6B3A'}
+            className="w-full pl-9 pr-8 py-2.5 text-[13px] font-medium outline-none border bg-white transition-colors"
+            style={{ borderColor: '#E5E7EB', color: '#0D0D0D' }}
+            onFocus={e => e.target.style.borderColor = '#0D0D0D'}
             onBlur={e => e.target.style.borderColor = '#E5E7EB'}
           />
           {localRecherche && (
             <button onClick={() => setLocalRecherche('')}
               className="absolute right-3 top-1/2 -translate-y-1/2">
-              <span className="material-symbols-outlined text-[16px]" style={{ color: '#9CA3AF' }}>close</span>
+              <span className="material-symbols-outlined text-[15px]" style={{ color: '#9CA3AF' }}>close</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* ─── Catégories ─────────────────────────────────────────── */}
-      <div className="bg-white rounded-[20px] p-4" style={{ border: '1px solid #E5E7EB' }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-3" style={{ color: '#6B7280' }}>
+      {/* ─── Catégories ─── */}
+      <div className="mb-6">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-3" style={{ color: '#9CA3AF' }}>
           Univers Produits
         </p>
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col">
           {categories.map((cat) => (
             <button
               key={cat.label}
               onClick={() => setCategorieActive(cat.slug)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-semibold transition-all text-left"
-              style={categorieActive === cat.slug
-                ? { background: '#1B6B3A', color: 'white' }
-                : { background: 'transparent', color: '#4B5563' }}>
-              <span className="material-symbols-outlined text-[17px]"
-                style={{ color: categorieActive === cat.slug ? 'white' : '#9CA3AF' }}>
-                {cat.icon}
+              className="flex items-center justify-between px-0 py-2.5 text-[13px] font-bold transition-colors text-left border-b"
+              style={{
+                borderColor: '#F3F4F6',
+                color: categorieActive === cat.slug ? '#1B6B3A' : '#4B5563',
+              }}>
+              <span className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[16px]"
+                  style={{ color: categorieActive === cat.slug ? '#1B6B3A' : '#D1D5DB' }}>
+                  {cat.icon}
+                </span>
+                {cat.label}
               </span>
-              {cat.label}
+              {categorieActive === cat.slug && (
+                <span className="material-symbols-outlined text-[14px]" style={{ color: '#1B6B3A' }}>check</span>
+              )}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ─── Bannière Vendeur ───────────────────────────────────── */}
-      <div className="rounded-[20px] p-5 relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #1B6B3A, #0D4A28)' }}>
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l10 20H10L20 0z' fill='white'/%3E%3C/svg%3E\")" }} />
-        <div className="relative z-10">
-          <span className="material-symbols-outlined text-[28px] mb-2 block" style={{ color: '#D4920A' }}>storefront</span>
-          <h4 className="font-extrabold text-white text-[14px] leading-tight mb-1">
-            Vendez sur CauriMarket
-          </h4>
-          <p className="text-[11px] font-medium mb-4" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Rejoignez des centaines d&apos;artisans béninois en 2 minutes.
-          </p>
-          <Link href="/inscription-vendeur"
-            className="block text-center px-4 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider hover:opacity-90 transition-opacity"
-            style={{ background: '#D4920A', color: 'white' }}>
-            Créer ma boutique
-          </Link>
-        </div>
+      {/* ─── Bannière Vendeur ─── */}
+      <div className="p-5 bg-[#0D0D0D]">
+        <span className="material-symbols-outlined text-[24px] mb-3 block" style={{ color: '#D4920A' }}>storefront</span>
+        <h4 className="font-black text-white text-[13px] leading-tight mb-1">
+          Vendez sur CauriMarket
+        </h4>
+        <p className="text-[11px] font-medium mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          Rejoignez des centaines d&apos;artisans béninois en 2 minutes.
+        </p>
+        <Link href="/inscription-vendeur"
+          className="block text-center px-4 py-2.5 text-[11px] font-black uppercase tracking-wider text-white transition-opacity hover:opacity-80"
+          style={{ background: '#1B6B3A' }}>
+          Créer ma boutique
+        </Link>
       </div>
     </aside>
   )

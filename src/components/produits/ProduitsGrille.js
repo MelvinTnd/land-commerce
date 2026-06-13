@@ -23,7 +23,6 @@ const FALLBACK_PRODUITS_RAW = [
   { id: 11, slug: 'huile-palme-rouge',         nom: 'Huile de Palme Rouge Bio',          lieu: 'Lokossa',        prix: 3500,  promoP: null,  note: 4.7, badge: null,       categorie: 'Alimentaire',  categorieSlug: 'alimentation', stock: 50 },
   { id: 12, slug: 'figurine-bois-fon',         nom: 'Figurine en Bois Fon sculptée',     lieu: 'Abomey-Calavi',  prix: 9500,  promoP: null,  note: 4.5, badge: null,       categorie: 'Sculpture',    categorieSlug: 'sculpture', stock: 11 },
 ]
-// Enrichir chaque produit fallback avec la bonne image via getProductImage
 const FALLBACK_PRODUITS = FALLBACK_PRODUITS_RAW.map(p => ({
   ...p,
   image: getProductImage({ slug: p.slug, categorie: p.categorie }),
@@ -33,13 +32,11 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
   const [favoris, setFavoris] = useState([])
   const { ajouterAuPanier, estDansPanier } = useCart()
   const [vue, setVue] = useState('grille')
-  const [loading, setLoading] = useState(true)          // true au départ → skeleton
-  const [isLive, setIsLive]   = useState(false)          // true quand les vraies données sont chargées
-  const [allProduits, setAllProduits] = useState([])     // vide au départ
+  const [loading, setLoading] = useState(true)
+  const [allProduits, setAllProduits] = useState([])
 
   useEffect(() => {
     setLoading(true)
-    setIsLive(false)
     const triMap = { 'Prix croissant': 'prix_asc', 'Prix décroissant': 'prix_desc', 'Meilleures ventes': 'note' }
     getProducts({
       search: recherche || undefined,
@@ -61,30 +58,22 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
           shop: p.shop,
         }))
         if (prods.length > 0) {
-          setAllProduits(prods)   // vraies données de l'API
-          setIsLive(true)
+          setAllProduits(prods)
         } else {
-          // Si on est en train de rechercher, et que l'API ne renvoie rien, on ne veut pas afficher les fallbacks
-          // On n'affiche les fallbacks que si c'est le catalogue général (pas de filtres)
           if (recherche || (categorieActive && categorieActive !== 'Tous')) {
             setAllProduits([])
           } else {
             setAllProduits(FALLBACK_PRODUITS)
           }
-          setIsLive(false)
         }
         setLoading(false)
       })
       .catch(() => {
-        // Timeout ou erreur → fallback immédiat
         setAllProduits(FALLBACK_PRODUITS)
-        setIsLive(false)
         setLoading(false)
       })
   }, [recherche, categorieActive, triActif])
 
-
-  // Filtre côté client : catégorie + recherche
   const produits = allProduits.filter(p => {
     if (categorieActive && categorieActive !== null) {
       const matchSlug = p.categorieSlug?.toLowerCase() === categorieActive?.toLowerCase()
@@ -98,11 +87,9 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
     return true
   })
 
-
   useEffect(() => {
     if (onCountChange) onCountChange(produits.length)
   }, [produits.length, onCountChange])
-
 
   const toggleFav = (e, id) => {
     e.preventDefault()
@@ -112,31 +99,26 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
   return (
     <div className="flex-1 flex flex-col">
 
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#E6F8EA' }}>
-            <span className="material-symbols-outlined text-[18px]" style={{ color: '#1B6B3A' }}>inventory_2</span>
-          </div>
-          <div>
-            <p className="text-[13px] font-black text-[#0D0D0D] leading-tight">
-              {categorieActive && categorieActive !== 'Tous' ? categorieActive : 'Tout le catalogue'}
-            </p>
-            <p className="text-[11px] font-medium" style={{ color: '#9CA3AF' }}>
-              {loading ? 'Chargement...' : `${produits.length} article(s)`}
-            </p>
-          </div>
+      {/* ── Toolbar ── */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4"
+        style={{ borderBottom: '1px solid #E5E7EB' }}>
+        <div>
+          <p className="text-[13px] font-black" style={{ color: '#0D0D0D' }}>
+            {categorieActive && categorieActive !== 'Tous' ? categorieActive : 'Tout le catalogue'}
+          </p>
+          <p className="text-[11px] font-medium mt-0.5" style={{ color: '#9CA3AF' }}>
+            {loading ? 'Chargement...' : `${produits.length} article(s)`}
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Toggle vue */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center border border-gray-200">
             {[{ v: 'grille', icon: 'grid_view' }, { v: 'liste', icon: 'view_list' }].map(({ v, icon }) => (
               <button key={v} onClick={() => setVue(v)}
-                className="w-10 h-10 flex items-center justify-center transition-colors border"
+                className="w-9 h-9 flex items-center justify-center transition-colors"
                 style={{
-                  background: vue === v ? '#1B6B3A' : 'white',
-                  borderColor: vue === v ? '#1B6B3A' : '#E5E7EB',
+                  background: vue === v ? '#0D0D0D' : 'white',
                   color: vue === v ? 'white' : '#6B7280'
                 }}>
                 <span className="material-symbols-outlined text-[18px]">{icon}</span>
@@ -144,146 +126,147 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
             ))}
           </div>
 
-          {/* Sort */}
-          <div className="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white">
-            <span className="material-symbols-outlined text-[16px] text-gray-400">sort</span>
+          {/* Tri */}
+          <div className="flex items-center gap-2 px-3 py-2 border border-gray-200 bg-white">
+            <span className="material-symbols-outlined text-[15px] text-gray-400">sort</span>
             <select value={triActif} onChange={e => setTriActif(e.target.value)}
-              className="text-[13px] font-bold text-gray-900 bg-transparent outline-none cursor-pointer">
+              className="text-[12px] font-bold uppercase tracking-widest text-gray-900 bg-transparent outline-none cursor-pointer">
               {tris.map(t => <option key={t}>{t}</option>)}
             </select>
           </div>
         </div>
       </div>
 
-      {/* Content */}
+      {/* ── Skeletons ── */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="bg-white rounded-[24px] p-4 animate-pulse">
-              <div className="bg-gray-100 rounded-[18px] mb-4" style={{ aspectRatio: '4/5' }} />
-              <div className="h-3 bg-gray-100 rounded mb-2 w-1/2" />
-              <div className="h-4 bg-gray-100 rounded mb-4" />
-              <div className="h-10 bg-gray-100 rounded-2xl" />
+            <div key={i} className="bg-white p-4 animate-pulse">
+              <div className="bg-gray-100 mb-4" style={{ aspectRatio: '1/1' }} />
+              <div className="h-2.5 bg-gray-100 mb-2 w-1/3" />
+              <div className="h-4 bg-gray-100 mb-3" />
+              <div className="h-3 bg-gray-100 w-1/2" />
             </div>
           ))}
         </div>
+
       ) : produits.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-[28px]"
-          style={{ border: '1px dashed #E5E7EB' }}>
-          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ background: '#F3F4F6' }}>
-            <span className="material-symbols-outlined text-[32px]" style={{ color: '#D1D5DB' }}>search_off</span>
-          </div>
-          <h3 className="text-[18px] font-black text-[#0D0D0D] mb-2">Aucun produit trouvé</h3>
-          <p className="text-sm font-medium max-w-sm" style={{ color: '#9CA3AF' }}>
-            Essayez d'élargir vos critères de filtre.
+        <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-gray-200">
+          <span className="material-symbols-outlined text-[40px] mb-4" style={{ color: '#D1D5DB' }}>search_off</span>
+          <h3 className="text-[17px] font-black mb-2" style={{ color: '#0D0D0D' }}>Aucun produit trouvé</h3>
+          <p className="text-[13px] font-medium max-w-sm" style={{ color: '#9CA3AF' }}>
+            Essayez d&apos;élargir vos critères de filtre.
           </p>
         </div>
+
       ) : vue === 'grille' ? (
-        /* ── GRILLE 3 colonnes max, cartes généreuses ── */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        /* ── GRILLE ── */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200">
           {produits.map(p => {
             const inCart = estDansPanier(p.id)
             const isFav = favoris.includes(p.id)
             const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null
 
             return (
-              <div key={p.id}
-                className="group bg-white overflow-hidden flex flex-col transition-all border border-gray-100 hover:border-[#1B6B3A]">
+              <div key={p.id} className="group bg-white flex flex-col overflow-hidden">
 
-                {/* Image — ratio carré pour plus de lisibilité */}
+                {/* Image */}
                 <div className="relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
-                  <Link href={`/produits/${p.slug || p.id}`} style={{ display: 'block', width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
+                  <Link href={`/produits/${p.slug || p.id}`}
+                    style={{ display: 'block', width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
                     <ProductImage
                       nom={p.nom}
                       categorie={p.categorie}
                       apiImage={p.image}
                       fill
-                      className="object-cover transition-transform duration-600 group-hover:scale-105"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </Link>
 
                   {/* Badges */}
-                  <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
+                  <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap">
                     {p.badge && (
-                      <span className="px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white"
+                      <span className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-white"
                         style={{ background: '#1B6B3A' }}>{p.badge}</span>
                     )}
                     {remise && (
-                      <span className="px-3 py-1 rounded-full text-[9px] font-black text-white"
+                      <span className="px-2.5 py-1 text-[9px] font-black text-white"
                         style={{ background: '#EF4444' }}>-{remise}%</span>
                     )}
                     {p.stock > 0 && p.stock <= 5 && (
-                      <span className="px-3 py-1 rounded-full text-[9px] font-black text-white"
+                      <span className="px-2.5 py-1 text-[9px] font-black text-white"
                         style={{ background: '#EA580C' }}>⚡ {p.stock} restants</span>
                     )}
                   </div>
 
                   {/* Favori */}
                   <button onClick={e => toggleFav(e, p.id)}
-                    className="absolute top-3 right-3 w-9 h-9 bg-white flex items-center justify-center border border-gray-100 hover:border-[#1B6B3A] transition-colors z-10">
-                    <span className="material-symbols-outlined text-[17px]"
+                    className="absolute top-3 right-3 w-8 h-8 bg-white flex items-center justify-center border border-gray-200 hover:border-gray-900 transition-colors z-10">
+                    <span className="material-symbols-outlined text-[16px]"
                       style={{ color: isFav ? '#EF4444' : '#9CA3AF', fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0" }}>
                       favorite
                     </span>
                   </button>
 
-                  {/* Quick add — visible on hover md+ */}
-                  <div className="absolute bottom-3 left-3 right-3 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+                  {/* Quick add on hover */}
+                  <div className="absolute bottom-0 left-0 right-0 transition-all duration-300 translate-y-full group-hover:translate-y-0">
                     <button
                       onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
-                      className="w-full py-3 text-[11px] font-bold uppercase tracking-wider transition-colors border"
+                      className="w-full py-3 text-[11px] font-black uppercase tracking-widest transition-colors border-t"
                       style={{
                         background: inCart ? '#1B6B3A' : 'white',
-                        color: inCart ? 'white' : '#1A1A1A',
-                        borderColor: inCart ? '#1B6B3A' : '#1B6B3A',
+                        color: inCart ? 'white' : '#0D0D0D',
+                        borderColor: '#E5E7EB',
                       }}>
                       {inCart ? '✓ Dans le panier' : '+ Ajouter au panier'}
                     </button>
                   </div>
                 </div>
 
-                {/* Infos */}
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+                {/* Infos produit */}
+                <div className="p-4 flex flex-col flex-1" style={{ borderTop: '1px solid #F3F4F6' }}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>
                       {p.lieu}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[12px] text-yellow-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-[11px] font-bold text-gray-900">{p.note}</span>
+                    </span>
+                    <div className="flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[11px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-[11px] font-bold" style={{ color: '#0D0D0D' }}>{p.note}</span>
                     </div>
                   </div>
 
                   <Link href={`/produits/${p.slug || p.id}`}>
-                    <h5 className="font-bold text-[15px] leading-snug text-gray-900 group-hover:text-[#1B6B3A] transition-colors line-clamp-2 mb-4">
+                    <h5 className="font-bold text-[14px] leading-snug line-clamp-2 mb-3 transition-colors hover:text-[#1B6B3A]"
+                      style={{ color: '#0D0D0D' }}>
                       {p.nom}
                     </h5>
                   </Link>
 
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="mt-auto flex items-center justify-between pt-3" style={{ borderTop: '1px solid #F3F4F6' }}>
                     <div>
                       {p.promoP ? (
                         <>
-                          <p className="font-black text-[18px] leading-none" style={{ color: '#EF4444' }}>
+                          <p className="font-black text-[17px] leading-none" style={{ color: '#EF4444' }}>
                             {p.promoP.toLocaleString('fr-FR')} <span className="text-[10px] text-gray-400">CFA</span>
                           </p>
                           <p className="text-[11px] line-through mt-0.5" style={{ color: '#9CA3AF' }}>{p.prix.toLocaleString('fr-FR')} CFA</p>
                         </>
                       ) : (
-                        <p className="font-bold text-[18px] leading-none text-gray-900">
+                        <p className="font-bold text-[17px] leading-none" style={{ color: '#0D0D0D' }}>
                           {p.prix.toLocaleString('fr-FR')} <span className="text-[10px] text-gray-400">CFA</span>
                         </p>
                       )}
                     </div>
                     <button
                       onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
-                      className="w-10 h-10 flex items-center justify-center border transition-colors"
+                      className="w-9 h-9 flex items-center justify-center border transition-colors"
                       style={{
                         background: inCart ? '#1B6B3A' : 'white',
-                        borderColor: '#1B6B3A',
-                        color: inCart ? 'white' : '#1B6B3A'
+                        borderColor: inCart ? '#1B6B3A' : '#E5E7EB',
+                        color: inCart ? 'white' : '#0D0D0D'
                       }}>
-                      <span className="material-symbols-outlined text-[20px]">{inCart ? 'check' : 'add'}</span>
+                      <span className="material-symbols-outlined text-[18px]">{inCart ? 'check' : 'add'}</span>
                     </button>
                   </div>
                 </div>
@@ -291,64 +274,77 @@ export default function ProduitsGrille({ categorieActive, triActif, setTriActif,
             )
           })}
         </div>
+
       ) : (
-        /* ── Vue LISTE ── */
-        <div className="flex flex-col gap-4">
+
+        /* ── LISTE ── */
+        <div className="flex flex-col divide-y divide-gray-100">
           {produits.map(p => {
             const inCart = estDansPanier(p.id)
             const isFav = favoris.includes(p.id)
+            const remise = p.promoP ? Math.round((1 - p.promoP / p.prix) * 100) : null
             return (
-              <Link key={p.id} href={`/produits/${p.slug || p.id}`}
-                className="group flex gap-5 bg-white rounded-[24px] p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-                style={{ border: '1px solid #EBEBEB' }}>
-                <div className="relative shrink-0 w-36 aspect-square rounded-[18px] overflow-hidden bg-[#F7F5F0]">
-                  <img src={p.image} alt={p.nom} className="object-cover w-full h-full" />
+              <div key={p.id} className="group flex gap-5 bg-white py-5 transition-colors hover:bg-gray-50">
+                <div className="relative shrink-0 w-28 aspect-square overflow-hidden bg-gray-100">
+                  <Link href={`/produits/${p.slug || p.id}`} style={{ position: 'absolute', inset: 0 }}>
+                    <img src={p.image} alt={p.nom} className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105" />
+                  </Link>
+                  {remise && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 text-[9px] font-black text-white"
+                      style={{ background: '#EF4444' }}>-{remise}%</span>
+                  )}
                 </div>
-                <div className="flex-1 flex flex-col justify-between py-1">
+                <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0">
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[10px] font-black px-2.5 py-1 rounded-full" style={{ background: '#F3F4F6', color: '#6B7280' }}>{p.categorie}</span>
-                      <div className="flex items-center gap-0.5">
-                        <span className="material-symbols-outlined text-[11px]" style={{ color: '#EAB308', fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[11px] font-black" style={{ color: '#0D0D0D' }}>{p.note}</span>
-                      </div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#9CA3AF' }}>{p.lieu}</span>
+                      <span className="text-[10px]" style={{ color: '#D1D5DB' }}>·</span>
+                      <span className="text-[10px] font-bold" style={{ color: '#9CA3AF' }}>{p.categorie}</span>
                     </div>
-                    <h5 className="font-black text-[16px] text-[#0D0D0D] group-hover:text-[#1B6B3A] transition-colors line-clamp-2 mb-1">{p.nom}</h5>
-                    <p className="text-[11px] font-bold flex items-center gap-1" style={{ color: '#9CA3AF' }}>
-                      <span className="material-symbols-outlined text-[13px]">location_on</span>{p.lieu}
-                    </p>
+                    <Link href={`/produits/${p.slug || p.id}`}>
+                      <h5 className="font-bold text-[15px] line-clamp-2 leading-snug transition-colors hover:text-[#1B6B3A]"
+                        style={{ color: '#0D0D0D' }}>{p.nom}</h5>
+                    </Link>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      <span className="material-symbols-outlined text-[11px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-[11px] font-bold" style={{ color: '#0D0D0D' }}>{p.note}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between pt-3" style={{ borderTop: '1px solid #F3F4F6' }}>
+                  <div className="flex items-center justify-between pt-3 mt-3" style={{ borderTop: '1px solid #F3F4F6' }}>
                     <div>
                       {p.promoP ? (
                         <>
-                          <p className="font-black text-[20px] leading-none" style={{ color: '#EF4444' }}>
-                            {p.promoP.toLocaleString('fr-FR')} <span className="text-[12px] font-bold text-gray-400">CFA</span>
+                          <p className="font-black text-[18px] leading-none" style={{ color: '#EF4444' }}>
+                            {p.promoP.toLocaleString('fr-FR')} <span className="text-[11px] font-bold text-gray-400">CFA</span>
                           </p>
-                          <p className="text-[12px] line-through" style={{ color: '#9CA3AF' }}>{p.prix.toLocaleString('fr-FR')} CFA</p>
+                          <p className="text-[11px] line-through" style={{ color: '#9CA3AF' }}>{p.prix.toLocaleString('fr-FR')} CFA</p>
                         </>
                       ) : (
-                        <p className="font-black text-[20px] text-[#0D0D0D]">
-                          {p.prix.toLocaleString('fr-FR')} <span className="text-[12px] font-bold text-gray-400">CFA</span>
+                        <p className="font-black text-[18px]" style={{ color: '#0D0D0D' }}>
+                          {p.prix.toLocaleString('fr-FR')} <span className="text-[11px] font-bold text-gray-400">CFA</span>
                         </p>
                       )}
                     </div>
                     <div className="flex gap-2">
                       <button onClick={e => toggleFav(e, p.id)}
-                        className="w-11 h-11 rounded-2xl flex items-center justify-center transition-all z-10"
-                        style={{ background: '#F3F4F6', color: isFav ? '#EF4444' : '#9CA3AF' }}>
-                        <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
+                        className="w-9 h-9 flex items-center justify-center border border-gray-200 hover:border-gray-900 transition-colors"
+                        style={{ color: isFav ? '#EF4444' : '#9CA3AF' }}>
+                        <span className="material-symbols-outlined text-[17px]" style={{ fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0" }}>favorite</span>
                       </button>
                       <button onClick={e => { e.preventDefault(); if (!inCart) ajouterAuPanier({ ...p, prix: p.promoP || p.prix }) }}
-                        className="h-11 px-5 flex items-center gap-2 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all z-10"
-                        style={{ background: inCart ? '#1B6B3A' : '#E6F8EA', color: inCart ? 'white' : '#1B6B3A' }}>
-                        <span className="material-symbols-outlined text-[18px]">{inCart ? 'check' : 'add_shopping_cart'}</span>
+                        className="flex items-center gap-2 px-4 h-9 font-black text-[11px] uppercase tracking-widest border transition-colors"
+                        style={{
+                          background: inCart ? '#1B6B3A' : 'white',
+                          borderColor: inCart ? '#1B6B3A' : '#E5E7EB',
+                          color: inCart ? 'white' : '#0D0D0D'
+                        }}>
+                        <span className="material-symbols-outlined text-[16px]">{inCart ? 'check' : 'add_shopping_cart'}</span>
                         {inCart ? 'Ajouté' : 'Ajouter'}
                       </button>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             )
           })}
         </div>

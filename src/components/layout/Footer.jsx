@@ -62,10 +62,10 @@ export default function Footer() {
           <div className="md:col-span-4">
             <div className="flex items-center gap-2.5 mb-5">
               <div className="w-10 h-10 relative rounded-xl overflow-hidden">
-                <Image src="/logo.png" alt="BéninMarket" fill className="object-contain" sizes="40px" />
+                <Image src="/logo.png" alt="CauriMarket" fill className="object-contain" sizes="40px" />
               </div>
               <span className="font-black text-[20px] tracking-tight" style={{ color: '#0D0D0D' }}>
-                Bénin<span style={{ color: '#1B6B3A' }}>Market</span>
+                Cauri<span style={{ color: '#1B6B3A' }}>Market</span>
               </span>
             </div>
             <p className="text-[14px] leading-relaxed mb-7 max-w-xs" style={{ color: '#6B7280' }}>
@@ -130,7 +130,7 @@ export default function Footer() {
       <div className="px-6 md:px-12 lg:px-20 py-5" style={{ borderTop: '1px solid rgba(0,0,0,0.07)', background: '#fff' }}>
         <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-[12px] font-medium" style={{ color: '#9CA3AF' }}>
-            © 2026 BéninMarket — Fait avec ❤️ pour l&apos;artisanat béninois
+            © 2026 CauriMarket — Fait avec ❤️ pour l&apos;artisanat béninois
           </p>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#1B6B3A' }} />

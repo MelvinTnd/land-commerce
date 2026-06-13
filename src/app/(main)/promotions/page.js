@@ -4,12 +4,12 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const promos = [
-  { id: 1, titre: 'Vente Flash Artisanat', reduction: '-30%', prix: '25 000', original: '35 714', description: "Sculptures, masques et mobilier d'exception.", finDate: new Date(Date.now() + 48 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&q=80&w=800', color: '#EF4444', tag: '🔥 FLASH' },
-  { id: 2, titre: 'Spécial Terroir', reduction: '-20%', prix: '12 000', original: '15 000', description: 'Miel, épices et produits bio des collines à prix doux.', finDate: new Date(Date.now() + 8 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800', color: '#F59E0B', tag: '🌿 TERROIR' },
-  { id: 3, titre: 'Collection Mode', reduction: '-25%', prix: '18 000', original: '24 000', description: 'Tuniques, bijoux et accessoires de créateurs béninois.', finDate: new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=800', color: '#8B5CF6', tag: '👗 MODE' },
-  { id: 4, titre: 'Maison & Déco', reduction: '-15%', prix: '30 000', original: '35 294', description: 'Tables, coussins et luminaires artisanaux pour votre intérieur.', finDate: new Date(Date.now() + 12 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=800', color: '#06B6D4', tag: '🏡 DÉCO' },
-  { id: 5, titre: 'Bijoux & Accessoires', reduction: '-35%', prix: '8 000', original: '12 307', description: 'Colliers, bracelets et boucles d\'oreilles en bronze et perles.', finDate: new Date(Date.now() + 72 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800', color: '#EC4899', tag: '💎 BIJOUX' },
-  { id: 6, titre: 'Épices du Monde', reduction: '-10%', prix: '5 000', original: '5 555', description: 'Mélanges d\'épices rares et huiles essentielles du Bénin.', finDate: new Date(Date.now() + 20 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&q=80&w=800', color: '#10B981', tag: '🌶️ ÉPICES' },
+  { id: 1, titre: 'Vente Flash Artisanat', reduction: '-30%', prix: '25 000', original: '35 714', description: "Sculptures, masques et mobilier d'exception.", finDate: new Date(Date.now() + 48 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&q=80&w=800', tag: 'FLASH' },
+  { id: 2, titre: 'Spécial Terroir', reduction: '-20%', prix: '12 000', original: '15 000', description: 'Miel, épices et produits bio des collines à prix doux.', finDate: new Date(Date.now() + 8 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=800', tag: 'TERROIR' },
+  { id: 3, titre: 'Collection Mode', reduction: '-25%', prix: '18 000', original: '24 000', description: 'Tuniques, bijoux et accessoires de créateurs béninois.', finDate: new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&q=80&w=800', tag: 'MODE' },
+  { id: 4, titre: 'Maison & Déco', reduction: '-15%', prix: '30 000', original: '35 294', description: 'Tables, coussins et luminaires artisanaux pour votre intérieur.', finDate: new Date(Date.now() + 12 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=800', tag: 'DÉCO' },
+  { id: 5, titre: 'Bijoux & Accessoires', reduction: '-35%', prix: '8 000', original: '12 307', description: "Colliers, bracelets et boucles d'oreilles en bronze et perles.", finDate: new Date(Date.now() + 72 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800', tag: 'BIJOUX' },
+  { id: 6, titre: 'Épices du Monde', reduction: '-10%', prix: '5 000', original: '5 555', description: "Mélanges d'épices rares et huiles essentielles du Bénin.", finDate: new Date(Date.now() + 20 * 24 * 3600 * 1000).toISOString(), image: 'https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&q=80&w=800', tag: 'ÉPICES' },
 ]
 
 function useCountdown(finDate) {
@@ -37,52 +37,73 @@ function PromoCard({ p }) {
   const [imgErr, setImgErr] = useState(false)
 
   return (
-    <div className="group relative bg-white overflow-hidden transition-all duration-400 hover:-translate-y-2"
-      style={{ borderRadius: '28px', border: '1px solid #EBEBEB', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+    <div className="group bg-white flex flex-col overflow-hidden transition-colors"
+      style={{ border: '1px solid #E5E7EB' }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = '#0D0D0D'}
+      onMouseLeave={e => e.currentTarget.style.borderColor = '#E5E7EB'}>
 
       {/* Image */}
-      <div className="relative overflow-hidden" style={{ aspectRatio: '4/3' }}>
+      <div className="relative overflow-hidden bg-gray-100" style={{ aspectRatio: '4/3' }}>
         {imgErr ? (
           <div className="w-full h-full flex items-center justify-center" style={{ background: '#F3F4F6' }}>
             <span className="material-symbols-outlined text-[48px]" style={{ color: '#D1D5DB' }}>broken_image</span>
           </div>
         ) : (
-          <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" unoptimized onError={() => setImgErr(true)} />
+          <Image src={p.image} alt={p.titre} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width:640px) 100vw,(max-width:1024px) 50vw,33vw" unoptimized onError={() => setImgErr(true)} />
         )}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)' }} />
-        <div className="absolute top-4 left-4 flex gap-2">
-          <span className="px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide text-white" style={{ background: p.color }}>{p.tag}</span>
-          {urgency && <span className="px-3 py-1.5 rounded-full text-[10px] font-black text-white animate-pulse" style={{ background: '#EF4444' }}>⚡ URGENT</span>}
+
+        {/* Overlay gradient bas */}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)' }} />
+
+        {/* Tag + urgency */}
+        <div className="absolute top-0 left-0 flex gap-0">
+          <span className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white bg-[#0D0D0D]">
+            {p.tag}
+          </span>
+          {urgency && (
+            <span className="px-3 py-1.5 text-[10px] font-black text-white bg-[#EF4444] animate-pulse">
+              URGENT
+            </span>
+          )}
         </div>
-        <div className="absolute top-4 right-4 text-[26px] font-black text-white px-4 py-1.5 rounded-[14px]"
-          style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}>
+
+        {/* Badge réduction */}
+        <div className="absolute top-0 right-0 px-3 py-1.5 text-[14px] font-black text-white"
+          style={{ background: '#D4920A' }}>
           {p.reduction}
         </div>
 
-        {/* Mini countdown on image */}
-        <div className="absolute bottom-4 left-4 flex gap-2">
-          {t.d > 0 && <div className="text-center"><div className="font-black text-[16px] text-white">{t.d}j</div></div>}
-          <div className="font-black text-white text-[15px]">
-            {String(t.h).padStart(2, '0')}:{String(t.m).padStart(2, '0')}:{String(t.s).padStart(2, '0')}
+        {/* Countdown bas */}
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-[13px] text-white/70">schedule</span>
+          <div className="flex items-center gap-1 text-white">
+            {t.d > 0 && (
+              <span className="text-[13px] font-black">{t.d}j</span>
+            )}
+            <span className="font-black text-[13px] tabular-nums">
+              {String(t.h).padStart(2, '0')}:{String(t.m).padStart(2, '0')}:{String(t.s).padStart(2, '0')}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <h3 className="font-black text-[17px] text-[#0D0D0D] mb-2 leading-tight">{p.titre}</h3>
-        <p className="text-[13px] font-medium mb-4 line-clamp-2" style={{ color: '#9CA3AF' }}>{p.description}</p>
+      {/* Contenu */}
+      <div className="p-5 flex flex-col flex-1">
+        <h3 className="font-black text-[16px] mb-1.5 leading-snug" style={{ color: '#0D0D0D' }}>{p.titre}</h3>
+        <p className="text-[13px] font-medium mb-5 line-clamp-2 flex-1" style={{ color: '#6B7280' }}>{p.description}</p>
 
-        <div className="flex items-end justify-between">
+        <div className="flex items-end justify-between pt-4" style={{ borderTop: '1px solid #F3F4F6' }}>
           <div>
-            <p className="font-black text-[22px] leading-none" style={{ color: p.color }}>{p.prix} <span className="text-[12px] text-gray-400">CFA</span></p>
+            <p className="font-black text-[20px] leading-none" style={{ color: '#1B6B3A' }}>
+              {p.prix} <span className="text-[11px] text-gray-400 font-bold">CFA</span>
+            </p>
             <p className="text-[12px] line-through mt-0.5" style={{ color: '#9CA3AF' }}>{p.original} CFA</p>
           </div>
           <Link href="/produits"
-            className="flex items-center gap-2 px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-wider transition-all hover:opacity-90"
-            style={{ background: p.color, color: 'white' }}>
-            Voir l'offre
-            <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+            className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-black uppercase tracking-widest border border-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
+            style={{ color: '#0D0D0D' }}>
+            Voir l&apos;offre
+            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
           </Link>
         </div>
       </div>
@@ -92,62 +113,89 @@ function PromoCard({ p }) {
 
 export default function PromotionsPage() {
   return (
-    <div style={{ background: '#0D1117', minHeight: '100vh' }}>
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
 
-      {/* Hero dark */}
-      <div className="relative pt-28 pb-20 px-6 md:px-10 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-          style={{ width: '700px', height: '400px', background: 'radial-gradient(ellipse, rgba(212,146,10,0.2) 0%, transparent 70%)' }} />
+      {/* ── Hero ── */}
+      <div style={{ background: '#F7F5F0', borderBottom: '1px solid #E5E7EB' }}>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-14">
 
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-widest mb-6"
-            style={{ background: 'rgba(212,146,10,0.15)', color: '#D4920A', border: '1px solid rgba(212,146,10,0.25)' }}>
-            <span className="material-symbols-outlined text-[15px]">local_offer</span>
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest mb-8" style={{ color: '#9CA3AF' }}>
+            <Link href="/" className="hover:text-[#1B6B3A] transition-colors">Accueil</Link>
+            <span>/</span>
+            <span style={{ color: '#0D0D0D' }}>Promotions</span>
+          </div>
+
+          <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] mb-4"
+            style={{ color: '#D4920A' }}>
+            <span className="w-4 h-px bg-[#D4920A] inline-block" />
             Offres Exclusives
           </span>
-          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-5">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-none mb-4" style={{ color: '#0D0D0D' }}>
             Promotions &<br />
             <span style={{ color: '#D4920A' }}>Ventes Flash</span>
           </h1>
-          <p className="text-[17px] font-medium max-w-2xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Profitez d'offres exclusives sur les trésors du Bénin. Des prix cassés, des délais limités.
+          <p className="text-[15px] font-medium max-w-lg" style={{ color: '#6B7280' }}>
+            Profitez d&apos;offres exclusives sur les trésors du Bénin. Des prix cassés, des délais limités.
           </p>
         </div>
       </div>
 
-      {/* Promos grid */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 pb-28" style={{ background: '#F7F5F0', borderRadius: '40px 40px 0 0' }}>
-        <div className="pt-16 pb-4">
-          <p className="text-[12px] font-black uppercase tracking-widest mb-2" style={{ color: '#9CA3AF' }}>{promos.length} offres actives</p>
-          <h2 className="text-3xl font-black text-[#0D0D0D]">Toutes les promotions</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-8">
-          {promos.map(p => <PromoCard key={p.id} p={p} />)}
+      {/* ── Section promos ── */}
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-14">
+
+        {/* Sous-titre */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] mb-1" style={{ color: '#9CA3AF' }}>
+              {promos.length} offres actives
+            </p>
+            <h2 className="text-2xl font-black tracking-tight" style={{ color: '#0D0D0D' }}>
+              Toutes les promotions
+            </h2>
+          </div>
+          <div className="flex items-center gap-2 text-[12px] font-bold" style={{ color: '#9CA3AF' }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#EF4444' }} />
+            Mise à jour en temps réel
+          </div>
         </div>
 
-        {/* Newsletter CTA */}
-        <div className="mt-20 relative overflow-hidden p-12 text-center"
-          style={{ borderRadius: '32px', background: 'linear-gradient(135deg, #0B1F12, #1B6B3A)' }}>
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-          <div className="relative z-10">
-            <span className="material-symbols-outlined text-[40px] mb-4 block" style={{ color: '#D4920A' }}>notifications_active</span>
-            <h3 className="text-3xl font-black text-white mb-3">Ne manquez aucune offre</h3>
-            <p className="text-white/60 mb-8 max-w-md mx-auto">Recevez les alertes promotions directement dans votre boîte mail.</p>
-            <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-3">
+        {/* Grille promos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {promos.map(p => <PromoCard key={p.id} p={p} />)}
+        </div>
+      </div>
+
+      {/* ── Newsletter CTA ── */}
+      <div style={{ background: '#F7F5F0', borderTop: '1px solid #E5E7EB' }}>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 py-16">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] mb-3 flex items-center gap-2"
+                style={{ color: '#D4920A' }}>
+                <span className="w-4 h-px bg-[#D4920A] inline-block" />
+                Newsletter
+              </span>
+              <h3 className="text-2xl font-black tracking-tight mb-2" style={{ color: '#0D0D0D' }}>
+                Ne manquez aucune offre
+              </h3>
+              <p className="text-[14px] font-medium" style={{ color: '#6B7280' }}>
+                Recevez les alertes promotions directement dans votre boîte mail.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-0 w-full md:max-w-sm shrink-0">
               <input type="email" placeholder="votre@email.bj"
-                className="flex-1 px-5 py-4 rounded-2xl text-sm font-medium outline-none"
-                style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} />
-              <button className="px-7 py-4 rounded-2xl font-black text-sm uppercase tracking-wider transition-all hover:opacity-90"
-                style={{ background: '#D4920A', color: '#0D0D0D' }}>
-                S'abonner
+                className="flex-1 px-5 py-3.5 text-[13px] font-medium outline-none border border-gray-300 bg-white focus:border-gray-900 transition-colors"
+                style={{ color: '#0D0D0D' }} />
+              <button className="px-6 py-3.5 font-black text-[11px] uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+                style={{ background: '#1B6B3A' }}>
+                S&apos;abonner
               </button>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   )
 }

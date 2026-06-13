@@ -28,7 +28,7 @@ function ProduitsContent() {
   const filtresActifs = categorieActive || recherche
 
   return (
-    <div className="bg-white" style={{ minHeight: '100vh' }}>
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
       <ProduitsHeroArtisan total={totalProduits} />
 
       <div className="max-w-7xl mx-auto px-4 md:px-10 py-12 flex gap-10">
@@ -58,8 +58,8 @@ function ProduitsContent() {
       {/* ── Bouton FAB Filtres mobile ── */}
       <button
         onClick={() => setShowFiltresMobile(true)}
-        className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3.5 rounded-full shadow-xl text-white text-[13px] font-black transition-all hover:scale-105"
-        style={{ background: '#1B6B3A', boxShadow: '0 8px 32px rgba(27,107,58,0.4)' }}
+        className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-6 py-3 border border-gray-900 bg-white shadow-lg text-[11px] font-black uppercase tracking-widest transition-all hover:bg-gray-900 hover:text-white"
+        style={{ color: '#0D0D0D' }}
       >
         <span className="material-symbols-outlined text-[18px]">tune</span>
         Filtres
